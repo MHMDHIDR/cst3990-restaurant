@@ -48,12 +48,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           tel: user.tel,
           token: generateToken(user._id),
           userAdded: 1,
-          message: 'تم التسجيل بنجاح 👍🏼 يمكنك تسجيل الدخول الآن'
+          message: 'User Successfully Registered You Can Login 👍🏼'
         })
       } else {
         res.status(400).json({
           userAdded: 0,
-          message: 'لم يتم تسجيل المستخدم!'
+          message: 'User Not Added!, Please Try Again Later'
         })
       }
       break

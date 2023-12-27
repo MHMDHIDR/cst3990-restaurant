@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import useAxios from 'hooks/useAxios'
-import { useTranslate } from 'hooks/useTranslate'
 
 const About = () => {
   const [data, setData] = useState<string | any>()
@@ -13,14 +12,10 @@ const About = () => {
     }
   }, [response])
 
-  const { t } = useTranslate()
-
   return (
     <section id='about' className='py-12 my-8 about'>
       <div className='container mx-auto'>
-        <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-          {t('app.nav.about.title')}
-        </h2>
+        <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>About</h2>
         <p
           className={`max-w-6xl mx-4 sm:mx-auto leading-[3rem] ${
             data?.appDesc?.length > 75 ? 'text-justify' : 'text-center'

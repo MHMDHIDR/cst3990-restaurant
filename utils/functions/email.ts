@@ -16,7 +16,7 @@ const email = async ({ name, subject, from, to, msg }: any) => {
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: process.env.MAILER_EMAIL,
+      user: process.env.EMAIL,
       pass: process.env.MAILER_PASSWORD
     }
   })

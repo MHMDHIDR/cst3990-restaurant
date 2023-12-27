@@ -10,18 +10,14 @@ import Card from 'components/Card'
 import Nav from 'components/Nav'
 import Footer from 'components/Footer'
 import Search from 'components/Search'
-import { useTranslate } from 'hooks/useTranslate'
+import { CartAddButton, CartRemoveButton } from 'components/CartButton'
+import { capitalizeText } from 'utils/functions/capitalize'
 
 const SearchResults: React.FC = () => {
   const { search, searchResults, loading } = useContext(SearchContext)
   const { items } = useContext(CartContext)
-  const { t } = useTranslate()
 
-  useDocumentTitle(
-    search
-      ? `${search} ${t('app.search.searchResultsTitle')}`
-      : t('app.search.searchInput')
-  )
+  useDocumentTitle(search ? `${search} Search results for` : 'Find your favorite food')
 
   const searchResultsCount = searchResults.length
 
@@ -33,13 +29,13 @@ const SearchResults: React.FC = () => {
           {search ? (
             <>
               <h2 className='mb-10 text-xl md:text-2xl xl:text-4xl'>
-                {t('app.search.searchResultsTitle')} {search}
+                Search results for {search}
               </h2>
               <Search />
             </>
           ) : (
             <h2 className='mb-10 text-xl md:text-2xl xl:text-4xl'>
-              {t('app.search.searchTitle')}
+              Find products, meals, drinks, sweets...
             </h2>
           )}
         </div>
@@ -53,7 +49,7 @@ const SearchResults: React.FC = () => {
                     cItemId={data._id}
                     cHeading={
                       <Link href={`/view/item/${data._id}`}>
-                        {removeSlug(abstractText(data.foodName, 70))}
+                        {removeSlug(abstractText(capitalizeText(data.foodName), 70))}
                       </Link>
                     }
                     cPrice={data.foodPrice}
@@ -66,25 +62,13 @@ const SearchResults: React.FC = () => {
                     cCtaLabel={
                       //add to cart button, if item is already in cart then disable the button
                       items.find(itemInCart => itemInCart.cItemId === data._id) ? (
-                        <div className='relative rtl m-2 min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-red-800 hover:bg-red-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            ❌
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.removeFromCart')}
-                          </span>
-                        </div>
+                        <CartRemoveButton classes='bg-red-800 hover:bg-red-700'>
+                          Remove From Cart
+                        </CartRemoveButton>
                       ) : (
-                        <div className='relative rtl m-2 min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-green-800 hover:bg-green-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            🛒
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.addToCart')}
-                          </span>
-                        </div>
+                        <CartAddButton classes='bg-green-800 hover:bg-green-700'>
+                          Add To Cart
+                        </CartAddButton>
                       )
                     }
                   />
@@ -95,7 +79,7 @@ const SearchResults: React.FC = () => {
             <LoadingCard />
           ) : (
             <h3 className='text-xl text-center md:text-2xl xl:text-4xl'>
-              {t('app.search.searchNotFound')} {search}
+              There are no search results for {search}
             </h3>
           )
         ) : (

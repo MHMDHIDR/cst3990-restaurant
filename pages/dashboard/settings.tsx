@@ -15,7 +15,6 @@ import { responseTypes } from '@types'
 import goTo from 'functions/goTo'
 import { stringJson } from 'functions/jsonTools'
 import uploadS3 from 'utils/functions/uploadS3'
-import { useTranslate } from 'hooks/useTranslate'
 
 const Settings = () => {
   useDocumentTitle('Settings')
@@ -43,7 +42,6 @@ const Settings = () => {
   const [isUpdating, setIsUpdating] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
   const { userType } = useAuth()
-  const { t } = useTranslate()
 
   //fetching description data
   const { response, loading } = useAxios({ url: '/settings' })
@@ -155,7 +153,7 @@ const Settings = () => {
       }
     } else {
       formMsg.current!.textContent =
-        'الرجاء إضافة التعديلات بطريقة صحيحة لتستطيع التحديث بنجاح 😃'
+        'Please make sure that all fields are filled correctly! 😃'
     }
   }
 
@@ -195,9 +193,7 @@ const Settings = () => {
 
             {/* Description Form */}
             <form id='descForm' onSubmit={HandleUpdate}>
-              <h2 className='mx-0 mt-4 mb-8 mr-5 text-xl text-center'>
-                {t('app.dashboard.settings.title')}
-              </h2>
+              <h2 className='mx-0 mt-4 mb-8 mr-5 text-xl text-center'>Trade Mark</h2>
               <label
                 htmlFor='logoImg'
                 className='flex flex-wrap items-center justify-center gap-5 mb-10 cursor-pointer md:justify-between'
@@ -239,18 +235,14 @@ const Settings = () => {
                   }}
                   required
                 ></input>
-                <span className='form__label'>
-                  {t('app.dashboard.settings.form.name.label')}
-                </span>
+                <span className='form__label'>Type App Name</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={appNameErr}
                 ></span>
               </label>
 
-              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.about.label')}
-              </h3>
+              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>About App</h3>
               <label htmlFor='aboutDescription' className='form__group'>
                 <textarea
                   name='aboutDescription'
@@ -273,18 +265,14 @@ const Settings = () => {
                   }}
                   required
                 ></textarea>
-                <span className='form__label'>
-                  {t('app.dashboard.settings.form.about.aboutText')}
-                </span>
+                <span className='form__label'>Write a Description</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={descErr}
                 ></span>
               </label>
 
-              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.tagLine.label')}
-              </h3>
+              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>App Tagline</h3>
               <label htmlFor='aboutTagline' className='form__group'>
                 <textarea
                   name='aboutTagline'
@@ -307,18 +295,14 @@ const Settings = () => {
                   }}
                   required
                 ></textarea>
-                <span className='form__label'>
-                  {t('app.dashboard.settings.form.tagLine.tagLineText')}
-                </span>
+                <span className='form__label'>Write App Tagline Text</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={tagLineErr}
                 ></span>
               </label>
 
-              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.afterOrder.label')}
-              </h3>
+              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>After Order Message</h3>
               <label htmlFor='orderMsg' className='form__group'>
                 <textarea
                   name='orderMsg'
@@ -341,9 +325,7 @@ const Settings = () => {
                   }}
                   required
                 ></textarea>
-                <span className='form__label'>
-                  {t('app.dashboard.settings.form.afterOrder.success')}
-                </span>
+                <span className='form__label'>Order Success</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={orderMsgErr}
@@ -371,18 +353,14 @@ const Settings = () => {
                   }}
                   required
                 ></textarea>
-                <span className='form__label'>
-                  {t('app.dashboard.settings.form.afterOrder.failure')}
-                </span>
+                <span className='form__label'>Order Failure</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={orderMsgErr}
                 ></span>
               </label>
 
-              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.whatsapp.label')}
-              </h3>
+              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>WhatsApp Number</h3>
               <label htmlFor='whatsAppNumber' className='form__group'>
                 <input
                   name='whatsAppNumber'
@@ -406,7 +384,7 @@ const Settings = () => {
                   }}
                 />
                 <span className='pointer-events-none form__label'>
-                  {t('app.dashboard.settings.form.whatsapp.whatsappText')}
+                  App WhatsApp number to contact you via WhatsApp (optional)
                 </span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
@@ -415,7 +393,7 @@ const Settings = () => {
               </label>
 
               <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.instagram.label')}
+                Instagram account link
               </h3>
               <label htmlFor='instagramAccount' className='form__group'>
                 <input
@@ -440,7 +418,8 @@ const Settings = () => {
                   }}
                 />
                 <span className='pointer-events-none form__label'>
-                  {t('app.dashboard.settings.form.instagram.instagramText')}
+                  Type your Instagram account link, to open your account page when you
+                  click on the Instagram icon at the bottom of the site (optional)
                 </span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
@@ -449,7 +428,7 @@ const Settings = () => {
               </label>
 
               <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>
-                {t('app.dashboard.settings.form.twitter.label')}
+                Twitter account link
               </h3>
               <label htmlFor='twitterAccount' className='form__group'>
                 <input
@@ -474,7 +453,8 @@ const Settings = () => {
                   }}
                 />
                 <span className='pointer-events-none form__label'>
-                  {t('app.dashboard.settings.form.twitter.twitterText')}
+                  Type your Twitter account link, to open your account page when clicking
+                  on the Twitter icon at the bottom of the site (optional)
                 </span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
@@ -483,12 +463,9 @@ const Settings = () => {
               </label>
 
               <div className='mx-0 mt-4 mb-6 text-center'>
-                <h3 className='mb-10 text-lg'>
-                  {t('app.dashboard.settings.form.categories.label')}
-                </h3>
+                <h3 className='mb-10 text-lg'>Meals Categories</h3>
                 <div className='flex justify-evenly'>
-                  <span>{t('app.dashboard.settings.form.categories.nameEn')}</span>
-                  <span>{t('app.dashboard.settings.form.categories.nameAr')}</span>
+                  <span>Category</span>
                 </div>
               </div>
               {categoryList?.map((categoryItem: string[], idx: number) => (
@@ -555,10 +532,10 @@ const Settings = () => {
                   {isUpdating && isUpdating ? (
                     <>
                       <LoadingSpinner />
-                      {t('app.dashboard.settings.form.update.updating')}
+                      Updating Information...
                     </>
                   ) : (
-                    t('app.dashboard.settings.form.update.label')
+                    'Update'
                   )}
                 </button>
               </div>

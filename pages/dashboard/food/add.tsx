@@ -21,8 +21,6 @@ import { selectedToppingsProps } from '@types'
 import { origin, USER } from '@constants'
 import { stringJson } from 'functions/jsonTools'
 import { focus } from 'utils/functions/focus'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
 import { capitalizeText } from 'utils/functions/capitalize'
 
 const AddFood = () => {
@@ -48,9 +46,6 @@ const AddFood = () => {
   //Contexts
   const { tags } = useContext(TagsContext)
   const { file } = useContext(FileUploadContext)
-
-  const { t } = useTranslate()
-  const { locale } = useLocale()
 
   //Form errors messages
   const ImgErr = useRef<HTMLSpanElement>(null)
@@ -104,11 +99,11 @@ const AddFood = () => {
           modalLoading!.classList.add('hidden')
         }, 300)
       } catch (err) {
-        formMsg.current!.textContent = `عفواً حدث خطأ ما 😥 ${err}`
+        formMsg.current!.textContent = `Something went wrong! 😥 Please try again later.`
       }
     } else {
       formMsg.current!.textContent =
-        'الرجاء إضافة بيانات الوجبة بصورة صحيحة لتستطيع إضافتها 😃'
+        'Please make sure that all fields are filled correctly! 😃'
     }
   }
 
@@ -132,13 +127,13 @@ const AddFood = () => {
   return loading ? (
     <LoadingPage />
   ) : USER?.userAccountType !== 'admin' || userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='لوحة التحكم' />
+    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
       {addFoodStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم إضافة ${category[1]} بنجاح 😄 الرجاء الانتظار ليتم تحويلك لقائمة الوجبات والمشروبات`}
+          msg={`${category[1]} Has Been Added Successfully! 🎉, Wait a moment you will be redirected to the menu page`}
           redirectLink={goTo(`menu`)}
           redirectTime={3000}
         />
@@ -149,7 +144,7 @@ const AddFood = () => {
         <section className='py-12 my-8 dashboard'>
           <div className='container mx-auto'>
             <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              {t('app.dashboard.addItem.title')}
+              Add Foods, Drinks, or Sweets
             </h3>
             <div className='food'>
               {/* Show Modal Loading when submitting form */}
@@ -157,7 +152,7 @@ const AddFood = () => {
                 status={Loading}
                 modalHidden='hidden'
                 classes='text-blue-500 text-center'
-                msg='الرجاء الانتظار...'
+                msg='Please wait a moment...'
               />
 
               <form
@@ -207,9 +202,7 @@ const AddFood = () => {
                       }
                     }}
                   />
-                  <span className='form__label'>
-                    {t('app.dashboard.addItem.form.name.label')}
-                  </span>
+                  <span className='form__label'>Name</span>
                   <span
                     className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                     ref={foodNameErr}
@@ -229,17 +222,15 @@ const AddFood = () => {
                       const target = parseInt((e.target as HTMLInputElement).value.trim())
 
                       if (target > 0 && target < 5) {
-                        priceErr.current!.textContent = `سعر الوجبة أو المشروب يجب أن لا يقل عن 5 ريال`
-                      } else if (target > 500) {
-                        priceErr.current!.textContent = `سعر الوجبة أو المشروب يجب أن لا يزيد عن 500 ريال`
+                        priceErr.current!.textContent = `The price of the meal or drink is too low`
+                      } else if (target > 1000) {
+                        priceErr.current!.textContent = `The price of the meal or drink is too high`
                       } else {
                         priceErr.current!.textContent = ''
                       }
                     }}
                   />
-                  <span className='form__label'>
-                    {t('app.dashboard.addItem.form.price.label')} ({t('app.currency')})
-                  </span>
+                  <span className='form__label'>Price £</span>
                   <span
                     className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                     ref={priceErr}
@@ -258,18 +249,14 @@ const AddFood = () => {
                     }
                     required
                   >
-                    <option value=''>
-                      {t('app.dashboard.addItem.form.category.label')}
-                    </option>
+                    <option value=''>Pick a Category</option>
                     {categoryList?.map((category, idx) => (
                       <option key={idx} value={category[0]}>
-                        {locale === 'ar' ? category[1] : capitalizeText(category[0])}
+                        {capitalizeText(category[0])}
                       </option>
                     ))}
                   </select>
-                  <span className='form__label active'>
-                    {t('app.dashboard.addItem.form.category.label')}
-                  </span>
+                  <span className='form__label active'>Please Pick from the list</span>
                 </label>
 
                 <label htmlFor='foodDescription' className='form__group'>
@@ -285,17 +272,15 @@ const AddFood = () => {
                       const target = (e.target as HTMLTextAreaElement).value.trim()
 
                       if (target.length > 0 && target.length < 30) {
-                        descErr.current!.textContent = `الوصف صغير ولا يكفي أن يصف العنصر المضاف`
+                        descErr.current!.textContent = `Description is too short to describe the food or drink`
                       } else if (target.length > 300) {
-                        descErr.current!.textContent = `الوصف لا يمكن أن يزيد عن 300 حرف`
+                        descErr.current!.textContent = `Description is too long to describe the food or drink`
                       } else {
                         descErr.current!.textContent = ''
                       }
                     }}
                   ></textarea>
-                  <span className='form__label'>
-                    {t('app.dashboard.addItem.form.desc.label')}
-                  </span>
+                  <span className='form__label'>Write a Full Description</span>
                   <span
                     className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                     ref={descErr}
@@ -305,22 +290,15 @@ const AddFood = () => {
                 <label htmlFor='foodTags' className='form__group'>
                   <AddTags inputId='foodTags' />
                   <span className='form__label'>
-                    {t('app.dashboard.addItem.form.tags.label')}
+                    Tags help to search for a meal (Tags) - This field is optional
                   </span>
                 </label>
 
                 <div className='mx-0 mt-4 mb-6 text-center'>
-                  <h3 className='mb-10 text-xl'>
-                    {t('app.dashboard.addItem.form.toppings.label')}
-                  </h3>
+                  <h3 className='mb-10 text-xl'>Toppings (Optional)</h3>
                   <div className='flex justify-around'>
-                    <span className='text-xl'>
-                      {t('app.dashboard.addItem.form.toppings.toppingName')}
-                    </span>
-                    <span className='text-xl'>
-                      {t('app.dashboard.addItem.form.toppings.toppingPrice')} (
-                      {t('app.currency')})
-                    </span>
+                    <span className='text-xl'>Topping Name</span>
+                    <span className='text-xl'>Topping Price (£)</span>
                   </div>
                 </div>
                 {toppings?.map(
@@ -346,7 +324,7 @@ const AddFood = () => {
                           id='toppingPrice'
                           min='1'
                           max='500'
-                          className='w-2/4 p-3 text-xl text-gray-700 bg-transparent border-2 border-gray-500 border-solid rounded-lg outline-none focus-within:border-orange-500 dark:focus-within:border-gray-400 dark:text-gray-200 rtl'
+                          className='w-2/4 p-3 text-xl text-gray-700 bg-transparent border-2 border-gray-500 border-solid rounded-lg outline-none focus-within:border-orange-500 dark:focus-within:border-gray-400 dark:text-gray-200'
                           dir='auto'
                           name='toppingPrice'
                           defaultValue={toppingPrice}
@@ -365,9 +343,7 @@ const AddFood = () => {
                         {toppings.length !== 1 && (
                           <button
                             type='button'
-                            data-tooltip={t(
-                              'app.dashboard.addItem.form.toppings.deleteTopping'
-                            )}
+                            data-tooltip={`Delete ${toppingName} topping`}
                             className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
                             onClick={() => handleRemoveClick(idx)}
                           >
@@ -377,9 +353,7 @@ const AddFood = () => {
                         {toppings.length - 1 === idx && (
                           <button
                             type='button'
-                            data-tooltip={t(
-                              'app.dashboard.addItem.form.toppings.addTopping'
-                            )}
+                            data-tooltip={`Add a new topping for ${foodName}`}
                             className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
                             onClick={handleAddClick}
                           >
@@ -401,13 +375,13 @@ const AddFood = () => {
                     type='submit'
                     className='min-w-[7rem] bg-green-600 hover:bg-green-700 text-white py-1.5 px-6 rounded-md'
                   >
-                    {t('app.dashboard.addItem.form.addBtn')}
+                    Add
                   </button>
                   <Link
                     href={goTo('menu')}
                     className='text-gray-800 underline-hover text-bold dark:text-white'
                   >
-                    {t('app.dashboard.addItem.form.menuLink')}
+                    Menu
                   </Link>
                 </div>
               </form>

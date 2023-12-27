@@ -1,5 +1,5 @@
 export const createLocaleDateString = (date: string) =>
-  new Date(date).toLocaleDateString('ar-EG', {
+  new Date(date).toLocaleDateString('en-GB', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

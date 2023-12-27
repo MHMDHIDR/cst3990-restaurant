@@ -8,7 +8,6 @@ import EmblaCarousel from './EmblaCarousel'
 import { removeSlug } from 'functions/slug'
 import Logo from './Icons/Logo'
 import { cardProps, CartProps, mediaProps, selectedToppingsProps } from '@types'
-import { useTranslate } from 'hooks/useTranslate'
 
 const Card = ({
   cItemId,
@@ -26,13 +25,13 @@ const Card = ({
   const { items, addToCart, removeFromCart } = useContext<CartProps>(CartContext)
   const { handleToppingChecked, checkedToppings } = useContext(ToppingsContext)
   const { userType, loading } = useAuth()
-  const { t } = useTranslate()
 
   const handleCart = () => {
     const item = items.find(item => item.cItemId === cItemId)
+
     if (item) {
       if (
-        window.confirm(`${t('app.messages.deleteFromCart')}:
+        window.confirm(`Are you sure you want to remove the following items from your cart?:
           ${cHeading.props.children}
         `)
       ) {
@@ -73,8 +72,8 @@ const Card = ({
             </h3>
           ) : null}
           {cPrice ? (
-            <span className='px-3 py-1 text-xl text-green-800 bg-green-300 rounded-xl bg-opacity-80 rtl'>
-              {cPrice + ' ' + t('app.currency')}
+            <span className='px-3 py-1 text-xl text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
+              £{cPrice}
             </span>
           ) : null}
           <p className='py-8 break-all'>{cDesc}</p>
@@ -95,9 +94,9 @@ const Card = ({
           )}
           {cToppings && typeof cToppings[0]?.toppingName === 'string' && (
             // if this item has toppings and it's a string
-            <div className='flex flex-col flex-wrap items-start gap-4 rtl'>
-              <span>الإضافات:</span>
-              {cToppings.map(({ toppingName = 'إضافة', toppingPrice = 1 }, idx) => {
+            <div className='flex flex-col flex-wrap items-start gap-4'>
+              <span>Toppings:</span>
+              {cToppings.map(({ toppingName = 'Topping', toppingPrice = 1 }, idx) => {
                 const cToppingId = cItemId + '-' + idx
 
                 return (
@@ -114,15 +113,15 @@ const Card = ({
                     />
                     <label
                       htmlFor={cToppingId}
-                      className='cursor-pointer p-1.5 text-base rounded-md select-none'
+                      className='px-3 py-1 mx-4 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
                     >
-                      {toppingName}
+                      £{toppingPrice}
                     </label>
                     <label
                       htmlFor={cToppingId}
-                      className='px-3 py-1 mr-2 -ml-2 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
+                      className='cursor-pointer p-1.5 text-base rounded-md select-none'
                     >
-                      {toppingPrice + ' ' + t('app.currency')}
+                      {toppingName}
                     </label>
                   </div>
                 )
@@ -139,14 +138,14 @@ const Card = ({
                   {cCtaLabel}
                 </Link>
               ) : (
-                <button onClick={() => handleCart()}>{cCtaLabel}</button>
+                <div onClick={() => handleCart()}>{cCtaLabel}</div>
               )}
               {!loading && userType === 'admin' && (
                 <Link
                   href={`/dashboard/food/edit/${cItemId}`}
                   className='px-4 py-1.5 mx-2 text-white bg-green-600 rounded-md hover:bg-green-700 h-fit'
                 >
-                  {t('app.foodItem.edit')}
+                  Edit Item
                 </Link>
               )}
             </div>

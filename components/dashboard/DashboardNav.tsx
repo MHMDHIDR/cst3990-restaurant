@@ -7,16 +7,10 @@ import menuToggler from 'functions/menuToggler'
 import Image from 'next/image'
 import useAxios from 'hooks/useAxios'
 import { USER } from '@constants'
-import LanguageSwitcher from 'components/LanguageSwitcher'
-import { useLocale } from 'hooks/useLocale'
-import { useTranslate } from 'hooks/useTranslate'
 
 const DashboardNav = () => {
   const [websiteLogoDisplayPath, setWebsiteLogoDisplayPath] = useState('')
   const { response } = useAxios({ url: '/settings' })
-
-  const { locale } = useLocale()
-  const { t } = useTranslate()
 
   const handleLogout = () => {
     if (USER) {
@@ -40,7 +34,7 @@ const DashboardNav = () => {
       }`}
       onClick={() => menuToggler(true)}
     >
-      <Link href={`/${locale}`}>
+      <Link href={`/`}>
         {websiteLogoDisplayPath ? (
           <Image
             src={websiteLogoDisplayPath}
@@ -56,7 +50,6 @@ const DashboardNav = () => {
 
       <div className='flex items-center justify-center gap-x-5 gap-y-3'>
         <ThemeToggler />
-        <LanguageSwitcher />
       </div>
 
       <div className='flex flex-wrap justify-end gap-4'>
@@ -65,13 +58,13 @@ const DashboardNav = () => {
           className='inline-block px-2 py-1 text-white bg-orange-700 border rounded-lg cursor-pointer hover:bg-opacity-30'
           onClick={handleLogout}
         >
-          {t('app.dashboard.nav.signout')}
+          Sign Out
         </Link>
         <Link
-          href={`/${locale}`}
+          href={`/`}
           className='inline-block px-2 py-1 text-white bg-orange-700 border rounded-lg cursor-pointer hover:bg-opacity-30'
         >
-          {t('app.dashboard.nav.visit')}
+          Visit App
         </Link>
       </div>
     </nav>

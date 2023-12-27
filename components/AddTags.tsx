@@ -2,11 +2,9 @@ import { useContext } from 'react'
 import { TagsContext } from 'contexts/TagsContext'
 import { TagsProps } from '@types'
 import TagIcon from './Icons/TagIcon'
-import { useTranslate } from 'hooks/useTranslate'
 
 const AddTags = ({ inputId }: { inputId: string }) => {
   const { tags, removeTags, addTag } = useContext<TagsProps>(TagsContext)
-  const { t } = useTranslate()
 
   return (
     <>
@@ -36,7 +34,7 @@ const AddTags = ({ inputId }: { inputId: string }) => {
         type='text'
         id={inputId}
         className='form__input tags'
-        placeholder={t('app.dashboard.addItem.form.tags.label')}
+        placeholder={`Tags help to search for a meal (Tags) - This field is optional`}
         onKeyDown={(e: any) => {
           if (e.target.value.trim() === '') return
           addTag(e)

@@ -1,7 +1,6 @@
-import mongoose from 'mongoose'
+import mongoose, { type ConnectOptions } from 'mongoose'
 
 const { MONGODB_URI } = process.env
-
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
 }
@@ -15,22 +14,24 @@ if (!cached) {
 }
 
 async function dbConnect() {
+  // Check if we have a connection to the database
   if (cached.conn) {
     return cached.conn
   }
 
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false
-    }
+    mongoose.set('strictQuery', true)
 
-    mongoose.set('strictQuery', false)
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then(mongoose => {
-      return mongoose
-    })
+    cached.promise = await mongoose.connect(MONGODB_URI!, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    } as ConnectOptions)
+
+    console.log('✅ Mongoose 🚀')
   }
-  cached.conn = await cached.promise
-  return cached.conn
+  cached.conn = cached.promise
+
+  return await cached.conn
 }
 
 export default dbConnect

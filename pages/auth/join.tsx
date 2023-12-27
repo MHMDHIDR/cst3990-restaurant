@@ -10,7 +10,6 @@ import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
 import { origin, USER } from '@constants'
-import { useTranslate } from 'hooks/useTranslate'
 
 const Join = () => {
   useDocumentTitle('Join')
@@ -52,9 +51,9 @@ const Join = () => {
     } catch (response: any) {
       setErrMsg(
         response?.response?.status === 409
-          ? 'عفواً المستخدم مسجل من قبل بنفس البريد الالكتروني'
+          ? 'Sorry, this email is already taken'
           : response?.response?.status === 400
-          ? 'رجاء تعبئة جميع الحقول أدناه'
+          ? 'Please fill all fields correctly'
           : response?.response?.statusText
       )
     } finally {
@@ -62,7 +61,6 @@ const Join = () => {
     }
   }
 
-  const { t } = useTranslate()
   const { locale } = useRouter()
 
   // if done loading (NOT Loading) then show the login form
@@ -76,7 +74,7 @@ const Join = () => {
             className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'
             data-section='login'
           >
-            {t('app.join.title')}
+            Join Our Community
           </h3>
           <div className='max-w-6xl mx-auto'>
             <form className='mt-32' onSubmit={handleJoin}>
@@ -90,7 +88,7 @@ const Join = () => {
                   autoFocus
                   required
                 />
-                <span className='form__label'>{t('app.join.form.name.label')}</span>
+                <span className='form__label'>Name</span>
               </label>
 
               <label htmlFor='email' className='form__group'>
@@ -103,7 +101,7 @@ const Join = () => {
                   dir='auto'
                   required
                 />
-                <span className='form__label'>{t('app.join.form.email.label')}</span>
+                <span className='form__label'>Email</span>
               </label>
 
               <label htmlFor='tel' className='form__group'>
@@ -116,7 +114,7 @@ const Join = () => {
                   dir='auto'
                   required
                 />
-                <span className='form__label'>{t('app.join.form.phone.label')}</span>
+                <span className='form__label'>Phone Number, (e.g: 00123456789)</span>
               </label>
 
               <label htmlFor='password' className='form__group'>
@@ -141,7 +139,7 @@ const Join = () => {
                     <EyeIconOpen className={`fill-green-700 dark:fill-green-400`} />
                   )}
                 </span>
-                <span className='form__label'>{t('app.join.form.password.label')}</span>
+                <span className='form__label'>Password</span>
               </label>
 
               <div className='flex flex-col gap-6 text-center border-none form__group'>
@@ -153,15 +151,15 @@ const Join = () => {
                   {isSendingJoinForm && isSendingJoinForm ? (
                     <>
                       <LoadingSpinner />
-                      &nbsp;{t('app.join.form.joinBtn.loading')}
+                      &nbsp;Joining...
                     </>
                   ) : (
-                    t('app.join.form.joinBtn.label')
+                    'Join'
                   )}
                 </button>
 
                 <strong className='block mx-auto my-8 text-orange-800 dark:text-orange-600 w-fit'>
-                  {t('app.join.form.or')}
+                  OR
                 </strong>
 
                 <div className='flex items-center sm:gap-y-12 gap-x-6 justify-evenly'>
@@ -169,7 +167,7 @@ const Join = () => {
                     href='/auth/login'
                     className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
                   >
-                    {t('app.join.form.login')}
+                    Login Now and Order
                   </Link>
                 </div>
               </div>

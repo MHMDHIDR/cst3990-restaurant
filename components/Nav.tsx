@@ -13,9 +13,6 @@ import Image from 'next/image'
 import { DEFAULT_USER_DATA, USER } from '@constants'
 import { UserProps } from '@types'
 import useAuth from 'hooks/useAuth'
-import { useLocale } from 'hooks/useLocale'
-import { useTranslate } from 'hooks/useTranslate'
-import LanguageSwitcher from './LanguageSwitcher'
 
 const Nav = () => {
   const { items } = useContext(CartContext)
@@ -53,9 +50,10 @@ const Nav = () => {
   const { response } = useAxios({ url: '/settings' })
 
   useEffect(() => {
-    response
-      ? setWebsiteLogoDisplayPath(response?.response[0].websiteLogoDisplayPath)
-      : setWebsiteLogoDisplayPath('')
+    if (!response?.response?.length) {
+      return setWebsiteLogoDisplayPath('')
+    }
+    setWebsiteLogoDisplayPath(response.response[0].websiteLogoDisplayPath)
   }, [response])
 
   let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0
@@ -70,9 +68,6 @@ const Nav = () => {
     lastScrollY = window.scrollY
   })
 
-  const { locale } = useLocale()
-  const { t } = useTranslate()
-
   return (
     <div className='fixed inset-0 bottom-auto z-[9999] w-full transition-transform duration-300 nav ltr'>
       <nav
@@ -85,7 +80,7 @@ const Nav = () => {
               : ''
           }`}
       >
-        <Link aria-label='App Logo' title='App Logo' href={`/${locale}`}>
+        <Link aria-label='App Logo' title='App Logo' href={`/`}>
           {websiteLogoDisplayPath ? (
             <Image
               src={websiteLogoDisplayPath}
@@ -101,12 +96,9 @@ const Nav = () => {
 
         <ThemeToggler />
 
-        <Link
-          href='/order-food'
-          className={`flex gap-x-3 underline-hover ${locale === 'ar' ? 'rtl' : 'ltr'}`}
-        >
+        <Link href='/order-food' className={`flex gap-x-3 underline-hover`}>
           <span>🛒</span>
-          <span className='hidden sm:inline'>{t('app.nav.cart.title')} : </span>
+          <span className='hidden sm:inline'>View Cart : </span>
           <span className='font-bold'>{cartItemsLength}</span>
         </Link>
 
@@ -144,30 +136,30 @@ const Nav = () => {
           id='menu'
         >
           <ul
-            className='absolute flex flex-col items-center w-full py-5 mx-auto mt-3 text-gray-800 border border-orange-300 rounded-lg shadow-lg gap-x-6 2xl:gap-12 space-y-7 sm:space-y-10 sm:py-8 sm:mt-8 bg-gradient-to-tr from-orange-300 to-orange-400 rtl xl:static xl:justify-between xl:flex-row xl:space-y-0 xl:bg-none xl:space-x-4 xl:py-0 xl:mt-0 xl:border-none xl:shadow-none'
+            className='absolute flex flex-col items-center w-full py-5 mx-auto mt-3 text-gray-800 border border-orange-300 rounded-lg shadow-lg gap-x-6 2xl:gap-12 space-y-7 sm:space-y-10 sm:py-8 sm:mt-8 bg-gradient-to-tr from-orange-300 to-orange-400 xl:static xl:justify-between xl:flex-row xl:space-y-0 xl:bg-none xl:space-x-4 xl:py-0 xl:mt-0 xl:border-none xl:shadow-none'
             id='menu'
           >
             <li>
-              <MyLink to='menu'>{t('app.nav.menu.title')}</MyLink>
+              <MyLink to='menu'>Menu</MyLink>
             </li>
             <li>
-              <MyLink to='new'>{t('app.nav.newFood.title')}</MyLink>
+              <MyLink to='new'>New Food</MyLink>
             </li>
             <li>
               <Link href='/categories' className='underline-hover'>
-                {t('app.nav.categories.title')}
+                Categories
               </Link>
             </li>
             <li>
-              <MyLink to='about'>{t('app.nav.about.title')}</MyLink>
+              <MyLink to='about'>About</MyLink>
             </li>
             <li>
-              <MyLink to='contact'>{t('app.nav.contact.title')}</MyLink>
+              <MyLink to='contact'>Contact</MyLink>
             </li>
             <li className='flex gap-3'>
               {userData || session ? (
                 <NavMenu
-                  label={`${t('app.nav.accountOptions.welcome')} ${
+                  label={`Welcome Back ${
                     userData ? userData.userFullName : session ? session!.user!.name : ''
                   }`}
                   isOptions={false}
@@ -182,20 +174,20 @@ const Nav = () => {
                       href='/dashboard'
                       className='px-3 py-1 text-sm text-center text-white transition-colors bg-gray-800 border-2 rounded-lg select-none hover:bg-gray-700 dark:hover:bg-gray-500 xl:border-0'
                     >
-                      {t('app.nav.accountOptions.dashboard')}
+                      Dashboard
                     </Link>
                   )}
                   <Link
                     href='/my-orders'
                     className='px-3 py-1 text-sm text-center text-white transition-colors bg-gray-800 border-2 rounded-lg select-none hover:bg-gray-700 dark:hover:bg-gray-500 xl:border-0'
                   >
-                    {t('app.nav.accountOptions.myorders')}
+                    My Orders
                   </Link>
                   <button
                     className='px-3 py-1 text-sm text-center text-white transition-colors bg-red-700 border-2 rounded-lg select-none hover:bg-red-600 xl:border-0'
                     onClick={handleLogout}
                   >
-                    {t('app.nav.accountOptions.signout')}
+                    Sign Out
                   </button>
                 </NavMenu>
               ) : session === null && !userData && userData === false ? (
@@ -203,12 +195,9 @@ const Nav = () => {
                   href='/auth/login'
                   className='px-3 py-1 text-sm text-center text-white transition-colors bg-gray-800 border-2 rounded-lg select-none hover:bg-gray-700 xl:border-0'
                 >
-                  {t('app.nav.accountOptions.signin')}
+                  Sign In
                 </Link>
               ) : null}
-            </li>
-            <li>
-              <LanguageSwitcher />
             </li>
           </ul>
         </div>

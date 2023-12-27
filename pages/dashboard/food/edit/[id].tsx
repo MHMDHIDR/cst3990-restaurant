@@ -22,8 +22,6 @@ import { origin, API_URL, DEFAULT_FOOD_DATA, USER } from '@constants'
 import { ToppingsProps, foodDataProps, FoodImgsProps } from '@types'
 import { stringJson } from 'functions/jsonTools'
 import uploadS3 from 'utils/functions/uploadS3'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
 
 const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
   useDocumentTitle('Edit Food')
@@ -52,9 +50,6 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
   const [loadingMsg, setLoadingMsg] = useState('')
   const [hasConfirmBtns, setHasConfirmBtn] = useState(false)
   const { loading, userType } = useAuth()
-
-  const { t } = useTranslate()
-  const { locale } = useLocale()
 
   //Contexts
   const { tags, setTags } = useContext(TagsContext)
@@ -165,7 +160,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
       }
     } else {
       formMsg.current!.textContent =
-        'الرجاء إضافة البيانات بشكل صحيح لتستطيع تحديث البيانات 😃'
+        'Please Fill in All Fields Correctly and Make Sure You Have Uploaded Successfully 😃'
     }
   }
 
@@ -227,9 +222,9 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
         setDelFoodName(removeSlug(e.target.dataset.name))
         setHasConfirmBtn(true)
         setLoadingMsg(
-          `هل أنت متأكد من حذف المنتج ${removeSlug(
+          `Are you sure you want to remove this product ${removeSlug(
             e.target.dataset.name
-          )} ؟ لا يمكن التراجع عن هذا القرار`
+          )}? You can not undo this action.`
         )
         modalLoading!.classList.remove('hidden')
         break
@@ -237,7 +232,9 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
       case 'deleteImg': {
         setAction('deleteImg')
         setHasConfirmBtn(true)
-        setLoadingMsg(`هل أنت متأكد من حذف الصورة لا يمكن التراجع عن هذا القرار`)
+        setLoadingMsg(
+          `Are you sure you want to remove this image? You can not undo this action.`
+        )
         setDelFoodImg(e.target.dataset.imgName)
         modalLoading!.classList.remove('hidden')
         break
@@ -258,43 +255,45 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
   return loading ? (
     <LoadingPage />
   ) : USER?.userAccountType !== 'admin' || userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='لوحة التحكم' />
+    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
       {updatedFoodStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم تحديث بيانات ${removeSlug(
+          msg={`Updated data for ${removeSlug(
             data?.foodName
-          )} بنجاح   😄   الرجاء الانتظار ليتم تحويلك لقائمة الوجبات والمشروبات`}
+          )} successfully 😄 Redirecting you to the menu`}
           redirectLink={goTo('menu')}
           redirectTime={4000}
         />
       ) : updatedFoodStatus === 0 ? (
         <Modal
           status={Error}
-          msg='حدث خطأ ما أثناء تحديث بيانات الوجبة!'
+          msg={`Something went wrong while updating ${removeSlug(
+            data?.foodName
+          )}! Please try again later`}
           redirectLink={goTo(`food/edit/${data?._id}`)}
           redirectTime={4000}
         />
       ) : deleteImgStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم حذف الصورة بنجاح 😄`}
+          msg={`Image ${delFoodImg} deleted successfully 😄 Redirecting you to the menu`}
           redirectLink={goTo(`food/edit/${data?._id}`)}
           redirectTime={3500}
         />
       ) : deleteImgStatus === 0 ? (
         <Modal
           status={Error}
-          msg='حدث خطأ ما أثناء حذف الصورة!'
+          msg={`Something went wrong while deleting ${delFoodImg}! Please try again later`}
           redirectLink={goTo(`food/edit/${data?._id}`)}
           redirectTime={3500}
         />
       ) : deleteFoodStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم حذف ${delFoodName} بنجاح 😄 الرجاء الانتظار ليتم تحويلك لقائمة الوجبات`}
+          msg={`Deleted ${delFoodName} successfully 😄 Redirecting you to the menu`}
           redirectLink={goTo('menu')}
           redirectTime={3500}
         />
@@ -317,11 +316,11 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
               modalHidden='hidden'
               classes='text-blue-600 dark:text-blue-400 text-lg'
               msg={loadingMsg}
-              ctaConfirmBtns={hasConfirmBtns ? ['حذف', 'الغاء'] : undefined}
+              ctaConfirmBtns={hasConfirmBtns ? ['Delete', 'Cancel'] : undefined}
             />
 
             <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              {t('app.foodItem.edit')}
+              Edit Item
             </h3>
 
             <div className='dashboard__food__form edit'>
@@ -359,19 +358,15 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                           const target = (e.target as HTMLInputElement).value.trim()
 
                           if (target.length > 0 && target.length < 5) {
-                            foodNameErr.current!.textContent =
-                              'إسم الوجبة أو المشروب صغير ولا يوصف'
+                            foodNameErr.current!.textContent = `It's too short, please add more characters`
                           } else if (target.length > 30) {
-                            foodNameErr.current!.textContent =
-                              'الاسم لا يمكن أن يزيد عن 30 حرفاً، يمكنك إضافة وصف طويل إذا كنت تحتاج لذلك'
+                            foodNameErr.current!.textContent = `It's too long, please remove some characters`
                           } else {
                             foodNameErr.current!.textContent = ''
                           }
                         }}
                       />
-                      <span className='form__label'>
-                        {t('app.dashboard.addItem.form.nameAr.label')}
-                      </span>
+                      <span className='form__label'>Name</span>
                       <span
                         className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                         ref={foodNameErr}
@@ -403,10 +398,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         }}
                         defaultValue={data?.foodPrice}
                       />
-                      <span className='form__label'>
-                        {t('app.dashboard.addItem.form.price.label')} ({t('app.currency')}
-                        )
-                      </span>
+                      <span className='form__label'>Price (£)</span>
                       <span
                         className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                         ref={priceErr}
@@ -426,9 +418,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         }
                         defaultValue={data?.category}
                       >
-                        <option value=''>
-                          {locale === 'ar' ? 'اختر التصنيف' : 'Pick a Category'}
-                        </option>
+                        <option value=''>Pick a Category</option>
                         {categoryList?.map((category, idx) => (
                           <option key={idx} value={category[0]}>
                             {category[0]}
@@ -436,7 +426,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         ))}
                       </select>
                       <span className='form__label active'>
-                        {t('app.dashboard.addItem.form.category.label')}
+                        Please Pick From the List
                       </span>
                     </label>
 
@@ -461,9 +451,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         }}
                         defaultValue={data?.foodDesc}
                       ></textarea>
-                      <span className='form__label'>
-                        {t('app.dashboard.addItem.form.desc.label')}
-                      </span>
+                      <span className='form__label'>Write a Full Description</span>
                       <span
                         className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                         ref={descErr}
@@ -473,22 +461,15 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                     <label htmlFor='foodTags' className='form__group'>
                       <AddTags inputId='foodTags' />
                       <span className='form__label'>
-                        {t('app.dashboard.addItem.form.tags.label')}
+                        Tags help to search for a meal (Tags) - This field is optional
                       </span>
                     </label>
 
                     <div className='mx-0 mt-4 mb-6 text-center'>
-                      <h3 className='mb-10 text-xl'>
-                        {t('app.dashboard.addItem.form.toppings.label')}
-                      </h3>
+                      <h3 className='mb-10 text-xl'>Toppings (Optional)</h3>
                       <div className='flex justify-around'>
-                        <span className='text-xl'>
-                          {t('app.dashboard.addItem.form.toppings.toppingName')}
-                        </span>
-                        <span className='text-xl'>
-                          {t('app.dashboard.addItem.form.toppings.toppingPrice')} (
-                          {t('app.currency')})
-                        </span>
+                        <span className='text-xl'>Topping Name</span>
+                        <span className='text-xl'>Topping Price (£)</span>
                       </div>
                     </div>
                     {toppings?.map(
@@ -524,9 +505,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                             {toppings.length !== 1 && (
                               <button
                                 type='button'
-                                data-tooltip={t(
-                                  'app.dashboard.addItem.form.toppings.deleteTopping'
-                                )}
+                                data-tooltip={`Delete ${toppingName} topping`}
                                 className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
                                 onClick={() => handleRemoveClick(idx)}
                               >
@@ -536,9 +515,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                             {toppings.length - 1 === idx && (
                               <button
                                 type='button'
-                                data-tooltip={t(
-                                  'app.dashboard.addItem.form.toppings.addTopping'
-                                )}
+                                data-tooltip={`Add new topping to ${foodName}`}
                                 className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
                                 onClick={handleAddClick}
                               >
@@ -561,7 +538,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         className='min-w-[7rem] bg-green-600 hover:bg-green-700 text-white py-1.5 px-6 rounded-md'
                         onClick={(e: any) => HandleUpdateFood(e)}
                       >
-                        {t('app.dashboard.editItem.form.updateBtn')}
+                        Update
                       </button>
                       <button
                         id='deleteFood'
@@ -569,20 +546,20 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         data-name={data?.foodName}
                         className='min-w-[7rem] bg-red-600 hover:bg-red-700 text-white py-1.5 px-6 rounded-md'
                       >
-                        {t('app.dashboard.editItem.form.deleteBtn')}
+                        Delete
                       </button>
                     </div>
                   </form>
                 ) : !foodData ? (
                   <div className='flex flex-col items-center gap-8 text-lg justify-evenly'>
                     <p className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'>
-                      {t('app.dashboard.editItem.messages.noFoodFound')}
+                      Sorry! We Couldn&apos;t Find The Item You&apos;re Looking for 😕
                     </p>
                     <Link
                       href={goTo('dashboard')}
                       className='px-3 py-1 text-orange-800 transition-colors bg-orange-100 border border-orange-700 rounded hover:bg-orange-200'
                     >
-                      {t('app.dashboard.editItem.messages.goBack')}
+                      Go Back to Dashboard
                     </Link>
                   </div>
                 ) : foodData === null || foodData?.itemsCount === 0 ? (

@@ -106,46 +106,46 @@ const DashboardUsers = () => {
   return loading ? (
     <LoadingPage />
   ) : USER?.userAccountType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='لوحة التحكم' />
+    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
       {deleteUserStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم حذف ${userName} بنجاح 😄 الرجاء الانتظار ليتم تحويلك لقائمة المستخدمين`}
+          msg={`Done Deleting ${userName} Please wait while we redirect you to users list`}
           redirectLink={goTo('users')}
           redirectTime={3000}
         />
       ) : deleteUserStatus === 0 ? (
         <Modal
           status={Error}
-          msg={`حدث خطأ ما أثناء حذف ${userName}!`}
+          msg={`Error Deleting ${userName}!`}
           redirectLink={goTo('users')}
           redirectTime={3000}
         />
       ) : userUpdated === 1 ? (
         <Modal
           status={Success}
-          msg={`تم${
+          msg={`Done ${
             userAccountAction === 'block'
-              ? `❗️ حظر 😔 ${userName} `
+              ? `❗️ Blocking 😔 ${userName} `
               : userAccountAction === 'active'
-              ? `🎉 تفعيل 😄 ${userName}`
+              ? `🎉 Activating 😄 ${userName}`
               : userAccountAction === 'admin'
-              ? `🎉 تحويل ${userName} إلى مدير 😎`
+              ? `🎉 Making ${userName} To Admin 😎`
               : userAccountAction === 'cashier'
-              ? `🎉 تحويل ${userName} إلى كاشير 😎`
+              ? `🎉 Making ${userName} To Cashier 😎`
               : userAccountAction === 'user'
-              ? `❗️ تحويل ${userName}  إلى مستخدم 😎`
+              ? `❗️ Making ${userName}  To User 😎`
               : null
-          } بنجاح الرجاء الانتظار ليتم تحويلك لقائمة المستخدمين`}
+          } Please wait while we redirect you to users list`}
           redirectLink={goTo('users')}
           redirectTime={3000}
         />
       ) : userUpdated === 0 ? (
         <Modal
           status={Error}
-          msg={`حدث خطأ ما أثناء تحديث ${userName}!`}
+          msg={`Error Deleting ${userName}!`}
           redirectLink={goTo('users')}
           redirectTime={3000}
         />
@@ -157,32 +157,32 @@ const DashboardUsers = () => {
           status={Loading}
           modalHidden='hidden'
           classes='txt-blue text-center'
-          msg={`هل أنت متأكد من ${
+          msg={`Are you sure you want to ${
             userAccountAction === 'block'
-              ? `حظر ${userName}`
+              ? `Blocking ${userName}`
               : userAccountAction === 'active'
-              ? `تفعيل ${userName}`
+              ? `Activating ${userName}`
               : userAccountAction === 'admin'
-              ? `تحويل ${userName} الى مدير`
+              ? `Make ${userName} an admin`
               : userAccountAction === 'cashier'
-              ? `تحويل ${userName} الى كاشير`
+              ? `Make ${userName} a cashier`
               : userAccountAction === 'user'
-              ? `تحويل ${userName} الى مستخدم`
-              : 'الغاء'
-          } لا يمكن التراجع عن هذا القرار`}
+              ? `Make ${userName} a user`
+              : 'Cancel'
+          } You can not undo this action`}
           ctaConfirmBtns={[
             userAccountAction === 'block'
-              ? 'حظر'
+              ? 'Block'
               : userAccountAction === 'active'
-              ? 'تفعيل'
+              ? 'Activate'
               : userAccountAction === 'admin'
-              ? 'تحويل الى مدير'
+              ? 'Make Admin'
               : userAccountAction === 'cashier'
-              ? 'تحويل الى كاشير'
+              ? 'Make Cashier'
               : userAccountAction === 'user'
-              ? 'تحويل الى مستخدم'
-              : 'حذف',
-            'الغاء'
+              ? 'Make User'
+              : 'Delete',
+            'Cancel'
           ]}
         />
       )}
@@ -190,17 +190,17 @@ const DashboardUsers = () => {
         <section className='py-12 my-8 dashboard'>
           <div className='container mx-auto'>
             <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              قائمة المستخدمين
+              Customers List
             </h3>
 
             <table className='table w-full text-center'>
               <thead className='text-white bg-orange-800'>
                 <tr>
-                  <th className='px-1 py-2'>الإســــــــــــــم</th>
-                  <th className='px-1 py-2'>البريد الالكتروني</th>
-                  <th className='px-1 py-2'>نوع المستخدم</th>
-                  <th className='px-1 py-2'>حالة المستخدم</th>
-                  <th className='px-1 py-2'>الإجراءات</th>
+                  <th className='px-1 py-2'>Full Name</th>
+                  <th className='px-1 py-2'>Email</th>
+                  <th className='px-1 py-2'>User Type</th>
+                  <th className='px-1 py-2'>User Status</th>
+                  <th className='px-1 py-2'>Action</th>
                 </tr>
               </thead>
 
@@ -252,20 +252,20 @@ const DashboardUsers = () => {
                           <span
                             data-tooltip={
                               item.userAccountStatus === 'block'
-                                ? 'المستخدم المحظور لا يملك صلاحية للدخول على النظام'
-                                : 'المستخدم المفعل يملك صلاحية الدخول على حسابه فعليه يستطيع الدخول للنظام وعمل الاجراء الذي يتناسب مع صلاحياته'
+                                ? 'Blocked users can not login to their accounts and can not access the system'
+                                : 'Active users can login to their accounts and can access the system and make actions based on their account type'
                             }
                           >
                             {item.userAccountStatus === 'block'
-                              ? '❌\u00A0\u00A0\u00A0محظور'
-                              : '✅\u00A0\u00A0\u00A0مفعل'}
+                              ? '❌ Blocked'
+                              : '✅Active'}
                           </span>
                         </td>
                         <td className='px-1 py-2'>
                           {idx === 0 ? (
                             //first admin account doesn't have to get deleted or blocked from others hence no action provided
                             <span className='text-gray-600 select-none dark:text-gray-200'>
-                              لا يوجد إجراء
+                              No Actions
                             </span>
                           ) : (
                             <NavMenu>

@@ -19,8 +19,6 @@ import { validPhone } from 'functions/validForm'
 import scrollToView from 'functions/scrollToView'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { useSession } from 'next-auth/react'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
 
 const formDataFromLocalStorage =
   typeof window !== 'undefined'
@@ -85,7 +83,7 @@ const OrderFood = () => {
       'formDataCart',
       stringJson({ personName, personPhone, personAddress, personNotes })
     )
-  }, [personName, personPhone, personAddress, personNotes])
+  }, [personName, personPhone, personAddress, personNotes, session])
 
   useEffect(() => {
     setGrandPrice(grandPriceRef?.current?.textContent || grandPrice)
@@ -106,7 +104,7 @@ const OrderFood = () => {
       //if there's No user in localStorage then show modal to login or register else collect order
       if (USER || session!?.user) {
         setShowLoginRegisterModal(false)
-        setShowPaymentModal(true)
+        //setShowPaymentModal(true)
       } else {
         setShowLoginRegisterModal(true)
       }
@@ -115,7 +113,7 @@ const OrderFood = () => {
     }
   }
 
-  const handleSaveOrder = async (paymentData: any) => {
+  const handleSaveOrder = async (/*paymentData: any*/) => {
     //using FormData to send constructed data
     const formData = new FormData()
     formData.append('userId', userId)
@@ -127,7 +125,7 @@ const OrderFood = () => {
     formData.append('checkedToppings', stringJson(checkedToppings))
     formData.append('foodItems', stringJson(items))
     formData.append('grandPrice', grandPriceRef?.current?.textContent || '')
-    formData.append('paymentData', stringJson(paymentData))
+    formData.append('paymentData', 'stringJson(paymentData)')
 
     try {
       const response = await axios.post(`${origin}/api/orders`, formData)
@@ -148,9 +146,6 @@ const OrderFood = () => {
     }
   }
 
-  const { locale } = useLocale()
-  const { t } = useTranslate()
-
   return (
     <Layout>
       <section id='orderFood' className='py-12 my-8'>
@@ -158,7 +153,7 @@ const OrderFood = () => {
           <Modal
             status={Success}
             msg={responseMsg.Success}
-            btnName='قائمة الوجبات'
+            btnName='View Orders'
             btnLink='/view'
             redirectLink='/view'
             redirectTime={10000}
@@ -166,14 +161,18 @@ const OrderFood = () => {
         ) : showLoginRegisterModal === true ? (
           <Modal
             status={Loading}
-            msg={`يجب عليك تسجيل الدخول أو عمل حساب جديد أولا وذلك للطلب`}
-            btnName='تسجيل دخول'
+            msg={`You need to login or register to complete your order`}
+            btnName='Login or Register'
             btnLink={`/auth/login?redirect=${pathname}`}
           />
         ) : showPaymentModal === true ? (
           <Modal
             status={Loading}
-            msg={`سيتم الدفع بالعملة (دولار أمريكي) وذلك بعد تحويل الإجمالي: ${grandPrice} ر.ق، سيتم دفع = ${(
+            msg='Ordering is in the process, please wait a moment...'
+            extraComponents={<>{handleSaveOrder(/*paymentData*/)}</>}
+            btnName='Return'
+            btnLink={`order-food`}
+            /* msg={`سيتم الدفع بالعملة (دولار أمريكي) وذلك بعد تحويل الإجمالي: ${grandPrice} ر.ق، سيتم دفع = ${(
               grandPrice / 3.65
             ).toFixed(2)} دولار أمريكي لدفع بأحد الوسائل التالية:`}
             extraComponents={
@@ -184,9 +183,7 @@ const OrderFood = () => {
                   handleSaveOrder(paymentData)
                 }}
               />
-            }
-            btnName='رجوع'
-            btnLink={`order-food`}
+            }*/
           />
         ) : null}
 
@@ -195,31 +192,23 @@ const OrderFood = () => {
             <LoadingPage />
           ) : items.length > 0 ? (
             <>
-              <h2 className='inline-block mb-20 text-3xl font-bold'>
-                {t('app.order-food.title')}
-              </h2>
+              <h2 className='inline-block mb-20 text-3xl font-bold'>Cart</h2>
               <CartItems />
 
               <form method='POST' onSubmit={handleCollectOrder}>
                 <Link
                   href='/view'
-                  className={`relative block p-2 mx-auto my-10 text-xl text-gray-900 bg-orange-400 border group border-orange-700 hover:bg-orange-500 transition-colors rounded-md w-[20rem] lg:w-[25rem] ${
-                    locale === 'ar' ? 'pr-10' : 'pl-10'
-                  }`}
+                  className={`relative block p-2 mx-auto my-10 text-xl text-gray-900 bg-orange-400 border group border-orange-700 hover:bg-orange-500 transition-colors rounded-md w-[20rem] lg:w-[25rem] pl-10`}
                 >
                   <span
-                    className={`absolute inline-flex justify-center pt-3.5 pointer-events-none transition-all bg-white border border-orange-700 rounded-full -top-1.5 w-14 h-14 ${
-                      locale === 'ar'
-                        ? 'group-hover:right-2 right-6 ml-3'
-                        : 'group-hover:left-2 left-6 mr-3 [transform:rotateY(180deg)]'
-                    }`}
+                    className={`absolute inline-flex justify-center pt-3.5 pointer-events-none transition-all bg-white border border-orange-700 rounded-full -top-1.5 w-14 h-14 group-hover:left-2 left-6 mr-3 [transform:rotateY(180deg)]`}
                   >
                     🛒
                   </span>
-                  {t('app.order-food.explore')}
+                  Explore other meals
                 </Link>
 
-                <h2 className='mb-10 text-2xl'>{t('app.order-food.form.title')}</h2>
+                <h2 className='mb-10 text-2xl'>Please add order details</h2>
                 <label htmlFor='name' className={`form__group`}>
                   <input
                     className={`relative form__input`}
@@ -232,13 +221,10 @@ const OrderFood = () => {
                       const target = e.target.value.trim()
 
                       if (target.length > 0 && target.length < 4) {
-                        personNameErr.current!.textContent = t(
-                          'app.order-food.form.name.error.shortText'
-                        )
+                        personNameErr.current!.textContent = 'Please enter a valid name'
                       } else if (target.length > 30) {
-                        personNameErr.current!.textContent = t(
-                          'app.order-food.form.name.error.longText'
-                        )
+                        personNameErr.current!.textContent =
+                          'The name is too long, please add a name of up to 30 characters'
                       } else {
                         personNameErr.current!.textContent = ''
                       }
@@ -246,7 +232,7 @@ const OrderFood = () => {
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.order-food.form.name.label')} &nbsp;
+                    Your Full Name &nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -270,9 +256,8 @@ const OrderFood = () => {
                         target.length > 8 ||
                         !validPhone(target)
                       ) {
-                        personPhoneErr.current!.textContent = t(
-                          'app.order-food.form.phone.error.shortText'
-                        )
+                        personPhoneErr.current!.textContent =
+                          'Please enter a phone number in the same format as the phone number in the example'
                       } else {
                         personPhoneErr.current!.textContent = ''
                       }
@@ -280,7 +265,8 @@ const OrderFood = () => {
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.order-food.form.phone.label')} &nbsp;
+                    {/* UK phone number */}
+                    Phone Number (e.g: 123 4567 8900)&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -300,9 +286,8 @@ const OrderFood = () => {
                       const target = e.target.value.trim()
 
                       if (target.length > 0 && target.length < 4) {
-                        personAddressErr.current!.textContent = t(
-                          'app.order-food.form.phone.error.shortText'
-                        )
+                        personAddressErr.current!.textContent =
+                          'Please enter a phone number in the same format as the phone number in the example'
                       } else {
                         personAddressErr.current!.textContent = ''
                       }
@@ -310,7 +295,7 @@ const OrderFood = () => {
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.order-food.form.address.label')}&nbsp;
+                    Address, (e.g: zone 00, 000st, building 000)&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -329,7 +314,8 @@ const OrderFood = () => {
                   ></textarea>
 
                   <span className={`form__label`}>
-                    {t('app.order-food.form.notes.label')} &nbsp;😄
+                    You Can Add Notes or Additions for The chef to Add to Your Order 😄
+                    &nbsp;😄
                   </span>
                 </label>
                 <p
@@ -337,8 +323,9 @@ const OrderFood = () => {
                   ref={formErr}
                 ></p>
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
-                  {t('app.order-food.totalOrderPrice')}:&nbsp;
+                  Total Price:
                   <strong ref={grandPriceRef}>
+                    &nbsp;£
                     {items.reduce(
                       (acc: number, item: any) =>
                         acc +
@@ -361,7 +348,6 @@ const OrderFood = () => {
                       0
                     )}
                   </strong>
-                  &nbsp; {t('app.currency')}
                 </span>
 
                 <div className='flex flex-col items-center justify-evenly'>
@@ -373,10 +359,10 @@ const OrderFood = () => {
                     {isLoading && isLoading ? (
                       <>
                         <LoadingSpinner />
-                        {t('app.order-food.form.confirmingBtn')}
+                        Checking and Confirming Details...
                       </>
                     ) : (
-                      t('app.order-food.form.confirmBtn')
+                      'Confirm Order Details'
                     )}
                   </button>
                 </div>
@@ -385,8 +371,8 @@ const OrderFood = () => {
           ) : (
             <NoItems
               links={[
-                { to: `../view`, label: t('app.order-food.viewMeals') },
-                { to: `../categories`, label: t('app.order-food.viewCategories') }
+                { to: `../view`, label: 'View Meals' },
+                { to: `../categories`, label: 'View Categories' }
               ]}
             />
           )}

@@ -53,11 +53,11 @@ const Header = () => {
               />
             )}
 
-            <h1 className='inline-block h-20 max-w-xs px-2 my-4 overflow-x-hidden text-lg leading-loose text-center text-white select-none sm:max-w-fit xl:text-3xl sm:text-xl md:text-4xl rtl sm:whitespace-nowrap'>
+            <h1 className='inline-block h-20 max-w-xs px-2 my-4 overflow-x-hidden text-lg leading-loose text-center text-white select-none sm:max-w-fit xl:text-3xl sm:text-xl md:text-4xl sm:whitespace-nowrap'>
               <Typewriter
                 options={{
                   strings:
-                    data?.appTagline || `نحن الأفضل، وسنبقى كذلك ... إلى الأبد 😄 🤍`,
+                    data?.appTagline || `Finding new ways to make your food better`,
                   autoStart: true,
                   loop: true
                 }}

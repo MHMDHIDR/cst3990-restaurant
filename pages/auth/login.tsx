@@ -14,7 +14,6 @@ import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
 import { UserProps } from '@types'
 import { origin, APP_URL, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
-import { useTranslate } from 'hooks/useTranslate'
 
 const LoginDataFromLocalStorage =
   typeof window !== 'undefined' && parseJson(localStorage.getItem('LoginData') || '{}')
@@ -42,9 +41,6 @@ const Login = () => {
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
 
   const { loading } = useAuth()
-
-  const { t } = useTranslate()
-  const { locale } = useRouter()
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -92,7 +88,7 @@ const Login = () => {
         : userAccountType === 'user'
         ? window.location.replace('/')
         : userAccountType === 'admin'
-        ? window.location.replace(`/${locale}/dashboard`)
+        ? window.location.replace(`/dashboard`)
         : null
     } catch (response: any) {
       setLoginMsg(response?.response?.message)
@@ -113,7 +109,7 @@ const Login = () => {
             className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'
             data-section='login'
           >
-            {t('app.login.title')}
+            Login
           </h3>
           <div className='max-w-6xl mx-auto'>
             <form className='mt-32' onSubmit={sendLoginForm}>
@@ -129,9 +125,7 @@ const Login = () => {
                   autoFocus
                   required
                 />
-                <span className='form__label'>
-                  {t('app.login.form.emailOrPhone.label')}
-                </span>
+                <span className='form__label'>Email or Phone Number</span>
               </label>
 
               <label htmlFor='password' className='form__group'>
@@ -145,9 +139,7 @@ const Login = () => {
                   required
                 />
                 <span
-                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60 ${
-                    locale === 'ar' ? 'left-1' : 'right-1'
-                  }`}
+                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60 right-1`}
                   onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
@@ -156,25 +148,23 @@ const Login = () => {
                     <EyeIconOpen className={`fill-green-700 dark:fill-green-400`} />
                   )}
                 </span>
-                <span className='form__label'> {t('app.login.form.password.label')}</span>
+                <span className='form__label'> Password</span>
               </label>
 
               <div className='flex flex-col gap-6 text-center border-none form__group ltr'>
-                <div className='flex flex-wrap items-center justify-around gap-y-4 rtl'>
+                <div className='flex flex-wrap items-center justify-around gap-y-4'>
                   <button
-                    className={`w-fit px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all ${
-                      locale === 'en' && 'order-2'
-                    }`}
+                    className={`w-fit px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all order-2`}
                     type='submit'
                     id='submitBtn'
                   >
                     {isSendingLoginForm ? (
                       <>
                         <LoadingSpinner />
-                        &nbsp; {t('app.login.form.loginBtn.loading')}
+                        &nbsp; Login In...
                       </>
                     ) : (
-                      t('app.login.form.loginBtn.label')
+                      'Login'
                     )}
                   </button>
                   <button
@@ -182,7 +172,7 @@ const Login = () => {
                     className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
                     onClick={() => signIn('google', { callbackUrl: APP_URL })}
                   >
-                    {t('app.login.form.loginWithGoogleBtn.label')}
+                    Login with Google
                     <Image
                       src={`/assets/img/icons/google.svg`}
                       className='w-8 h-8'
@@ -194,7 +184,7 @@ const Login = () => {
                 </div>
 
                 <strong className='block mx-auto my-8 text-orange-800 dark:text-orange-600 w-fit'>
-                  {t('app.login.form.or')}
+                  OR
                 </strong>
 
                 <div className='flex flex-wrap items-center justify-evenly gap-y-6'>
@@ -202,14 +192,14 @@ const Login = () => {
                     href='/auth/join'
                     className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
                   >
-                    {t('app.login.form.join')}
+                    Join our Community and Order
                   </Link>
 
                   <Link
                     href='/auth/forgot'
                     className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
                   >
-                    {t('app.login.form.forgot')}
+                    Forgot my password
                   </Link>
                 </div>
               </div>

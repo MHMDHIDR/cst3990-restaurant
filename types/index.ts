@@ -370,8 +370,11 @@ export type fileRequestProps = NextApiRequest & {
 }
 
 export type ButtonProps = {
-  children: JSX.Element
+  children: JSX.Element | string
+  CartButtonIcon?: JSX.Element
+  classes?: string
   color?: string
+  onClick?: () => void
 }
 
 export type deleteFoodEventListenerProps = {

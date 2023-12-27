@@ -20,13 +20,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (user && user.userAccountAction === 'block') {
         res.status(403).json({
           LoggedIn: 0,
-          message: 'حسابك مغلق حاليا، يرجى التواصل مع الادارة'
+          message: 'Your Account Has Been Blocked, Please Contact The Admin'
         })
       } else if (user && (await compare(userPassword, user.userPassword))) {
         res.status(200).json({
           LoggedIn: 1,
-          message: `تم تسجيل الدخول بنجاح، جار تحويلك الى ${
-            user.userAccountType === 'admin' ? 'لوحة التحكم' : 'الصفحة الرئيسية'
+          message: `Logged In Successfully, Welcome Back To ${
+            user.userAccountType === 'admin' ? 'The Dashboard' : 'Your Account'
           }`,
           _id: user.id,
           userAccountType: user.userAccountType,

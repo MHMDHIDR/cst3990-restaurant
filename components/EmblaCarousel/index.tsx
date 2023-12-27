@@ -6,7 +6,7 @@ import { Thumb } from './EmblaCarouselThumb'
 import { removeSlug } from 'functions/slug'
 import Image from 'next/image'
 import { HEADER_BG_IMG } from '@constants'
-import { useTranslate } from 'hooks/useTranslate'
+import { capitalizeText } from 'utils/functions/capitalize'
 
 const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -14,47 +14,55 @@ const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false)
   const [scrollSnaps, setScrollSnaps] = useState<any>([])
 
-  const [mainViewportRef, embla] = useEmblaCarousel({ skipSnaps: false })
-  const [thumbViewportRef, emblaThumbs] = useEmblaCarousel({
+  const [mainViewportRef, emblaMainApi] = useEmblaCarousel({ skipSnaps: false })
+  const [thumbViewportRef, emblaThumbsApi] = useEmblaCarousel({
     containScroll: 'keepSnaps',
-    selectedClass: '',
-    dragFree: true
+    dragFree: true,
+    selectedClass: ''
   } as EmblaOptionsType)
-  const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla])
-  const scrollNext = useCallback(() => embla && embla.scrollNext(), [embla])
-  const scrollTo = useCallback((index: number) => embla && embla.scrollTo(index), [embla])
+
+  const scrollPrev = useCallback(
+    () => emblaMainApi && emblaMainApi.scrollPrev(),
+    [emblaMainApi]
+  )
+  const scrollNext = useCallback(
+    () => emblaMainApi && emblaMainApi.scrollNext(),
+    [emblaMainApi]
+  )
+  const scrollTo = useCallback(
+    (index: number) => emblaMainApi && emblaMainApi.scrollTo(index),
+    [emblaMainApi]
+  )
 
   const onThumbClick = useCallback(
     (index: number) => {
-      if (!embla || !emblaThumbs) return
-      if (emblaThumbs.clickAllowed()) embla.scrollTo(index)
+      if (!emblaMainApi || !emblaThumbsApi) return
+      emblaMainApi.scrollTo(index)
     },
-    [embla, emblaThumbs]
+    [emblaMainApi, emblaThumbsApi]
   )
 
   const onSelect = useCallback(() => {
-    if (!embla || !emblaThumbs) return
-    setSelectedIndex(embla.selectedScrollSnap())
-    emblaThumbs.scrollTo(embla.selectedScrollSnap())
+    if (!emblaMainApi || !emblaThumbsApi) return
+    setSelectedIndex(emblaMainApi.selectedScrollSnap())
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap())
 
-    setPrevBtnEnabled(embla.canScrollPrev())
-    setNextBtnEnabled(embla.canScrollNext())
-  }, [embla, emblaThumbs, setSelectedIndex])
+    setPrevBtnEnabled(emblaMainApi.canScrollPrev())
+    setNextBtnEnabled(emblaMainApi.canScrollNext())
+  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex])
 
   useEffect(() => {
-    if (!embla) return
+    if (!emblaMainApi) return
     onSelect()
-    setScrollSnaps(embla.scrollSnapList())
-    embla.on('select', onSelect)
-  }, [embla, setScrollSnaps, onSelect])
+    setScrollSnaps(emblaMainApi.scrollSnapList())
+    emblaMainApi.on('select', onSelect)
+  }, [emblaMainApi, setScrollSnaps, onSelect])
 
   //get food id, image, name, price from the array of object
   const IdByIndex = (index: number) => media[index % media.length].foodId
   const priceByIndex = (index: number) => media[index % media.length].foodPrice
   const mediaByIndex = (index: number) => media[index % media.length].foodImgDisplayPath
   const nameByIndex = (index: number) => media[index % media.length].foodName
-
-  const { t } = useTranslate()
 
   return (
     <div dir={`ltr`}>
@@ -72,8 +80,8 @@ const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
                 key={index}
               >
                 {priceByIndex(index) && (
-                  <span className='absolute z-40 flex items-center justify-center px-4 py-2 text-base font-bold text-white bg-green-900 sm:px-6 sm:text-xl rounded-xl top-3 left-4 rtl'>
-                    {priceByIndex(index)} {t('app.currency')}
+                  <span className='absolute z-40 flex items-center justify-center px-4 py-2 text-base font-bold text-white bg-green-900 sm:px-6 sm:text-xl rounded-xl top-3 left-4'>
+                    £{priceByIndex(index)}
                   </span>
                 )}
                 <div
@@ -89,14 +97,14 @@ const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
                     loading='lazy'
                     className={`absolute z-30 block object-cover w-full min-h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 hover:scale-110 transition-transform duration-200`}
                     src={mediaByIndex(index) || '/assets/img/icons/logo.svg'}
-                    alt={removeSlug(nameByIndex(index))}
+                    alt={removeSlug(capitalizeText(nameByIndex(index)))}
                     width={300}
                     height={300}
                   />
                 </div>
                 {!smallView && (
                   <span className='inline-block w-full py-2 text-base text-center sm:text-2xl'>
-                    {removeSlug(nameByIndex(index))}
+                    {removeSlug(capitalizeText(nameByIndex(index)))}
                   </span>
                 )}
               </Link>

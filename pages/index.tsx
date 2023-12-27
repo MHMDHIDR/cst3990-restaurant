@@ -12,7 +12,8 @@ import Card from 'components/Card'
 import abstractText from 'functions/abstractText'
 import { removeSlug } from 'functions/slug'
 import { SLIDES_IN_MENU, API_URL } from '@constants'
-import { useTranslate } from 'hooks/useTranslate'
+import { capitalizeText } from 'utils/functions/capitalize'
+import { CartAddButton, CartRemoveButton } from 'components/CartButton'
 
 const Index = ({
   menuFood,
@@ -29,8 +30,8 @@ const Index = ({
   let media: mediaProps = []
 
   //push food images to media array
-  menuFood &&
-    menuFood?.response.map(({ _id, foodImgs, foodName, foodPrice }: any) =>
+  menuFood.response &&
+    menuFood.response.map(({ _id, foodImgs, foodName, foodPrice }: any) =>
       media.push({
         foodId: _id,
         foodImgDisplayPath: foodImgs[0]?.foodImgDisplayPath,
@@ -43,6 +44,7 @@ const Index = ({
   const [drinkImgs, setDrinkImgs] = useState<any>('')
   const [sweetsImgs, setSweetsImgs] = useState<any>('')
   const [newFood, setNewFood] = useState<any>('')
+
   useEffect(() => {
     setFoodImgs(catFoodResponse?.response)
     setSweetsImgs(catDrinkResponse?.response)
@@ -69,14 +71,15 @@ const Index = ({
     return sweetsImgs?.[randomIndex]?.foodImgs[0]?.foodImgDisplayPath
   }
 
-  const { t } = useTranslate()
-
   return (
     <>
       <Head>
         <meta charSet='UTF-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-        <meta name='description' content={t(`app.main.description`)} />
+        <meta
+          name='description'
+          content={`Restaurant App To Find Order And Delicious Food!`}
+        />
         <meta name='robots' content='index, follow' />
         <meta name='keywords' content='restaurant, food, delicious, order, online' />
         <meta name='author' content='mr.hamood277@gmail.com' />
@@ -234,37 +237,32 @@ const Index = ({
           property='og:description'
           content='Restaurant is a web app to find and order delicious food, drinks.'
         />
-        <meta property='og:url' content='https://mhmdhidr-restaurant.netlify.app' />
         <meta name='twitter:card' content='Restaurant - Find and Order Food' />
         <meta name='twitter:url' content='{{pageUrl}}' />
         <meta name='twitter:title' content='{{pageTitle}}' />
         <meta name='twitter:description' content='{{description}}' />
         <meta name='twitter:image' content='{{imageUrl}}' />
-        <title>{t(`app.title`)}</title>
+        <title>Restaurant</title>
       </Head>
       <Layout>
         <section id='menu' className='py-12 my-8 menu'>
           <div className='container relative mx-auto'>
-            <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              {t('app.nav.menu.title')}
-            </h2>
+            <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>Menu</h2>
             <div className='w-11/12 mx-auto overflow-hidden'>
-              {menuFood && menuFood?.response?.length > 0 ? (
+              {menuFood.response && menuFood.response.length > 0 ? (
                 <div className='max-w-5xl mx-auto transition-transform translate-x-0 select-none'>
                   <EmblaCarousel slides={slides} media={media} />
                 </div>
               ) : (
                 <span className='inline-block w-full my-2 text-lg font-bold text-center text-red-500'>
-                  {t('app.messages.noFoodFound')}
+                  Sorry! We Couldn&apos;t Find New Food 😕
                 </span>
               )}
             </div>
           </div>
         </section>
         <section id='Categories' className='container mx-auto'>
-          <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-            {t('app.nav.categories.title')}
-          </h3>
+          <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>Categories</h3>
           <div className='flex flex-wrap justify-center mt-32 gap-14 xl:justify-between'>
             <Link
               href={`/view`}
@@ -276,7 +274,7 @@ const Index = ({
               }}
             >
               <h3 className='flex items-center justify-center h-full text-sm font-bold text-white bg-gray-800 md:text-base 2xl:text-xl bg-opacity-80'>
-                {t('app.categories.types.all')}
+                All Foods and Drinks
               </h3>
             </Link>
 
@@ -290,7 +288,7 @@ const Index = ({
               }}
             >
               <h3 className='flex items-center justify-center h-full text-sm font-bold text-white bg-gray-800 md:text-base 2xl:text-xl bg-opacity-80'>
-                {t('app.categories.types.foods')}
+                Foods
               </h3>
             </Link>
 
@@ -304,7 +302,7 @@ const Index = ({
               }}
             >
               <h3 className='flex items-center justify-center h-full text-sm font-bold text-white bg-gray-800 md:text-base 2xl:text-xl bg-opacity-80'>
-                {t('app.categories.types.drinks')}
+                Drinks
               </h3>
             </Link>
 
@@ -318,16 +316,14 @@ const Index = ({
               }}
             >
               <h3 className='flex items-center justify-center h-full text-sm font-bold text-white bg-gray-800 md:text-base 2xl:text-xl bg-opacity-80'>
-                {t('app.categories.types.sweets')}
+                Sweets
               </h3>
             </Link>
           </div>
         </section>
         <section id='new' className='py-12 my-8 overflow-x-hidden new'>
           <div className='container mx-auto text-center'>
-            <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              {t('app.nav.newFood.title')}
-            </h2>
+            <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>New Food</h2>
             {newFood && newFood?.response?.length > 0 ? (
               newFood?.response?.map((item: foodDataProps['response'], idx: number) => (
                 <motion.div
@@ -347,7 +343,7 @@ const Index = ({
                     cItemId={item._id}
                     cHeading={
                       <Link href={`/view/item/${item._id}`}>
-                        {removeSlug(abstractText(item.foodName, 40))}
+                        {removeSlug(abstractText(capitalizeText(item.foodName), 45))}
                       </Link>
                     }
                     cPrice={item.foodPrice}
@@ -360,25 +356,13 @@ const Index = ({
                     cCtaLabel={
                       //add to cart button, if item is already in cart then disable the button
                       items.find(itemInCart => itemInCart.cItemId === item._id) ? (
-                        <div className='relative rtl min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-red-800 hover:bg-red-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            ❌
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.removeFromCart')}
-                          </span>
-                        </div>
+                        <CartRemoveButton classes='bg-red-800 hover:bg-red-700'>
+                          Remove From Cart
+                        </CartRemoveButton>
                       ) : (
-                        <div className='relative rtl min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-green-800 hover:bg-green-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            🛒
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.addToCart')}
-                          </span>
-                        </div>
+                        <CartAddButton classes='bg-green-800 hover:bg-green-700'>
+                          Add To Cart
+                        </CartAddButton>
                       )
                     }
                   />
@@ -386,7 +370,7 @@ const Index = ({
               ))
             ) : (
               <p className='form__msg inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'>
-                {t('app.messages.noFoodFound')}
+                Sorry! We Couldn&apos;t Find New Food 😕
               </p>
             )}
           </div>

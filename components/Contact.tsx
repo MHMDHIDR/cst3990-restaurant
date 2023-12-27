@@ -4,7 +4,6 @@ import { LoadingSpinner } from './Loading'
 import { validEmail } from 'functions/validForm'
 import { origin } from '@constants'
 import axios from 'axios'
-import { useTranslate } from 'hooks/useTranslate'
 
 const Contact = () => {
   const [theName, setName] = useState('')
@@ -47,7 +46,7 @@ const Contact = () => {
       setSendStatus(data.mailSent)
       setSendStatusMsg(
         data?.message === 'Email Sent Successfully'
-          ? t('app.contact.form.afterSendSuccess')
+          ? 'Thank you for contacting us, we will reply to you as soon as possible 😄'
           : data?.message
       )
     } catch (error: any) {
@@ -57,20 +56,17 @@ const Contact = () => {
     }
   }
 
-  const { t } = useTranslate()
-
   return (
     <>
       <section id='contact' className='py-12 my-8 contact'>
         <div className='container mx-auto'>
-          <h2 className='mt-4 mb-12 text-2xl text-center md:text-3xl'>
-            {t('app.nav.contact.title')}
-          </h2>
+          <h2 className='mt-4 mb-12 text-2xl text-center md:text-3xl'>Contact</h2>
           <div className='max-w-6xl px-1 mx-auto'>
             <p className='text-sm text-center my-14 sm:text-base md:text-lg'>
-              {t('app.contact.description')}
+              Whether you have an inquiry or want to contact us, you can write to us via
+              the form below
               <strong className='inline-block w-full mt-3'>
-                {t('app.contact.tagLine')}
+                We are always happy to serve you
               </strong>
             </p>
 
@@ -86,7 +82,7 @@ const Contact = () => {
                   onChange={e => setName((e.target as HTMLInputElement).value)}
                   required
                 />
-                <span className='form__label'>{t('app.contact.form.name')}</span>
+                <span className='form__label'>Name</span>
               </label>
 
               <label htmlFor='subject' className='form__group'>
@@ -98,7 +94,7 @@ const Contact = () => {
                   onChange={e => setSubject((e.target as HTMLInputElement).value)}
                   required
                 />
-                <span className='form__label'>{t('app.contact.form.subject')}</span>
+                <span className='form__label'>Subject</span>
               </label>
 
               <label htmlFor='email' className='form__group'>
@@ -112,7 +108,7 @@ const Contact = () => {
                   }}
                   required
                 />
-                <span className='form__label'>{t('app.contact.form.email')}</span>
+                <span className='form__label'>Email</span>
               </label>
 
               <label htmlFor='message' className='form__group'>
@@ -123,7 +119,7 @@ const Contact = () => {
                   onChange={e => setMsg((e.target as HTMLTextAreaElement).value)}
                   required
                 ></textarea>
-                <span className='form__label'>{t('app.contact.form.message')}</span>
+                <span className='form__label'>Message</span>
               </label>
 
               <div className='mb-20 border-none form__group'>
@@ -142,10 +138,10 @@ const Contact = () => {
                   {loading && loading ? (
                     <>
                       <LoadingSpinner />
-                      {t('app.contact.form.sending')}
+                      Sending...
                     </>
                   ) : (
-                    t('app.contact.form.send')
+                    'Send'
                   )}
                 </button>
               </div>

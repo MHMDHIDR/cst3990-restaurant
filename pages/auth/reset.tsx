@@ -10,7 +10,6 @@ import useAuth from 'hooks/useAuth'
 import { origin } from '@constants'
 import { validPassword } from 'functions/validForm'
 import { stringJson } from 'functions/jsonTools'
-import { useTranslate } from 'hooks/useTranslate'
 import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
 
 const ResetPassword = () => {
@@ -59,11 +58,11 @@ const ResetPassword = () => {
       confirmNewPassErr.current!.textContent !== ''
     ) {
       setNewPassStatus(0)
-      setNewPassMsg('الرجاء ملء جميع الحقول بطريقة صحيحة')
+      setNewPassMsg('Please Fill in All Fields Correctly')
       return
     } else if (newUserPass !== newUserPassConfirm) {
       setNewPassStatus(0)
-      setNewPassMsg('كلمة المرور غير متطابقة')
+      setNewPassMsg('Passwords Do Not Match')
       return
     } else {
       const formData = new FormData()
@@ -97,7 +96,6 @@ const ResetPassword = () => {
     }
   }
 
-  const { t } = useTranslate()
   const { locale } = useRouter()
 
   // if done loading (NOT Loading) then show the login form
@@ -110,14 +108,14 @@ const ResetPassword = () => {
             className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'
             data-section='login'
           >
-            {t('app.reset.title')}
+            Enter Your New Password
           </h3>
 
           <div className='max-w-6xl mx-auto'>
             <form className='mt-32' onSubmit={sendResetPassForm}>
               <label htmlFor='newUserPass' className='form__group'>
                 <input
-                  className='form__input rtl'
+                  className='form__input'
                   id='newUserPass'
                   name='newUserPass'
                   type={passwordVisible ? 'text' : 'password'}
@@ -128,17 +126,15 @@ const ResetPassword = () => {
                     const parent = e.target.parentElement
                     if (e.target.value.length > 0 && !validPassword(e.target.value)) {
                       parent!.classList.add('notvalid')
-                      newPassErr.current!.textContent = t(
-                        'app.reset.form.password.longText'
-                      )
+                      newPassErr.current!.textContent =
+                        'The password must consist of English letters and numbers only, and its length must be from at least 8 letters and numbers to a maximum of 50 letters and numbers'
                     } else if (
                       newUserPassConfirm.length > 0 &&
                       e.target.value !== newUserPassConfirm
                     ) {
                       parent!.classList.add('notvalid')
-                      newPassErr.current!.textContent = t(
-                        'app.reset.form.password.noMatch'
-                      )
+                      newPassErr.current!.textContent =
+                        '"You Passwords Does NOT Match, You Must Match both passwords"'
                     } else {
                       parent!.classList.remove('notvalid')
                       newPassErr.current!.textContent = ''
@@ -159,7 +155,7 @@ const ResetPassword = () => {
                     <EyeIconOpen className={`fill-green-700 dark:fill-green-400`} />
                   )}
                 </span>
-                <span className='form__label'>{t('app.reset.form.password.label')}</span>
+                <span className='form__label'>Please Enter a New Password</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={newPassErr}
@@ -168,7 +164,7 @@ const ResetPassword = () => {
 
               <label htmlFor='newUserPassConfirm' className='form__group'>
                 <input
-                  className='form__input rtl'
+                  className='form__input'
                   id='newUserPassConfirm'
                   name='newUserPassConfirm'
                   type={passwordVisible ? 'text' : 'password'}
@@ -179,14 +175,12 @@ const ResetPassword = () => {
                     const parent = e.target.parentElement
                     if (e.target.value && !validPassword(e.target.value)) {
                       parent.classList.add('notvalid')
-                      confirmNewPassErr.current!.textContent = t(
-                        'app.reset.form.password.longText'
-                      )
+                      confirmNewPassErr.current!.textContent =
+                        'The password must consist of English letters and numbers only, and its length must be from at least 8 letters and numbers to a maximum of 50 letters and numbers'
                     } else if (e.target.value !== newUserPass) {
                       parent.classList.add('notvalid')
-                      confirmNewPassErr.current!.textContent = t(
-                        'app.reset.form.password.noMatch'
-                      )
+                      confirmNewPassErr.current!.textContent =
+                        'You Passwords Does NOT Match, You Must Match both passwords'
                     } else {
                       parent.classList.remove('notvalid')
                       confirmNewPassErr.current!.textContent = ''
@@ -206,9 +200,7 @@ const ResetPassword = () => {
                     <EyeIconOpen className={`fill-green-700 dark:fill-green-400`} />
                   )}
                 </span>
-                <span className='form__label'>
-                  {t('app.reset.form.confirmPassword.label')}
-                </span>
+                <span className='form__label'>Please Enter a New Password</span>
                 <span
                   className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
                   ref={confirmNewPassErr}
@@ -217,7 +209,7 @@ const ResetPassword = () => {
 
               <div className='flex flex-col gap-6 text-center border-none form__group ltr'>
                 <button
-                  className={`flex gap-4 w-fit  mx-auto px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all rtl${
+                  className={`flex gap-4 w-fit  mx-auto px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all${
                     sendingResetForm && sendingResetForm
                       ? ' scale-105 cursor-progress'
                       : ''
@@ -233,10 +225,10 @@ const ResetPassword = () => {
                   {sendingResetForm && sendingResetForm ? (
                     <>
                       <LoadingSpinner />
-                      {t('app.reset.form.resetBtn.loading')}
+                      Resetting your password Now...
                     </>
                   ) : (
-                    t('app.reset.form.resetBtn.label')
+                    'Reset Password'
                   )}
                 </button>
               </div>

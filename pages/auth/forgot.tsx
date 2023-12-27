@@ -10,7 +10,6 @@ import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
 import { origin } from '@constants'
 import { parseJson } from 'functions/jsonTools'
-import { useTranslate } from 'hooks/useTranslate'
 
 const ForgotDataFromLocalStorage =
   typeof window !== 'undefined' && parseJson(localStorage.getItem('ForgotData') || '{}')
@@ -85,8 +84,6 @@ const ForgotPassword = () => {
     }
   }
 
-  const { t } = useTranslate()
-
   // if done loading (NOT Loading) then show the login form
   return !loading ? (
     <Layout>
@@ -97,7 +94,7 @@ const ForgotPassword = () => {
             className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'
             data-section='login'
           >
-            {t('app.forgot.title')}
+            Reset Password
           </h3>
           <div className='max-w-6xl mx-auto'>
             <form className='mt-32' onSubmit={sendForgotPassForm}>
@@ -113,14 +110,12 @@ const ForgotPassword = () => {
                   autoFocus
                   required
                 />
-                <span className='form__label'>
-                  {t('app.forgot.form.emailOrPhone.label')}
-                </span>
+                <span className='form__label'>Email or Phone Number</span>
               </label>
 
               <div className='flex flex-col gap-6 text-center border-none form__group ltr'>
                 <button
-                  className={`flex gap-4 w-fit mx-auto px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all rtl${
+                  className={`flex gap-4 w-fit mx-auto px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all${
                     sendingForgotForm && sendingForgotForm
                       ? ' scale-105 cursor-progress'
                       : ''
@@ -136,15 +131,15 @@ const ForgotPassword = () => {
                   {sendingForgotForm && sendingForgotForm ? (
                     <>
                       <LoadingSpinner />
-                      <span>{t('app.forgot.form.forgotBtn.loading')}</span>
+                      <span>Sending Reset Request...</span>
                     </>
                   ) : (
-                    t('app.forgot.form.forgotBtn.label')
+                    'Send Reset Request'
                   )}
                 </button>
 
                 <strong className='block mx-auto my-8 text-orange-800 dark:text-orange-600 w-fit'>
-                  {t('app.forgot.form.or')}
+                  OR
                 </strong>
 
                 <div className='flex items-center sm:gap-y-12 gap-x-6 justify-evenly'>
@@ -152,13 +147,13 @@ const ForgotPassword = () => {
                     href='/auth/join'
                     className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
                   >
-                    {t('app.forgot.form.join')}
+                    Join our Community and Order
                   </Link>
                   <Link
                     href='/auth/login'
                     className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
                   >
-                    {t('app.forgot.form.login')}
+                    Login Now and Order
                   </Link>
                 </div>
               </div>

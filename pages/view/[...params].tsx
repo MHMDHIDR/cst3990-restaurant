@@ -14,8 +14,8 @@ import scrollToView from 'functions/scrollToView'
 import { foodDataProps } from '@types'
 import { API_URL, ITEMS_PER_PAGE } from '@constants'
 import { isNumber } from 'functions/isNumber'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
+import { CartAddButton, CartRemoveButton } from 'components/CartButton'
+import { capitalizeText } from 'utils/functions/capitalize'
 
 const ViewFood = ({ viewFood }: any) => {
   useDocumentTitle('View Foods')
@@ -44,9 +44,6 @@ const ViewFood = ({ viewFood }: any) => {
     setData(viewFood)
   }, [viewFood])
 
-  const { t } = useTranslate()
-  const { locale } = useLocale()
-
   return (
     <Layout>
       <section id='viewFood' className='py-12 my-8'>
@@ -59,7 +56,7 @@ const ViewFood = ({ viewFood }: any) => {
                     {removeSlug(data?.response?.foodName)}
                   </Link>
                 )
-              : t('app.viewPage.title')}
+              : 'View Meals'}
           </h2>
 
           {data !== undefined && data?.response?.length > 0 ? (
@@ -80,7 +77,7 @@ const ViewFood = ({ viewFood }: any) => {
                     cItemId={item._id}
                     cHeading={
                       <Link href={`/view/item/${item._id}`}>
-                        {removeSlug(abstractText(item.foodName, 70))}
+                        {removeSlug(abstractText(capitalizeText(item.foodName), 70))}
                       </Link>
                     }
                     cPrice={item.foodPrice}
@@ -93,25 +90,13 @@ const ViewFood = ({ viewFood }: any) => {
                     cCtaLabel={
                       //add to cart button, if item is already in cart then disable the button
                       items.find(itemInCart => itemInCart.cItemId === item._id) ? (
-                        <div className='relative rtl min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-red-800 hover:bg-red-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            ❌
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.removeFromCart')}
-                          </span>
-                        </div>
+                        <CartRemoveButton classes='bg-red-800 hover:bg-red-700'>
+                          Remove From Cart
+                        </CartRemoveButton>
                       ) : (
-                        <div className='relative rtl min-w-[7.5rem] text-white py-1.5 px-6 rounded-lg bg-green-800 hover:bg-green-700'>
-                          <span className='py-0.5 px-1 pr-1.5 bg-gray-100 rounded-md absolute right-1 top-1 pointer-events-none'>
-                            🛒
-                          </span>
-                          &nbsp;&nbsp;
-                          <span className='mr-4 text-center pointer-events-none'>
-                            {t('app.foodItem.addToCart')}
-                          </span>
-                        </div>
+                        <CartAddButton classes='bg-green-800 hover:bg-green-700'>
+                          Add To Cart
+                        </CartAddButton>
                       )
                     }
                   />
@@ -132,13 +117,13 @@ const ViewFood = ({ viewFood }: any) => {
           ) : (
             <div className='flex flex-col items-center justify-center text-base text-center lg:text-xl 2xl:text-3xl gap-14'>
               <span className='my-2 font-bold text-red-500'>
-                {t('app.viewPage.item.notFound')}
+                Sorry! The requested meal was not found 😥
               </span>
               <Link
-                href={`/${locale}`}
+                href={`/`}
                 className='px-3 py-1 text-orange-800 transition-colors bg-orange-100 border border-orange-700 rounded hover:bg-orange-200'
               >
-                {t('app.viewPage.item.returnToHome')}
+                Return to Home
               </Link>
             </div>
           )}
@@ -152,9 +137,8 @@ export async function getServerSideProps({ query: { params } }: any) {
   const categoriesURL = `${API_URL}/settings`
   const { response } = await fetch(categoriesURL).then(viewFood => viewFood.json())
 
-  const isCategory = response[0].CategoryList.map((c: string[]) => c[0]).includes(
-    params[0]
-  )
+  const isCategory =
+    response && response[0]?.CategoryList.map((c: string[]) => c[0]).includes(params[0])
   const pageNum =
     !params[0] || params[0] < 1 || isNaN(params[0]) ? 1 : parseInt(params[0])
   const pageNumWithCat =

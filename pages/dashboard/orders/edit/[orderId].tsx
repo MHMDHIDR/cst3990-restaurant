@@ -20,8 +20,6 @@ import { orderDataProps, selectedToppingsProps } from '@types'
 import goTo from 'functions/goTo'
 import abstractText from 'functions/abstractText'
 import { stringJson } from 'functions/jsonTools'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
 
 const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => {
   const { orderItemToppings, setOrderItemToppings } = useContext(ToppingsContext)
@@ -44,9 +42,6 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
   const [orderUpdated, setOrderUpdated] = useState()
   const [isLoading, setIsLoading] = useState(false)
 
-  const { t } = useTranslate()
-  const { locale } = useLocale()
-
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
 
@@ -59,8 +54,8 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
 
   useDocumentTitle(
     ordersData
-      ? `${t('app.dashboard.editOrder.title')} ${abstractText(ordersData.personName, 20)}`
-      : t('app.dashboard.editOrder.titleNoPerson')
+      ? `Edit Order Details For ${abstractText(ordersData.personName, 20)}`
+      : 'Edit The Order Details'
   )
 
   useEffect(() => {
@@ -82,7 +77,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
       handleSaveOrder()
       formErr.current!.textContent = ''
     } else {
-      formErr.current!.textContent = 'الرجاء إدخال البيانات المطلوبة بشكل صحيح'
+      formErr.current!.textContent = 'Please fill all fields correctly'
     }
   }
 
@@ -120,13 +115,13 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
           <Modal
             status={Loading}
             classes='txt-blue text-center'
-            msg={`جار تحديث حالة الطلب...`}
+            msg={`Updating Order Status...`}
           />
         ) : orderUpdated === 1 ? (
           <Modal
             status={Success}
-            msg={`تم تحديث بيانات الطلب بنجاح`}
-            btnName='قائمة الطلبات'
+            msg={`Order Details Updated Successfully! 😄`}
+            btnName='View Orders'
             btnLink={goTo(`orders`)}
             redirectLink={goTo(`orders`)}
             redirectTime={10000}
@@ -135,7 +130,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
           orderUpdated === 0 && (
             <Modal
               status={Error}
-              msg={`عفواً! خطأ ما!`}
+              msg={`Sorry! Something went wrong while updating the order details 😥`}
               redirectLink={goTo(`orders`)}
               redirectTime={4000}
             />
@@ -148,18 +143,14 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
               <Link href={goTo(`orders`)} className='flex'>
                 <ClickableButton>
                   <>
-                    <Arrow
-                      className={`inline-flex ${locale === 'ar' ? 'ml-4' : 'mr-4'}`}
-                      toLeft
-                    />
-                    <span>{t('app.dashboard.editOrder.goBack')}</span>
+                    <Arrow className={`inline-flex mr-4`} toLeft />
+                    <span>Go Back to Orders</span>
                   </>
                 </ClickableButton>
               </Link>
 
               <h2 className='inline-block mb-20 text-3xl font-bold'>
-                {t('app.dashboard.editOrder.title')} (
-                {abstractText(ordersData.personName, 40)})
+                Edit Order Details For ({abstractText(ordersData.personName, 40)})
               </h2>
 
               <CartItems
@@ -168,7 +159,8 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
               />
 
               <p className='my-10 text-xl font-bold text-center text-green-700 select-none dark:text-green-400'>
-                {t('app.dashboard.editOrder.form.title')}
+                Please Do not forget to press the Update button at the bottom of the page
+                to update the order information
               </p>
 
               <form method='POST' onSubmit={handleCollectOrder}>
@@ -184,13 +176,10 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                       const target = e.target.value.trim()
 
                       if (target.length > 0 && target.length < 4) {
-                        personNameErr.current!.textContent = t(
-                          'app.dashboard.editOrder.form.name.error.shortText'
-                        )
+                        personNameErr.current!.textContent = 'Please enter a valid name'
                       } else if (target.length > 30) {
-                        personNameErr.current!.textContent = t(
-                          'app.dashboard.editOrder.form.name.error.longText'
-                        )
+                        personNameErr.current!.textContent =
+                          'The name is too long, please add a name of up to 30 characters'
                       } else {
                         personNameErr.current!.textContent = ''
                       }
@@ -198,7 +187,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.dashboard.editOrder.form.name.label')} &nbsp;
+                    Your Full Name &nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -222,9 +211,8 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                         target.length > 8 ||
                         !validPhone(target)
                       ) {
-                        personPhoneErr.current!.textContent = t(
-                          'app.dashboard.editOrder.form.phone.error.shortText'
-                        )
+                        personPhoneErr.current!.textContent =
+                          'Please enter a phone number in the same format as the phone number in the example'
                       } else {
                         personPhoneErr.current!.textContent = ''
                       }
@@ -232,7 +220,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.dashboard.editOrder.form.phone.label')} &nbsp;
+                    Phone Number, (e.g: 00123456789) &nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -252,9 +240,8 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                       const target = e.target.value.trim()
 
                       if (target.length > 0 && target.length < 4) {
-                        personAddressErr.current!.textContent = t(
-                          'app.dashboard.editOrder.form.address.error.shortText'
-                        )
+                        personAddressErr.current!.textContent =
+                          'Please enter a valid name'
                       } else {
                         personAddressErr.current!.textContent = ''
                       }
@@ -262,7 +249,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     required
                   />
                   <span className={`form__label`}>
-                    {t('app.dashboard.editOrder.form.address.label')}&nbsp;
+                    Address, (e.g: zone 00, 000st, building 000)&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -281,7 +268,8 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                   ></textarea>
 
                   <span className={`form__label`}>
-                    {t('app.dashboard.editOrder.form.notes.label')} &nbsp;😄
+                    You Can Add Notes or Additions for The chef to Add to Your Order 😄
+                    &nbsp;😄
                   </span>
                 </label>
                 <p
@@ -289,8 +277,9 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                   ref={formErr}
                 ></p>
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
-                  {t('app.dashboard.editOrder.form.totalPrice')}:&nbsp;
+                  Total Price:
                   <strong ref={grandPriceRef}>
+                    £
                     {ordersData?.orderItems?.reduce(
                       (acc: number, item: any) =>
                         acc +
@@ -313,7 +302,6 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                       0
                     )}
                   </strong>
-                  &nbsp; {t('app.currency')}
                 </span>
 
                 <div className='flex flex-col items-center justify-evenly'>
@@ -325,10 +313,10 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     {isLoading && isLoading ? (
                       <>
                         <LoadingSpinner />
-                        {t('app.dashboard.editOrder.form.updatingBtn')}
+                        Updating Details...
                       </>
                     ) : (
-                      t('app.dashboard.editOrder.form.updateBtn')
+                      'Update Order Details'
                     )}
                   </button>
                 </div>
@@ -339,12 +327,12 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
             <LoadingPage />
           ) : (
             <NoItems
-              msg={`عفواً! لم يتم العثور على وجبات أو مشروبات في الطلبات الخاصة بـ ${
-                ordersData?.personName || 'العميل'
-              } 😥 يمكنك العودة لصفحة الطلبات ومراجعة باقي الطلبات، أو الرجوع للوحة التحكم`}
+              msg={`Sorry! No meals or drinks were found in your order ${
+                ordersData?.personName || 'Customer'
+              } 😥 You can return to the orders page and review the rest of the orders, or return to the dashboard`}
               links={[
-                { to: `orders`, label: 'تصفح الطلبات' },
-                { to: `dashboard`, label: 'لوحة التحكم' }
+                { to: `orders`, label: 'View Orders' },
+                { to: `dashboard`, label: 'Dashboard' }
               ]}
             />
           )}

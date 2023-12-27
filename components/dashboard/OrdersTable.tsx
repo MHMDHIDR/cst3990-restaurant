@@ -30,8 +30,6 @@ import { createLocaleDateString } from 'functions/convertDate'
 import scrollToView from 'functions/scrollToView'
 import { isNumber } from 'functions/isNumber'
 import Invoice from './Invoice'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
 
 const OrdersTable = ({ ordersByUserEmail = false }) => {
   useEffect(() => {
@@ -52,7 +50,6 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
   const { data: session } = useSession()
 
   const { userType } = useAuth()
-  const { t } = useTranslate()
 
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
@@ -61,8 +58,6 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
   const { pageNum }: any = query
   const redirectPath = pathname.includes('dashboard/orders') ? 'orders' : 'my-orders'
   const pageNumber = !pageNum || !isNumber(pageNum) || pageNum < 1 ? 1 : parseInt(pageNum)
-
-  const { locale } = useLocale()
 
   const { loading: LoadingOrders, ...response } = useAxios({
     url: `/orders?page=${pageNumber}&limit=${ITEMS_PER_PAGE}?orderDate=-1`
@@ -196,20 +191,19 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
       }, 2000)
     })
   }, [setIsLoading])
-  const reactToPrintContent = useCallback(
-    () => componentRef.current,
-    [componentRef.current]
-  )
+  const reactToPrintContent = useCallback(() => componentRef.current, [])
+
   const handlePrint = useReactToPrint({
     content: reactToPrintContent,
     documentTitle: 'Invoice',
     onBeforeGetContent: handleOnBeforeGetContent
   })
+
   useEffect(() => {
     if (typeof onBeforeGetContentResolve.current === 'function') {
       onBeforeGetContentResolve.current()
     }
-  }, [setIsLoading, onBeforeGetContentResolve.current])
+  }, [setIsLoading])
 
   return LoadingOrders ? (
     <LoadingPage />
@@ -221,10 +215,10 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
           classes='text-2xl'
           msg={
             orderInfo.status === 'accept'
-              ? `😄    تمت الموافقة على الطلب    🎉`
+              ? `😄    Order has been confirmed   🎉`
               : orderInfo.status === 'delete'
-              ? '🗑    تم حذف الطلب بنجاح    ❌'
-              : `❗️    تم رفض الطلب بنجاح    😔`
+              ? '🗑    Order has been removed successfully    ❌'
+              : `❗️    Order has been rejected successfully    😔`
           }
           redirectLink={goTo(redirectPath)}
           redirectTime={4000}
@@ -232,7 +226,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
       ) : orderUpdated === 0 ? (
         <Modal
           status={Error}
-          msg={`عفواً! خطأ ما!`}
+          msg={`❗️    Order has not been updated    😔`}
           redirectLink={goTo(redirectPath)}
           redirectTime={4000}
         />
@@ -243,35 +237,35 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
         <Modal
           status={Loading}
           classes='txt-blue text-center'
-          msg={`جار ${
-            orderInfo.status === 'invoice' ? 'طباعة الطلب' : 'تحديث حالة الطلب...'
-          }`}
+          msg={
+            orderInfo.status === 'invoice' ? 'Printing Order' : 'Updating Order Status...'
+          }
         />
       ) : (
         <Modal
           status={Loading}
           modalHidden='hidden'
           classes='txt-blue text-center'
-          msg={`هل أنت متأكد من ${
+          msg={`Are you sure you want to ${
             orderInfo.status === 'accept'
-              ? 'الموافقة'
+              ? 'Accept'
               : orderInfo.status === 'delete'
-              ? 'حذف'
+              ? 'Delete'
               : orderInfo.status === 'invoice'
-              ? 'طباعة'
-              : 'رفض'
-          } هذا الطلب؟
-          ${orderInfo.status !== 'invoice' ? ' لا يمكن التراجع عن هذا القرار' : ''}
+              ? 'Print'
+              : 'Reject'
+          } this order?
+          ${orderInfo.status !== 'invoice' ? ' You can not undo this action' : ''}
           `}
           ctaConfirmBtns={[
             orderInfo.status === 'accept'
-              ? 'موافق'
+              ? 'Accept'
               : orderInfo.status === 'delete'
-              ? 'حذف'
+              ? 'Delete'
               : orderInfo.status === 'invoice'
-              ? 'طباعة'
-              : 'رفض',
-            'الغاء'
+              ? 'Print'
+              : 'Reject',
+            'Cancel'
           ]}
         />
       )}
@@ -290,47 +284,21 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
       <table className='table w-full text-center border-collapse table-auto'>
         <thead className='text-white bg-orange-800'>
           <tr>
-            <th className='min-w-[0.5rem] px-1 py-2'>
-              {t('app.dashboard.orders.itemsTable.columns.no')}
-            </th>
-            <th className='px-1 py-2 min-w-[10rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.name')}
-            </th>
-            <th className='px-1 py-2 min-w-[7rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.email')}
-            </th>
-            <th className='px-1 py-2'>
-              {t('app.dashboard.orders.itemsTable.columns.datetime')}
-            </th>
-            <th className='px-1 py-2'>
-              {t('app.dashboard.orders.itemsTable.columns.phone')}
-            </th>
-            <th className='px-1 py-2 min-w-[20rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.details')}
-            </th>
-            <th className='px-1 py-2 min-w-[10rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.notes')}
-            </th>
-            <th className='px-1 py-2 min-w-[5rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.totalPrice')}
-            </th>
-            <th className='px-1 py-2'>
-              {t('app.dashboard.orders.itemsTable.columns.orderNumber')}
-            </th>
-            <th className='px-1 py-2 min-w-[6rem]'>
-              {t('app.dashboard.orders.itemsTable.columns.paymentUsed')}
-            </th>
-            <th className='px-1 py-2'>
-              {t('app.dashboard.orders.itemsTable.columns.status')}
-            </th>
+            <th className='min-w-[0.5rem] px-1 py-2'>No.</th>
+            <th className='px-1 py-2 min-w-[10rem]'>Name</th>
+            <th className='px-1 py-2 min-w-[7rem]'>Email</th>
+            <th className='px-1 py-2'>Date/Time</th>
+            <th className='px-1 py-2'>Phone</th>
+            <th className='px-1 py-2 min-w-[20rem]'>Details</th>
+            <th className='px-1 py-2 min-w-[10rem]'>Notes</th>
+            <th className='px-1 py-2 min-w-[5rem]'>Total Price</th>
+            <th className='px-1 py-2'>Order Number</th>
+            <th className='px-1 py-2 min-w-[6rem]'>Payment Used</th>
+            <th className='px-1 py-2'>Status</th>
             {(USER.userAccountType === 'admin' ||
               USER.userAccountType === 'cashier' ||
               userType === 'admin' ||
-              userType === 'cashier') && (
-              <th className='px-1 py-2'>
-                {t('app.dashboard.orders.itemsTable.columns.actions')}
-              </th>
-            )}
+              userType === 'cashier') && <th className='px-1 py-2'>Action</th>}
           </tr>
         </thead>
         <tbody>
@@ -364,12 +332,8 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                         <td className='px-1 py-2'>{order.personPhone}</td>
                         <td className='px-1 py-2 min-w-[30rem]'>
                           <span
-                            data-tooltip={`${t(
-                              'app.dashboard.orders.itemsTable.rows.show'
-                            )} ${order.orderItems.length} ${
-                              order.orderItems.length > 1
-                                ? t('app.dashboard.orders.itemsTable.rows.orders')
-                                : t('app.dashboard.orders.itemsTable.rows.order')
+                            data-tooltip={`Show ${order.orderItems.length} ${
+                              order.orderItems.length > 1 ? 'Orders' : 'Order'
                             }`}
                           >
                             <span
@@ -383,7 +347,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                           <div className='max-h-screen overflow-hidden transition-all duration-300 ordered-items'>
                             {order?.orderItems.length === 0 ? (
                               <p className='max-w-lg mx-auto my-2 text-lg font-bold leading-10 tracking-wider text-red-500'>
-                                {t('app.dashboard.orders.itemsTable.rows.noDetails')}
+                                Sorry! There Are No Details for this Order
                               </p>
                             ) : (
                               order?.orderItems?.map((item: cardProps, idx: number) => (
@@ -400,37 +364,20 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                           className='object-cover rounded-lg shadow-md w-14 h-14'
                                         />
                                         <div className='flex flex-col items-start'>
-                                          <span>
-                                            {t(
-                                              'app.dashboard.orders.itemsTable.rows.itemName'
-                                            )}
-                                            : {item.cHeading}
-                                          </span>
-                                          <span>
-                                            {t(
-                                              'app.dashboard.orders.itemsTable.rows.qty'
-                                            )}
-                                            : {item.cQuantity}
-                                          </span>
+                                          <span>Item Name : {item.cHeading}</span>
+                                          <span>Quantity : {item.cQuantity}</span>
                                         </div>
                                       </div>
 
                                       <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                                        {t(
-                                          'app.dashboard.orders.itemsTable.rows.pricePerQty'
-                                        )}
-                                        : &nbsp;
-                                        <strong>
-                                          {item.cPrice * item.cQuantity!}
-                                          &nbsp;&nbsp;
-                                        </strong>
-                                        {t('app.currency')}
+                                        Price Per Quantity:
+                                        <strong> £{item.cPrice * item.cQuantity!}</strong>
                                       </span>
                                     </div>
                                     <div className='flex flex-col gap-6'>
                                       {inSeletedToppings
                                         .map(id => id.slice(0, -2))
-                                        ?.includes(item.cItemId) && <h3>الاضافات</h3>}
+                                        ?.includes(item.cItemId) && <h3>Toppings</h3>}
                                       {item?.cToppings?.map(
                                         ({
                                           toppingId,
@@ -447,23 +394,16 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                                 ✅ &nbsp; {toppingName}
                                               </span>
                                               <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                                {t(
-                                                  'app.dashboard.orders.itemsTable.rows.toppingPrice'
-                                                )}{' '}
-                                                {toppingPrice} {t('app.currency')}
+                                                Topping Price £{toppingPrice}
                                               </span>
                                               <span className='px-2 text-orange-900 bg-orange-200 rounded-lg'>
-                                                {t(
-                                                  'app.dashboard.orders.itemsTable.rows.toppingQty'
-                                                )}{' '}
-                                                {toppingQuantity}
+                                                Topping Quantity {toppingQuantity}
                                               </span>
                                               <span className='px-2 text-green-900 bg-green-200 rounded-lg'>
-                                                {t(
-                                                  'app.dashboard.orders.itemsTable.rows.pricePerQty'
-                                                )}
-                                                : {toppingPrice * (toppingQuantity ?? 1)}{' '}
-                                                {t('app.currency')}
+                                                Price Per Quantity:{' '}
+                                                <strong>
+                                                  £{toppingPrice * (toppingQuantity ?? 1)}
+                                                </strong>
                                               </span>
                                             </div>
                                           )
@@ -481,7 +421,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                         <td className='px-1 py-2'>
                           {!order.personNotes ? (
                             <span className='font-bold text-red-600 dark:text-red-400'>
-                              {t('app.dashboard.orders.itemsTable.rows.noNotes')}
+                              There Are No Notes in the order
                             </span>
                           ) : (
                             order.personNotes
@@ -489,20 +429,23 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                         </td>
                         <td>
                           <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                            <strong>{order.grandPrice}</strong> {t('app.currency')}
+                            <strong> £{order.grandPrice}</strong>
                           </span>
                         </td>
                         <td className='px-1 py-2'>{order.orderId}</td>
                         <td className='px-1 py-2 min-w-[6rem]'>
                           <span
-                            data-tooltip={`${t(
-                              'app.dashboard.orders.itemsTable.columns.paymentUsed'
-                            )} ${
-                              order.paymentData.paymentSource === 'paypal' &&
-                              t('app.dashboard.orders.itemsTable.rows.paypal')
+                            data-tooltip={`Payment Used ${
+                              order.paymentData.paymentSource === 'paypal'
+                                ? 'PayPal'
+                                : 'N/A'
                             }`}
                           >
-                            {order.paymentData.paymentSource === 'paypal' && <PayPal />}
+                            {order.paymentData.paymentSource === 'paypal' ? (
+                              <PayPal />
+                            ) : (
+                              'N/A'
+                            )}
                           </span>
                         </td>
                         <td
@@ -515,17 +458,17 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                           }`}
                         >
                           {order.orderStatus === 'pending'
-                            ? t('app.dashboard.orders.itemsTable.rows.orderPending')
+                            ? 'Order Pending'
                             : order.orderStatus === 'accept'
-                            ? t('app.dashboard.orders.itemsTable.rows.orderAccepted')
-                            : t('app.dashboard.orders.itemsTable.rows.orderRejected')}
+                            ? 'Order Accepted'
+                            : 'Order Rejected'}
                         </td>
                         {(USER.userAccountType === 'admin' ||
                           USER.userAccountType === 'cashier' ||
                           userType === 'admin' ||
                           userType === 'cashier') && (
                           <td>
-                            <NavMenu label={`${locale === 'ar' ? 'الإجراء' : 'Action'}`}>
+                            <NavMenu label={`Action`}>
                               {order.orderStatus === 'pending' ? (
                                 <>
                                   <AcceptBtn
@@ -619,7 +562,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   />
                                 </>
                               ) : (
-                                <span>لا يوجد إجراء</span>
+                                <span>No Actions</span>
                               )}
                             </NavMenu>
                           </td>
@@ -638,13 +581,13 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                         className='my-2 md:text-2xl text-red-600 font-[600] py-2 px-1'
                         data-form-msg
                       >
-                        لم يتم العثور على طلبات بعد، يمكنك إنشاء طلب جديد
+                        No Orders Yet, You Can Create New Order
                       </p>
                       <Link
                         href={`/view`}
                         className='min-w-[7rem] bg-blue-500 hover:bg-blue-600 text-white py-1.5 text-lg px-6 rounded-md'
                       >
-                        قائمة الوجبات
+                        View Menu
                       </Link>
                     </td>
                     <td />
@@ -668,12 +611,8 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                     <td className='px-1 py-2'>{order.personPhone}</td>
                     <td className='px-1 py-2 min-w-[30rem]'>
                       <span
-                        data-tooltip={`${t(
-                          'app.dashboard.orders.itemsTable.rows.show'
-                        )} ${order.orderItems.length} ${
-                          order.orderItems.length > 1
-                            ? t('app.dashboard.orders.itemsTable.rows.orders')
-                            : t('app.dashboard.orders.itemsTable.rows.order')
+                        data-tooltip={`Show ${order.orderItems.length} ${
+                          order.orderItems.length > 1 ? 'Orders' : 'Order'
                         }`}
                       >
                         <span
@@ -687,100 +626,89 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                       <div className='max-h-screen overflow-hidden transition-all duration-300 ordered-items'>
                         {order?.orderItems.length === 0 ? (
                           <p className='max-w-lg mx-auto my-2 text-lg font-bold leading-10 tracking-wider text-red-500'>
-                            {t('app.dashboard.orders.itemsTable.rows.noDetails')}
+                            Sorry! There Are No Details for this Order
                           </p>
                         ) : (
-                          order?.orderItems?.map((item: any) => (
-                            <div key={item.cItemId}>
-                              <div className='flex flex-col gap-4'>
-                                <div className='flex flex-col items-start gap-2'>
-                                  <div className='flex items-center w-full gap-4'>
-                                    <Image
-                                      loading='lazy'
-                                      src={item.cImg[0].foodImgDisplayPath}
-                                      alt={item.cHeading}
-                                      width={56}
-                                      height={56}
-                                      className='object-cover rounded-lg shadow-md w-14 h-14'
-                                    />
-                                    <div className='flex flex-col items-start'>
-                                      <span>
-                                        {t(
-                                          'app.dashboard.orders.itemsTable.rows.itemName'
-                                        )}
-                                        : {item.cHeading}
-                                      </span>
-                                      <span>
-                                        {t('app.dashboard.orders.itemsTable.rows.qty')}:{' '}
-                                        {item.cQuantity}
-                                      </span>
+                          order?.orderItems?.map((item: any, itemInx: number) => {
+                            const { cItemId } = item
+                            const KEY = cItemId ? cItemId : itemInx
+                            return (
+                              <div key={KEY}>
+                                <div className='flex flex-col gap-4'>
+                                  <div className='flex flex-col items-start gap-2'>
+                                    <div className='flex items-center w-full gap-4'>
+                                      {item?.cImg && (
+                                        <Image
+                                          loading='lazy'
+                                          src={item.cImg[0].foodImgDisplayPath}
+                                          alt={item.cHeading}
+                                          width={56}
+                                          height={56}
+                                          className='object-cover rounded-lg shadow-md w-14 h-14'
+                                        />
+                                      )}
+                                      <div className='flex flex-col items-start'>
+                                        <span>Item Name : {item.cHeading}</span>
+                                        <span>Quantity: {item.cQuantity}</span>
+                                      </div>
                                     </div>
-                                  </div>
 
-                                  <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                                    {t(
-                                      'app.dashboard.orders.itemsTable.rows.pricePerQty'
+                                    <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
+                                      Price Per Quantity:
+                                      <strong> £{item.cPrice * item.cQuantity}</strong>
+                                    </span>
+                                  </div>
+                                  <div className='flex flex-col gap-6'>
+                                    {inSeletedToppings
+                                      .map(id => id.slice(0, -2))
+                                      ?.includes(item.cItemId) && <h3>الاضافات</h3>}
+                                    {item?.cToppings?.map(
+                                      ({
+                                        toppingId,
+                                        toppingName,
+                                        toppingPrice,
+                                        toppingQuantity
+                                      }: selectedToppingsProps) =>
+                                        inSeletedToppings[idx]?.includes(toppingId) && (
+                                          <div
+                                            key={toppingId}
+                                            className='flex flex-wrap gap-4'
+                                          >
+                                            <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
+                                              ✅ &nbsp; {toppingName}
+                                            </span>
+                                            <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
+                                              Topping Price:
+                                              <strong> £{toppingPrice}</strong>
+                                            </span>
+                                            <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
+                                              Topping Quantity:
+                                              <strong> {toppingQuantity}</strong>
+                                            </span>
+                                            <span className='p-1 my-auto text-green-900 bg-green-200 rounded-lg min-w-fit'>
+                                              Price Per Quantity:{' '}
+                                              <strong>
+                                                £{toppingPrice * toppingQuantity!}
+                                              </strong>
+                                            </span>
+                                          </div>
+                                        )
                                     )}
-                                    : &nbsp;
-                                    <strong>{item.cPrice * item.cQuantity}</strong>{' '}
-                                    {t('app.currency')}
-                                  </span>
+                                  </div>
                                 </div>
-                                <div className='flex flex-col gap-6'>
-                                  {inSeletedToppings
-                                    .map(id => id.slice(0, -2))
-                                    ?.includes(item.cItemId) && <h3>الاضافات</h3>}
-                                  {item?.cToppings?.map(
-                                    ({
-                                      toppingId,
-                                      toppingName,
-                                      toppingPrice,
-                                      toppingQuantity
-                                    }: selectedToppingsProps) =>
-                                      inSeletedToppings[idx]?.includes(toppingId) && (
-                                        <div
-                                          key={toppingId}
-                                          className='flex flex-wrap gap-4'
-                                        >
-                                          <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                            ✅ &nbsp; {toppingName}
-                                          </span>
-                                          <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                            {t(
-                                              'app.dashboard.orders.itemsTable.rows.toppingPrice'
-                                            )}{' '}
-                                            {toppingPrice} {t('app.currency')}
-                                          </span>
-                                          <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                            {t(
-                                              'app.dashboard.orders.itemsTable.rows.toppingQty'
-                                            )}{' '}
-                                            {toppingQuantity}
-                                          </span>
-                                          <span className='p-1 my-auto text-green-900 bg-green-200 rounded-lg min-w-fit'>
-                                            {t(
-                                              'app.dashboard.orders.itemsTable.rows.pricePerQty'
-                                            )}
-                                            :{toppingPrice * toppingQuantity!}{' '}
-                                            {t('app.currency')}
-                                          </span>
-                                        </div>
-                                      )
-                                  )}
-                                </div>
+                                {order.length > 1 && (
+                                  <Divider marginY={2} thickness={0.5} />
+                                )}
                               </div>
-                              {order.length > 1 && (
-                                <Divider marginY={2} thickness={0.5} />
-                              )}
-                            </div>
-                          ))
+                            )
+                          })
                         )}
                       </div>
                     </td>
                     <td className='px-1 py-2'>
                       {!order.personNotes ? (
                         <span className='font-bold text-red-600 dark:text-red-400'>
-                          {t('app.dashboard.orders.itemsTable.rows.noNotes')}
+                          There Are No Notes in the order
                         </span>
                       ) : (
                         order.personNotes
@@ -788,20 +716,21 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                     </td>
                     <td>
                       <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                        <strong>{order.grandPrice}</strong> {t('app.currency')}
+                        <strong> £{order.grandPrice}</strong>
                       </span>
                     </td>
                     <td className='px-1 py-2'>{order.orderId}</td>
                     <td className='px-1 py-2 min-w-[6rem]'>
                       <span
-                        data-tooltip={`${t(
-                          'app.dashboard.orders.itemsTable.columns.paymentUsed'
-                        )} ${
-                          order.paymentData.paymentSource === 'paypal' &&
-                          t('app.dashboard.orders.itemsTable.rows.paypal')
+                        data-tooltip={`Payment Used ${
+                          order.paymentData.paymentSource === 'paypal' ? 'PayPal' : 'N/A'
                         }`}
                       >
-                        {order.paymentData.paymentSource === 'paypal' && <PayPal />}
+                        {order.paymentData.paymentSource === 'paypal' ? (
+                          <PayPal />
+                        ) : (
+                          'N/A'
+                        )}
                       </span>
                     </td>
                     <td
@@ -814,13 +743,13 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                       }`}
                     >
                       {order.orderStatus === 'pending'
-                        ? t('app.dashboard.orders.itemsTable.rows.orderPending')
+                        ? 'Order Pending'
                         : order.orderStatus === 'accept'
-                        ? t('app.dashboard.orders.itemsTable.rows.orderAccepted')
-                        : t('app.dashboard.orders.itemsTable.rows.orderRejected')}
+                        ? 'Order Accepted'
+                        : 'Order Rejected'}
                     </td>
                     <td>
-                      <NavMenu label={`${locale === 'ar' ? 'الإجراء' : 'Action'}`}>
+                      <NavMenu label={`Action`}>
                         {order.orderStatus === 'pending' ? (
                           <>
                             <AcceptBtn

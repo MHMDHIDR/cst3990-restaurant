@@ -5,7 +5,6 @@ import { USER } from '@constants'
 import goTo from 'functions/goTo'
 import menuToggler from 'functions/menuToggler'
 import { useRouter } from 'next/router'
-import { useTranslate } from 'hooks/useTranslate'
 
 const DashboardSidebar = () => {
   const menuTogglerRef = useRef<any>()
@@ -15,7 +14,6 @@ const DashboardSidebar = () => {
     setTop(menuTogglerRef?.current?.getBoundingClientRect().top)
   }, [])
 
-  const { t } = useTranslate()
   const { locale } = useRouter()
 
   return (
@@ -28,7 +26,7 @@ const DashboardSidebar = () => {
         id='menuToggler'
       />
       <label
-        data-tooltip={locale === 'ar' ? 'القائمة' : 'Menu'}
+        data-tooltip='Menu'
         htmlFor='menuToggler'
         className={`block z-20 w-10 h-10 transition-all translate-x-0 bg-orange-700 border-2 border-gray-800 cursor-pointer hover:bg-orange-800 dark:border-white translate-y-36 sm:translate-y-36 peer-checked:-translate-x-56 ${
           top < 100 &&
@@ -64,33 +62,21 @@ const DashboardSidebar = () => {
           }`}
           id='menu'
         >
-          <SideBarLink href={'dashboard'}>
-            {t('app.dashboard.sideBar.dashboard')}
-          </SideBarLink>
+          <SideBarLink href={'dashboard'}>Dashboard</SideBarLink>
           {USER?.userAccountType === 'admin' || userType === 'admin' ? (
             <>
-              <SideBarLink href={'orders'}>
-                {t('app.dashboard.sideBar.orders')}
-              </SideBarLink>
-              <SideBarLink href={'statistics'}>
-                {t('app.dashboard.sideBar.statistics')}
-              </SideBarLink>
-              <SideBarLink href={'menu'}>{t('app.dashboard.sideBar.menu')}</SideBarLink>
-              <SideBarLink href={'food/add'}>
-                {t('app.dashboard.sideBar.add')}
-              </SideBarLink>
-              <SideBarLink href={'users'}>{t('app.dashboard.sideBar.users')}</SideBarLink>
-              <SideBarLink href={'settings'}>
-                {t('app.dashboard.sideBar.settings')}
-              </SideBarLink>
+              <SideBarLink href={'orders'}>Orders</SideBarLink>
+              <SideBarLink href={'statistics'}>Statistics</SideBarLink>
+              <SideBarLink href={'menu'}>Menu</SideBarLink>
+              <SideBarLink href={'food/add'}>Add</SideBarLink>
+              <SideBarLink href={'users'}>Users</SideBarLink>
+              <SideBarLink href={'settings'}>Settings</SideBarLink>
             </>
           ) : (
             USER?.userAccountType === 'cashier' ||
             (userType === 'cashier' && (
               <>
-                <SideBarLink href={'orders'}>
-                  {t('app.dashboard.sideBar.orders')}
-                </SideBarLink>
+                <SideBarLink href={'orders'}>Orders</SideBarLink>
               </>
             ))
           )}

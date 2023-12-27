@@ -23,8 +23,7 @@ import { origin, ITEMS_PER_PAGE, USER } from '@constants'
 import { stringJson } from 'functions/jsonTools'
 import { ClickableButton } from 'components/Button'
 import Add from 'components/Icons/Add'
-import { useTranslate } from 'hooks/useTranslate'
-import { useLocale } from 'hooks/useLocale'
+import { capitalizeText } from 'utils/functions/capitalize'
 
 const DashboardMenu = () => {
   useDocumentTitle('Menu')
@@ -37,9 +36,6 @@ const DashboardMenu = () => {
   const { loading, userType } = useAuth()
   const { query } = useRouter()
   const { pageNum }: any = query
-
-  const { t } = useTranslate()
-  const { locale } = useLocale()
 
   const pageNumber =
     !pageNum || !isNumber(pageNum) || pageNum < 1
@@ -57,7 +53,7 @@ const DashboardMenu = () => {
       .get(`foods?page=${pageNumber}&limit=${ITEMS_PER_PAGE}&createdAt=-1`)
       .then(({ data }) => setMenuFood(data))
     scrollToView()
-  }, [])
+  }, [pageNumber])
 
   useEventListener('click', (e: any) => {
     if (e.target.id === 'deleteFood') {
@@ -107,20 +103,20 @@ const DashboardMenu = () => {
   return loading || !userType ? (
     <LoadingPage />
   ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
-    <ModalNotFound btnLink='/dashboard' btnName='لوحة التحكم' />
+    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
       {deleteFoodStatus === 1 ? (
         <Modal
           status={Success}
-          msg={`تم حذف ${delFoodName} بنجاح 😄 الرجاء الانتظار ليتم تحويلك لقائمة الوجبات`}
+          msg={`${delFoodName} Has Been Deleted Successfully 😄!, Redirecting...`}
           redirectLink={goTo('menu')}
           redirectTime={3500}
         />
       ) : deleteFoodStatus === 0 ? (
         <Modal
           status={Error}
-          msg={`حدث خطأ ما أثناء حذف ${delFoodName}!`}
+          msg={`Error Deleting ${delFoodName}, Please Try Again Later 😥`}
           redirectLink={goTo('menu')}
           redirectTime={3500}
         />
@@ -136,47 +132,33 @@ const DashboardMenu = () => {
                 status={Loading}
                 modalHidden='hidden'
                 classes='text-blue-600 dark:text-blue-400 text-lg'
-                msg={`هل أنت متأكد من حذف ${delFoodName} ؟ لا يمكن التراجع عن هذا القرار`}
-                ctaConfirmBtns={['حذف', 'الغاء']}
+                msg={`Are you sure you want to delete ${delFoodName}? You can not undo this action`}
+                ctaConfirmBtns={['Delete', 'Cancel']}
               />
             )}
 
             <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-              {t('app.dashboard.menuPage.title')}
+              Foods, Drinks, and Sweets Menu
             </h3>
 
             <Link href={goTo('food/add')}>
               <ClickableButton>
                 <>
-                  <Add className={`inline-flex ${locale === 'ar' ? 'ml-4' : 'mr-4'}`} />
-                  <span>{t('app.dashboard.menuPage.add')}</span>
+                  <Add className={`inline-flex mr-4`} />
+                  <span>Add an Item</span>
                 </>
               </ClickableButton>
             </Link>
             <table className='table w-full text-center'>
               <thead className='text-white bg-orange-800'>
                 <tr>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.order')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.image')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.name')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.desc')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.price')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.lastUpdate')}
-                  </th>
-                  <th className='px-1 py-2'>
-                    {t('app.dashboard.menuPage.itemsTable.columns.actions')}
-                  </th>
+                  <th className='px-1 py-2'>Order</th>
+                  <th className='px-1 py-2'>Image</th>
+                  <th className='px-1 py-2'>Name</th>
+                  <th className='px-1 py-2'>Description</th>
+                  <th className='px-1 py-2'>Price</th>
+                  <th className='px-1 py-2'>The Update Date/Time</th>
+                  <th className='px-1 py-2'>Actions</th>
                 </tr>
               </thead>
 
@@ -195,14 +177,14 @@ const DashboardMenu = () => {
                             height={56}
                             width={56}
                             src={item.foodImgs[0]?.foodImgDisplayPath}
-                            alt={item.foodName}
+                            alt={capitalizeText(item.foodName)}
                             className='object-cover mx-auto rounded-lg shadow-md h-14 w-14'
                           />
                         </td>
                         <td className='px-1 py-2'>
                           {typeof window !== 'undefined' && window.innerWidth < 1360
-                            ? abstractText(removeSlug(item.foodName), 10)
-                            : removeSlug(item.foodName)}
+                            ? abstractText(removeSlug(capitalizeText(item.foodName)), 10)
+                            : removeSlug(capitalizeText(item.foodName))}
                         </td>
                         <td className='px-1 py-2'>
                           <p>
@@ -214,30 +196,29 @@ const DashboardMenu = () => {
                         <td className='px-1 py-2 min-w-[5.5rem]'>
                           <span>
                             <strong className='inline-block m-2 text-xl text-green-700 dark:text-green-400'>
-                              {item.foodPrice}
+                              £{item.foodPrice}
                             </strong>
-                            {t('app.currency')}
                           </span>
                         </td>
                         <td className='px-1 py-2 min-w-[16rem]'>
                           {createLocaleDateString(item.updatedAt)}
                         </td>
                         <td className='px-1 py-2'>
-                          <NavMenu label={`${locale === 'ar' ? 'الإجراء' : 'Action'}`}>
+                          <NavMenu label={`Actions`}>
                             <Link
                               href={goTo(`food/edit/${item._id}`)}
                               className='px-4 py-1 mx-2 text-white bg-green-600 rounded-md hover:bg-green-700'
                             >
-                              {t('app.foodItem.edit')}
+                              Edit Item
                             </Link>
                             <button
                               id='deleteFood'
                               data-id={item._id}
-                              data-name={item.foodName}
+                              data-name={capitalizeText(item.foodName)}
                               data-imgname={stringJson(item.foodImgs)}
                               className='px-4 py-1 mx-2 text-white bg-red-600 rounded-md hover:bg-red-700'
                             >
-                              {t('app.foodItem.remove')}
+                              Delete Item
                             </button>
                           </NavMenu>
                         </td>
@@ -275,20 +256,20 @@ const DashboardMenu = () => {
                     <td />
                     <td className='flex flex-col px-1 py-2'>
                       <p className='my-2 md:text-2xl text-red-600 dark:text-red-400 font-[600] py-2 px-1'>
-                        عفواً، لم يتم العثور على أي وجبات
+                        Sorry! No Items Found
                       </p>
                       <div className='flex justify-center gap-4'>
                         <Link
                           href={goTo('food/add')}
                           className='min-w-[7rem] bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-6 rounded-md'
                         >
-                          إضافة وجبة
+                          Add an Item
                         </Link>
                         <Link
                           href={goTo('dashboard')}
                           className='min-w-[7rem] bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-6 rounded-md'
                         >
-                          لوحة التحكم
+                          Dashboard
                         </Link>
                       </div>
                     </td>
