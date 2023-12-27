@@ -72,56 +72,62 @@ const Settings = () => {
   const twitterAccountErr = useRef<HTMLSpanElement>(null)
   const formMsg = useRef<HTMLDivElement>(null)
 
-  // handle input change
+  const handleListInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number,
+    otherValue: any,
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const { name, value } = e.target
+    const updatedList = [...list]
+
+    if (['categoryValue', 'categoryName', 'appTaglineItemValue'].includes(name)) {
+      updatedList[index] = name === 'appTaglineItemValue' ? [value] : [otherValue, value]
+      setList(updatedList)
+    }
+  }
+
+  const handleListAddClick = (
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    setList([...list, ''])
+  }
+
+  const handleListRemoveClick = (
+    index: number,
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const updatedList = [...list]
+    updatedList.splice(index, 1)
+    setList(updatedList)
+  }
+
+  const handleRemoveClick = (e: any, index: number) => {
+    const targetAppTaglines = e.target.name === 'appTaglinesList'
+    handleListRemoveClick(
+      index,
+      targetAppTaglines ? appTaglinesList : categoryList,
+      targetAppTaglines ? setAppTaglinesList : setCategoryList
+    )
+  }
+
+  const handleAddClick = (e: any) => {
+    const targetAppTaglines = e.target.name === 'appTaglinesList'
+    handleListAddClick(
+      targetAppTaglines ? appTaglinesList : categoryList,
+      targetAppTaglines ? setAppTaglinesList : setCategoryList
+    )
+  }
+
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number,
     otherValue: any
   ) => {
-    const { name, value } = e.target
-    const list = [...categoryList]
-    if (name === 'categoryValue') {
-      list[index] = [otherValue, value]
-
-      handleCategoryListInput(list)
-    } else if (name === 'categoryName') {
-      list[index] = [value, otherValue]
-
-      handleCategoryListInput(list)
-    } else if (name === 'appTaglineItemValue') {
-      list[index] = [value]
-
-      handleAppTaglinesListInput(list)
-    }
-  }
-
-  const handleCategoryListInput = (list: any[]) => {
-    setCategoryList(list)
-  }
-
-  const handleAppTaglinesListInput = (list: any[]) => {
-    setAppTaglinesList(list)
-  }
-
-  // handle click event of the Add button
-  const handleAppTaglineListAddClick = () => {
-    setAppTaglinesList([...appTaglinesList, ''])
-  }
-
-  const handleAppTaglineListRemoveClick = (index: number) => {
-    const list = [...appTaglinesList]
-    list.splice(index, 1)
-    setAppTaglinesList(list)
-  }
-  // handle click event of the Add button
-  const handleAddClick = () => {
-    setCategoryList([...categoryList, ['', '']])
-  }
-
-  const handleRemoveClick = (index: number) => {
-    const list = [...categoryList]
-    list.splice(index, 1)
-    setCategoryList(list)
+    handleListInputChange(e, index, otherValue, categoryList, setCategoryList)
   }
 
   const HandleUpdate = async (e: { preventDefault: () => void }) => {
@@ -160,7 +166,6 @@ const Settings = () => {
       instagramAccountErr.current!.textContent === '' ||
       twitterAccountErr.current!.textContent === ''
     ) {
-      setModalLoading(true)
       setIsUpdating(true)
 
       const { foodImgs } = await uploadS3(file)
@@ -341,7 +346,8 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
-                        onClick={() => handleAppTaglineListRemoveClick(idx)}
+                        name='appTaglinesList'
+                        onClick={e => handleRemoveClick(e, idx)}
                       >
                         -
                       </button>
@@ -350,7 +356,8 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
-                        onClick={handleAppTaglineListAddClick}
+                        name='appTaglinesList'
+                        onClick={e => handleAddClick(e)}
                       >
                         +
                       </button>
@@ -562,7 +569,8 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
-                        onClick={() => handleRemoveClick(idx)}
+                        name='categoryList'
+                        onClick={e => handleRemoveClick(e, idx)}
                       >
                         -
                       </button>
@@ -571,7 +579,8 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
-                        onClick={handleAddClick}
+                        name='categoryList'
+                        onClick={e => handleAddClick(e)}
                       >
                         +
                       </button>
