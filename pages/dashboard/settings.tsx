@@ -88,6 +88,10 @@ const Settings = () => {
       list[index] = [value, otherValue]
 
       handleCategoryListInput(list)
+    } else if (name === 'appTaglineItemValue') {
+      list[index] = [value]
+
+      handleAppTaglinesListInput(list)
     }
   }
 
@@ -99,6 +103,16 @@ const Settings = () => {
     setAppTaglinesList(list)
   }
 
+  // handle click event of the Add button
+  const handleAppTaglineListAddClick = () => {
+    setAppTaglinesList([...appTaglinesList, ''])
+  }
+
+  const handleAppTaglineListRemoveClick = (index: number) => {
+    const list = [...appTaglinesList]
+    list.splice(index, 1)
+    setAppTaglinesList(list)
+  }
   // handle click event of the Add button
   const handleAddClick = () => {
     setCategoryList([...categoryList, ['', '']])
@@ -327,7 +341,7 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
-                        onClick={() => handleRemoveClick(idx)}
+                        onClick={() => handleAppTaglineListRemoveClick(idx)}
                       >
                         -
                       </button>
@@ -336,7 +350,7 @@ const Settings = () => {
                       <button
                         type='button'
                         className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
-                        onClick={handleAddClick}
+                        onClick={handleAppTaglineListAddClick}
                       >
                         +
                       </button>
