@@ -6,7 +6,7 @@ export const Twitter = ({ fill = 'white' }) => (
   <svg
     stroke='currentColor'
     fill={fill}
-    stroke-width='0'
+    strokeWidth='0'
     viewBox='0 0 24 24'
     className={`${ICON_SIZE_CLASS} inline-block opacity-60 hover:opacity-100 transition-opacity mx-auto`}
     height='1em'

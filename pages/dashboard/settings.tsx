@@ -160,7 +160,7 @@ const Settings = () => {
   return loading || !userType ? (
     <LoadingPage />
   ) : userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='لوحة التحكم' />
+    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
       {settingsUpdated === 1 ? (
@@ -173,7 +173,7 @@ const Settings = () => {
       ) : settingsUpdated === 0 ? (
         <Modal
           status={Error}
-          msg='حدث خطأ ما أثناء تحديث الإعدادات!'
+          msg='Something went wrong! Please try again later.'
           redirectLink={goTo(`settings`)}
           redirectTime={3500}
         />
@@ -187,7 +187,7 @@ const Settings = () => {
                 status={Loading}
                 modalHidden='hidden'
                 classes='txt-blue text-center'
-                msg='الرجاء الانتظار...'
+                msg='Updating Information...'
               />
             )}
 
@@ -226,9 +226,9 @@ const Settings = () => {
                     const target = (e.target as HTMLInputElement).value.trim()
 
                     if (target.length > 0 && target.length < 10) {
-                      appNameErr.current!.textContent = `اسم الموقع قصير جداً ولا يوصف الموقع بشكل كافي، الاســـــم يجب يتكون من ${10} حرف على الأقل`
+                      appNameErr.current!.textContent = `App Name is too short! App Name must be at least ${10} characters`
                     } else if (target.length > 100) {
-                      appNameErr.current!.textContent = `وصف الموقع طويل جداً! لا يمكن أن يزيد عن ${100} حرف`
+                      appNameErr.current!.textContent = `App Name is too long! App Name must be less than ${100} characters`
                     } else {
                       appNameErr.current!.textContent = ''
                     }
@@ -256,9 +256,9 @@ const Settings = () => {
                     const target = (e.target as HTMLTextAreaElement).value.trim()
 
                     if (target.length > 0 && target.length < DESC_MIN_LENGTH) {
-                      descErr.current!.textContent = `وصف الموقع قصير جداً ولا يوصف الموقع بشكل كافي، الوصف يتكون من ${DESC_MIN_LENGTH} حرف على الأقل`
+                      descErr.current!.textContent = `App Description is too short! App Description must be at least ${DESC_MIN_LENGTH} characters`
                     } else if (target.length > DESC_MAX_LENGTH) {
-                      descErr.current!.textContent = `وصف الموقع طويل جداً! لا يمكن أن يزيد عن ${DESC_MAX_LENGTH} حرف`
+                      descErr.current!.textContent = `App Description is too long! App Description must be less than ${DESC_MAX_LENGTH} characters`
                     } else {
                       descErr.current!.textContent = ''
                     }
@@ -286,9 +286,9 @@ const Settings = () => {
                     const target = (e.target as HTMLTextAreaElement).value.trim()
 
                     if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      tagLineErr.current!.textContent = `شعار الموقع قصير جداً ولا يعبر عن الموقع، الشعار يتكون من ${TAGLINE_MIN_LENGTH} حرف على الأقل`
+                      tagLineErr.current!.textContent = `App Tagline is too short! App Tagline must be at least ${TAGLINE_MIN_LENGTH} characters`
                     } else if (target.length > TAGLINE_MAX_LENGTH) {
-                      tagLineErr.current!.textContent = `شعار الموقع طويل جداً! لا يمكن أن يزيد عن ${TAGLINE_MAX_LENGTH} حرف`
+                      tagLineErr.current!.textContent = `App Tagline is too long! App Tagline must be less than ${TAGLINE_MAX_LENGTH} characters`
                     } else {
                       tagLineErr.current!.textContent = ''
                     }
@@ -316,9 +316,11 @@ const Settings = () => {
                     const target = (e.target as HTMLTextAreaElement).value.trim()
 
                     if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      orderMsgErr.current!.textContent = `رسالة ما بعد الطلب قصيرة جداً، يجب أن تتكون الرسالة من يتكون من ${TAGLINE_MIN_LENGTH} حرف على الأقل`
+                      orderMsgErr.current!.textContent = `Order Success Message is too short! Order Success Message must be at least ${TAGLINE_MIN_LENGTH} characters`
                     } else if (target.length > TAGLINE_MAX_LENGTH * 3) {
-                      orderMsgErr.current!.textContent = `رسالة ما بعد الطلب طويلة جداً! لا يمكن أن تزيد عن ${TAGLINE_MAX_LENGTH} حرف`
+                      orderMsgErr.current!.textContent = `Order Success Message is too long! Order Success Message must be less than ${
+                        TAGLINE_MAX_LENGTH * 3
+                      } characters`
                     } else {
                       orderMsgErr.current!.textContent = ''
                     }
@@ -344,9 +346,11 @@ const Settings = () => {
                     const target = (e.target as HTMLTextAreaElement).value.trim()
 
                     if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      orderMsgErr.current!.textContent = `رسالة ما بعد الطلب قصيرة جداً، يجب أن تتكون الرسالة من يتكون من ${TAGLINE_MIN_LENGTH} حرف على الأقل`
+                      orderMsgErr.current!.textContent = `Order Failure Message is too short! Order Failure Message must be at least ${TAGLINE_MIN_LENGTH} characters`
                     } else if (target.length > TAGLINE_MAX_LENGTH * 3) {
-                      orderMsgErr.current!.textContent = `رسالة ما بعد الطلب طويلة جداً! لا يمكن أن تزيد عن ${TAGLINE_MAX_LENGTH} حرف`
+                      orderMsgErr.current!.textContent = `Order Failure Message is too long! Order Failure Message must be less than ${
+                        TAGLINE_MAX_LENGTH * 3
+                      } characters`
                     } else {
                       orderMsgErr.current!.textContent = ''
                     }
@@ -409,9 +413,9 @@ const Settings = () => {
                     const target = (e.target as HTMLInputElement).value.trim()
 
                     if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      instagramAccountErr.current!.textContent = `رابط حساب الانستقرام قصير جداً يجب أن يتكون من ${TAGLINE_MIN_LENGTH} حرف على الأقل`
+                      instagramAccountErr.current!.textContent = `Instagram account link is too short! Instagram account link must be at least ${TAGLINE_MIN_LENGTH} characters`
                     } else if (target.length > TAGLINE_MAX_LENGTH) {
-                      instagramAccountErr.current!.textContent = `رابط حساب الانستقرام طويل جداً! لا يمكن أن يزيد عن ${TAGLINE_MAX_LENGTH} حرف`
+                      instagramAccountErr.current!.textContent = `Instagram account link is too long! Instagram account link must be less than ${TAGLINE_MAX_LENGTH} characters`
                     } else {
                       instagramAccountErr.current!.textContent = ''
                     }
@@ -444,9 +448,9 @@ const Settings = () => {
                     const target = (e.target as HTMLInputElement).value.trim()
 
                     if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      twitterAccountErr.current!.textContent = `رابط حساب التويتر قصير جداً، يجب أن يتكون من ${TAGLINE_MIN_LENGTH} حرف على الأقل`
+                      twitterAccountErr.current!.textContent = `Twitter account link is too short! Twitter account link must be at least ${TAGLINE_MIN_LENGTH} characters`
                     } else if (target.length > TAGLINE_MAX_LENGTH) {
-                      twitterAccountErr.current!.textContent = `رابط حساب التويتر طويل جداً! لا يمكن أن يزيد عن ${TAGLINE_MAX_LENGTH} حرف`
+                      twitterAccountErr.current!.textContent = `Twitter account link is too long! Twitter account link must be less than ${TAGLINE_MAX_LENGTH} characters`
                     } else {
                       twitterAccountErr.current!.textContent = ''
                     }
