@@ -13,7 +13,7 @@ const SettingsSchema = new Schema({
   websiteLogoDisplayName: reqString,
   appName: reqString,
   appDesc: reqString,
-  appTagline: reqString,
+  AppTaglinesList: [reqString],
   whatsAppNumber: typeString,
   instagramAccount: typeString,
   twitterAccount: typeString,

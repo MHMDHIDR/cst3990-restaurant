@@ -25,7 +25,6 @@ const Settings = () => {
   //Description Form States
   const [appName, setAppName] = useState('')
   const [appDesc, setAppDesc] = useState('')
-  const [appTagline, setAppTagline] = useState('')
   const [orderMsgSuccess, setOrderMsgSuccess] = useState('')
   const [orderMsgFailure, setOrderMsgFailure] = useState('')
   const [whatsAppNumber, setWhatsAppNumber] = useState('')
@@ -39,6 +38,9 @@ const Settings = () => {
   //TagLine Form States
   const [data, setData] = useState<responseTypes>()
   const [categoryList, setCategoryList] = useState<any>(['', ''])
+  const [appTaglinesList, setAppTaglinesList] = useState<responseTypes['AppTaglineList']>(
+    ['']
+  )
   const [isUpdating, setIsUpdating] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
   const { userType } = useAuth()
@@ -50,6 +52,7 @@ const Settings = () => {
     if (response !== null) {
       setData(response?.response[0])
       setCategoryList(response?.response[0]?.CategoryList)
+      setAppTaglinesList(response?.response[0]?.AppTaglinesList)
     }
   }, [response])
 
@@ -77,9 +80,23 @@ const Settings = () => {
   ) => {
     const { name, value } = e.target
     const list = [...categoryList]
-    list[index] = name === 'categoryValue' ? [otherValue, value] : [value, otherValue]
+    if (name === 'categoryValue') {
+      list[index] = [otherValue, value]
 
+      handleCategoryListInput(list)
+    } else if (name === 'categoryName') {
+      list[index] = [value, otherValue]
+
+      handleCategoryListInput(list)
+    }
+  }
+
+  const handleCategoryListInput = (list: any[]) => {
     setCategoryList(list)
+  }
+
+  const handleAppTaglinesListInput = (list: any[]) => {
+    setAppTaglinesList(list)
   }
 
   // handle click event of the Add button
@@ -99,20 +116,20 @@ const Settings = () => {
     //initial form values if no value was updated taking it from [0] index
     const currentAppName = appName || data?.appName
     const currentAppDesc = appDesc || data?.appDesc
-    const currentAppTagline = appTagline || data?.appTagline
+    const currentAppTaglinesList = appTaglinesList || data?.AppTaglineList
     const currentOrderMsgSuccess = orderMsgSuccess || data?.orderMsg.Success
     const currentOrderMsgFailure = orderMsgFailure || data?.orderMsg.Failure
     const currentWhatsAppNumber = whatsAppNumber || data?.whatsAppNumber
     const currentInstagramAccount = instagramAccount || data?.instagramAccount
     const currentTwitterAccount = twitterAccount || data?.twitterAccount
-    const currentCategoryList = categoryList || data?.appTagline
+    const currentCategoryList = categoryList || data?.AppTaglineList
     const prevSettingImgPath = data?.websiteLogoDisplayPath ?? ''
     const prevSettingImgName = data?.websiteLogoDisplayName ?? ''
 
     const formData = new FormData()
     formData.append('appName', currentAppName!)
     formData.append('appDesc', currentAppDesc!)
-    formData.append('appTagline', currentAppTagline!)
+    formData.append('AppTaglinesList', stringJson(currentAppTaglinesList))
     formData.append('orderMsgSuccess', currentOrderMsgSuccess!)
     formData.append('orderMsgFailure', currentOrderMsgFailure!)
     formData.append('whatsAppNumber', currentWhatsAppNumber!)
@@ -272,35 +289,61 @@ const Settings = () => {
                 ></span>
               </label>
 
-              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>App Tagline</h3>
-              <label htmlFor='aboutTagline' className='form__group'>
-                <textarea
-                  name='aboutTagline'
-                  id='aboutTagline'
-                  className='form__input'
-                  defaultValue={data && data.appTagline}
-                  minLength={TAGLINE_MIN_LENGTH}
-                  maxLength={TAGLINE_MAX_LENGTH}
-                  onChange={e => setAppTagline(e.target.value.trim())}
-                  onKeyUp={e => {
-                    const target = (e.target as HTMLTextAreaElement).value.trim()
+              <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>App TagLines List</h3>
+              {appTaglinesList?.map((AppTaglineItem: string, idx: number) => (
+                <label htmlFor='aboutTagline' className='mb-4 space-y-2' key={idx}>
+                  <div className='flex gap-4 justify-evenly'>
+                    <input
+                      type='text'
+                      id='category'
+                      min='5'
+                      max='500'
+                      onChange={e => handleInputChange(e, idx, AppTaglineItem)}
+                      onKeyUp={e => {
+                        const target = (e.target as HTMLTextAreaElement).value.trim()
 
-                    if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
-                      tagLineErr.current!.textContent = `App Tagline is too short! App Tagline must be at least ${TAGLINE_MIN_LENGTH} characters`
-                    } else if (target.length > TAGLINE_MAX_LENGTH) {
-                      tagLineErr.current!.textContent = `App Tagline is too long! App Tagline must be less than ${TAGLINE_MAX_LENGTH} characters`
-                    } else {
-                      tagLineErr.current!.textContent = ''
-                    }
-                  }}
-                  required
-                ></textarea>
-                <span className='form__label'>Write App Tagline Text</span>
-                <span
-                  className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
-                  ref={tagLineErr}
-                ></span>
-              </label>
+                        if (
+                          tagLineErr.current &&
+                          tagLineErr.current.textContent !== null
+                        ) {
+                          if (target.length > 0 && target.length < TAGLINE_MIN_LENGTH) {
+                            tagLineErr.current!.textContent = `App Tagline is too short! App Tagline must be at least ${TAGLINE_MIN_LENGTH} characters`
+                          } else if (target.length > TAGLINE_MAX_LENGTH) {
+                            tagLineErr.current!.textContent = `App Tagline is too long! App Tagline must be less than ${TAGLINE_MAX_LENGTH} characters`
+                          } else {
+                            tagLineErr.current!.textContent = ''
+                          }
+                        }
+                      }}
+                      className='w-full p-4 text-xl text-gray-700 bg-transparent border-2 border-gray-500 border-solid rounded-lg outline-none focus-within:border-orange-500 dark:focus-within:border-gray-400 dark:text-gray-200'
+                      dir='auto'
+                      name='appTaglineItemValue'
+                      defaultValue={AppTaglineItem}
+                      required
+                    />
+                  </div>
+                  <div className='flex gap-4 pb-6'>
+                    {appTaglinesList.length !== 1 && (
+                      <button
+                        type='button'
+                        className='px-5 py-2 text-white transition-colors bg-red-500 rounded-lg w-fit hover:bg-red-600'
+                        onClick={() => handleRemoveClick(idx)}
+                      >
+                        -
+                      </button>
+                    )}
+                    {appTaglinesList.length - 1 === idx && (
+                      <button
+                        type='button'
+                        className='px-5 py-2 text-white transition-colors bg-blue-500 rounded-lg w-fit hover:bg-blue-600'
+                        onClick={handleAddClick}
+                      >
+                        +
+                      </button>
+                    )}
+                  </div>
+                </label>
+              ))}
 
               <h3 className='mx-0 mt-4 mb-12 text-lg text-center'>After Order Message</h3>
               <label htmlFor='orderMsg' className='form__group'>

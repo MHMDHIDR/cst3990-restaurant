@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { Doughnut } from 'react-chartjs-2'
-ChartJS.register(ArcElement, Tooltip, Legend)
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+// import { Doughnut } from 'react-chartjs-2'
+// ChartJS.register(ArcElement, Tooltip, Legend)
 import useAxios from 'hooks/useAxios'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useEventListener from 'hooks/useEventListener'
@@ -61,7 +61,9 @@ const DashboardStatistics = () => {
       <div className='container mx-auto'>
         <h1 className='mx-0 mt-32 mb-20 text-2xl text-center'>{TITLE}</h1>
 
-        <Doughnut
+        <p>Statistics Here</p>
+
+        {/* <Doughnut
           width={200}
           height={200}
           data={{
@@ -85,7 +87,7 @@ const DashboardStatistics = () => {
             ]
           }}
           className='max-w-sm mx-auto max-h-96'
-        />
+        /> */}
       </div>
     </Layout>
   )

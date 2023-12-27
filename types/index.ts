@@ -162,7 +162,7 @@ export type responseTypes = {
   heroBg: string[]
   appName: string
   appDesc: string
-  appTagline: string
+  AppTaglineList: string[]
   instagramAccount: string
   twitterAccount: string
   whatsAppNumber: string
@@ -190,7 +190,6 @@ export type settingsProps = {
 }
 
 export type headerProps = {
-  appTagline: string
   websiteLogoDisplayPath: string
 }
 

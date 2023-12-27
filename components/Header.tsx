@@ -4,20 +4,29 @@ import Search from './Search'
 import Nav from './Nav'
 import ScrollDown from './ScrollDown'
 import Typewriter from 'typewriter-effect'
-import { headerProps } from '@types'
 import Image from 'next/image'
+import type { headerProps, responseTypes } from '@types'
 
 const Header = () => {
   const [data, setData] = useState<headerProps>()
+  const [appTaglineList, setAppTaglineList] = useState<responseTypes['AppTaglineList']>([
+    '😋 Finding new ways to make your food better'
+  ])
   const { response, loading } = useAxios({ url: '/settings' })
 
   useEffect(() => {
-    loading
-      ? setData({
-          appTagline: '',
-          websiteLogoDisplayPath: ''
-        })
-      : setData(response?.response[0])
+    const fetchData = async () => {
+      try {
+        if (!loading) {
+          setData(response?.response[0])
+          setAppTaglineList([...response?.response][0]?.AppTaglinesList)
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
   }, [response, loading])
 
   return (
@@ -56,8 +65,7 @@ const Header = () => {
             <h1 className='inline-block h-20 max-w-xs px-2 my-4 overflow-x-hidden text-lg leading-loose text-center text-white select-none sm:max-w-fit xl:text-3xl sm:text-xl md:text-4xl sm:whitespace-nowrap'>
               <Typewriter
                 options={{
-                  strings:
-                    data?.appTagline || `Finding new ways to make your food better`,
+                  strings: appTaglineList,
                   autoStart: true,
                   loop: true
                 }}

@@ -1,5 +1,4 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import FileUploadContextProvider from 'contexts/FileUploadContext'
 import ToppingsContextProvider from 'contexts/ToppingsContext'
@@ -9,6 +8,7 @@ import SearchContextProvider from 'contexts/SearchContext'
 import DashboardOrderContextProvider from 'contexts/DashboardOrderContext'
 // import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { SessionProvider } from 'next-auth/react'
+import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

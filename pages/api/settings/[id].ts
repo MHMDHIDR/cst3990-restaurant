@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const {
     appName,
     appDesc,
-    appTagline,
+    AppTaglinesList,
     orderMsgSuccess,
     orderMsgFailure,
     whatsAppNumber,
@@ -35,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case 'PATCH': {
       const { id }: any = query
+      const appTaglinesList = parseJson(AppTaglinesList)
       const categories = parseJson(CategoryList)
 
       s3.deleteObject(
@@ -53,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 websiteLogoDisplayPath: parseJson(foodImgs)[0].foodImgDisplayPath,
                 appName,
                 appDesc,
-                appTagline,
+                AppTaglinesList: appTaglinesList,
                 whatsAppNumber,
                 instagramAccount,
                 twitterAccount,
