@@ -1,4 +1,4 @@
-import mongoose, { type ConnectOptions } from 'mongoose'
+import mongoose /**, { type ConnectOptions } */ from 'mongoose'
 
 const { MONGODB_URI } = process.env
 if (!MONGODB_URI) {
@@ -21,13 +21,13 @@ async function dbConnect() {
 
   if (!cached.promise) {
     mongoose.set('strictQuery', true)
-
-    cached.promise = await mongoose.connect(MONGODB_URI!, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    } as ConnectOptions)
-
-    console.log('✅ Mongoose 🚀')
+    try {
+      cached.promise = await mongoose.connect(MONGODB_URI!)
+      console.log('✅ Mongoose 🚀')
+    } catch (error) {
+      Error('Error connecting to database')
+      return
+    }
   }
   cached.conn = cached.promise
 

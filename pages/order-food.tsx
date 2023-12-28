@@ -6,7 +6,14 @@ import { CartContext } from 'contexts/CartContext'
 import { ToppingsContext } from 'contexts/ToppingsContext'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAxios from 'hooks/useAxios'
-import { MAX_QUANTITY, origin, USER } from '@constants'
+import {
+  ADDRESS_EXAMPLE,
+  MAX_QUANTITY,
+  origin,
+  PAYMENT_DATA_EXAMPLE,
+  PHONE_NUM_EXAMPLE,
+  USER
+} from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
@@ -18,7 +25,7 @@ import { validPhone } from 'functions/validForm'
 import scrollToView from 'functions/scrollToView'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { useSession } from 'next-auth/react'
-import { formattedPrice } from 'utils/functions/format'
+import { formattedPrice, unformattedPrice } from 'utils/functions/format'
 
 const formDataFromLocalStorage =
   typeof window !== 'undefined'
@@ -101,11 +108,12 @@ const OrderFood = () => {
     ) {
       formErr.current!.textContent = ''
 
-      //if there's No user in localStorage then show modal to login or register else collect order
+      // IF USER IS LOGGED IN
       if (USER || session!?.user) {
         setShowLoginRegisterModal(false)
-        //setShowPaymentModal(true)
+        handleSaveOrder()
       } else {
+        // IF USER IS NOT LOGGED IN
         setShowLoginRegisterModal(true)
       }
     } else {
@@ -113,7 +121,7 @@ const OrderFood = () => {
     }
   }
 
-  const handleSaveOrder = async (/*paymentData: any*/) => {
+  const handleSaveOrder = async () => {
     //using FormData to send constructed data
     const formData = new FormData()
     formData.append('userId', userId)
@@ -124,8 +132,8 @@ const OrderFood = () => {
     formData.append('personNotes', personNotes)
     formData.append('checkedToppings', stringJson(checkedToppings))
     formData.append('foodItems', stringJson(items))
-    formData.append('grandPrice', grandPriceRef?.current?.textContent || '')
-    formData.append('paymentData', 'stringJson(paymentData)')
+    formData.append('grandPrice', unformattedPrice(grandPriceRef?.current?.textContent!))
+    formData.append('paymentData', stringJson(PAYMENT_DATA_EXAMPLE))
 
     try {
       const response = await axios.post(`${origin}/api/orders`, formData)
@@ -253,7 +261,7 @@ const OrderFood = () => {
                   />
                   <span className={`form__label`}>
                     {/* UK phone number */}
-                    Phone Number (e.g: 123 4567 8900)&nbsp;
+                    Phone Number (e.g: {PHONE_NUM_EXAMPLE})&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -282,7 +290,7 @@ const OrderFood = () => {
                     required
                   />
                   <span className={`form__label`}>
-                    Address, (e.g: zone 00, 000st, building 000)&nbsp;
+                    Address, (e.g: {ADDRESS_EXAMPLE})&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span

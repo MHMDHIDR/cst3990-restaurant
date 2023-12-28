@@ -1,5 +1,7 @@
 import { UserProps } from '@types'
+import { randomUUID } from 'crypto'
 import { parseJson } from 'functions/jsonTools'
+import { json } from 'stream/consumers'
 
 export const { origin }: any = typeof window !== 'undefined' && window.location
 
@@ -14,6 +16,20 @@ export const ITEMS_PER_PAGE = 10
 export const MAX_QUANTITY = 100
 
 export const FILE_UPLOAD_IMG_SIZE = 122
+
+export const ADDRESS_EXAMPLE = '123 Street, City, Postcode'
+
+export const PHONE_NUM_EXAMPLE = '07767002516'
+
+export const PAYMENT_DATA_EXAMPLE = `[{
+    "accelerated": false,
+    "orderID": "${Math.random() * 10000}",
+    "payerID": "${Math.random() * 10000}",
+    "paymentID": null,
+    "billingToken": null,
+    "facilitatorAccessToken": "${Math.random() * 10000}",
+    "paymentSource": "paypal
+  }]`
 
 export const SCROLL_LIMIT = 400
 

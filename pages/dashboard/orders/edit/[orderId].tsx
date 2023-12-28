@@ -7,7 +7,13 @@ import { DashboardOrderContext } from 'contexts/DashboardOrderContext'
 import { CartContext } from 'contexts/CartContext'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import { validPhone } from 'functions/validForm'
-import { origin, API_URL, MAX_QUANTITY } from '@constants'
+import {
+  origin,
+  API_URL,
+  MAX_QUANTITY,
+  PHONE_NUM_EXAMPLE,
+  ADDRESS_EXAMPLE
+} from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
@@ -20,7 +26,7 @@ import { orderDataProps, selectedToppingsProps } from '@types'
 import goTo from 'functions/goTo'
 import abstractText from 'functions/abstractText'
 import { stringJson } from 'functions/jsonTools'
-import { formattedPrice } from 'utils/functions/format'
+import { formattedPrice, unformattedPrice } from 'utils/functions/format'
 
 const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => {
   const { orderItemToppings, setOrderItemToppings } = useContext(ToppingsContext)
@@ -93,7 +99,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
     formData.append('personNotes', personNotes || ordersData?.personNotes)
     formData.append('checkedToppings', stringJson(orderItemToppings))
     formData.append('foodItems', stringJson(ordersData?.orderItems))
-    formData.append('grandPrice', grandPriceRef?.current?.textContent!)
+    formData.append('grandPrice', unformattedPrice(grandPriceRef?.current?.textContent!))
 
     try {
       setIsLoading(true)
@@ -222,7 +228,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     required
                   />
                   <span className={`form__label`}>
-                    Phone Number, (e.g: 00123456789) &nbsp;
+                    Phone Number, (e.g: {PHONE_NUM_EXAMPLE}) &nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -251,7 +257,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     required
                   />
                   <span className={`form__label`}>
-                    Address, (e.g: zone 00, 000st, building 000)&nbsp;
+                    Address, (e.g: {ADDRESS_EXAMPLE})&nbsp;
                     <strong className='text-xl leading-4 text-red-600'>*</strong>
                   </span>
                   <span
@@ -279,7 +285,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                   ref={formErr}
                 ></p>
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
-                  Total Price:
+                  Total Price:&nbsp;
                   <strong>
                     <span ref={grandPriceRef}>
                       {formattedPrice(

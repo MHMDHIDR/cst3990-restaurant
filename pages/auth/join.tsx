@@ -9,7 +9,7 @@ import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
-import { origin, USER } from '@constants'
+import { origin, PHONE_NUM_EXAMPLE, USER } from '@constants'
 
 const Join = () => {
   useDocumentTitle('Join')
@@ -114,7 +114,9 @@ const Join = () => {
                   dir='auto'
                   required
                 />
-                <span className='form__label'>Phone Number, (e.g: 00123456789)</span>
+                <span className='form__label'>
+                  Phone Number, (e.g: {PHONE_NUM_EXAMPLE})
+                </span>
               </label>
 
               <label htmlFor='password' className='form__group'>

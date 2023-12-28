@@ -40,9 +40,11 @@ const DashboardMenu = () => {
   const UrlSplit =
     typeof window !== 'undefined' ? window.location.pathname.split('/') : [1]
 
-  const pageNumber = isNumber(Number(UrlSplit[UrlSplit.length - 1]))
-    ? Number(UrlSplit[UrlSplit.length - 1])
-    : 1
+  const pageNumber = isNumber(Number(pageFromQuery))
+    ? Number(pageFromQuery)
+    : !isNumber(Number(UrlSplit[UrlSplit.length - 1]))
+    ? 1
+    : Number(UrlSplit[UrlSplit.length - 1])
 
   useEffect(() => {
     axios

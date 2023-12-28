@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import axios from 'axios'
-import { useSession, signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
@@ -166,20 +166,6 @@ const Login = () => {
                     ) : (
                       'Login'
                     )}
-                  </button>
-                  <button
-                    type='button'
-                    className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
-                    onClick={() => signIn('google', { callbackUrl: APP_URL })}
-                  >
-                    Login with Google
-                    <Image
-                      src={`/assets/img/icons/google.svg`}
-                      className='w-8 h-8'
-                      width='28'
-                      height='28'
-                      alt='Google Login'
-                    />
                   </button>
                 </div>
 

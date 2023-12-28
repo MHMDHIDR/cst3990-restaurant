@@ -1,3 +1,8 @@
+/**
+ * valid email format
+ * @param email email address
+ * @returns  boolean if email is valid
+ */
 export const validEmail = (email: string) => {
   const emailFormat =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+")){3,}@((\[[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{3,15}))$/
@@ -18,9 +23,15 @@ export const validPassword = (password: string) => {
   return password.match(passwordFormat) ? true : false
 }
 
+/**
+ * Validates The Phone Number Format (max 11 digits) UK phone number
+ * @param phone  phone number
+ * @param length  length of phone number
+ * @returns  boolean if phone number is valid
+ */
 export const validPhone = (phone: string, length: number | undefined = 10) => {
   // valid phone number format max 11 digits UK phone number
-  const phoneFormat = new RegExp(`^(?:0|\\+?44)(?:\\d\\s?){${length}}$`) // e.g 07712345678
+  const phoneFormat = new RegExp(`^(?:0|\\+?44)(?:\\d\\s?){${length}}$`) // e.g
 
   return phone.match(phoneFormat) ? true : false
 }

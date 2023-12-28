@@ -28,3 +28,12 @@ export const formattedPrice = (price: number) => {
 
   return formatter.format(price)
 }
+
+/**
+ * Method That Unformats price from GBP
+ * @param price - price to be formatted (e.g. £10.00)
+ * @returns     - formatted price string (e.g. 10.00)
+ * */
+
+export const unformattedPrice: (price: string) => string = (price: string) =>
+  price.replace(/[^0-9.]/g, '')

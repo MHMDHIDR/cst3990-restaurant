@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import FileUploadContextProvider from 'contexts/FileUploadContext'
 import ToppingsContextProvider from 'contexts/ToppingsContext'

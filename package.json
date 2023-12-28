@@ -1,5 +1,6 @@
 {
   "name": "cst3990-restaurant",
+  "type": "module",
   "version": "1.0.0",
   "description": "NextJS Restaurant to find and order delicious foods, drinks, and sweets.",
   "private": true,
@@ -30,7 +31,6 @@
     "nodemailer": "^6.9.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-google-login": "^5.2.2",
     "react-to-print": "^2.14.15",
     "typescript": "^5.3.3",
     "typewriter-effect": "^2.21.0",
