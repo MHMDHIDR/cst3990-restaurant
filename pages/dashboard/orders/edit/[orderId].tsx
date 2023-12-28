@@ -20,6 +20,7 @@ import { orderDataProps, selectedToppingsProps } from '@types'
 import goTo from 'functions/goTo'
 import abstractText from 'functions/abstractText'
 import { stringJson } from 'functions/jsonTools'
+import { formattedPrice } from 'utils/functions/format'
 
 const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => {
   const { orderItemToppings, setOrderItemToppings } = useContext(ToppingsContext)
@@ -280,28 +281,29 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
                   Total Price:
                   <strong>
-                    £
                     <span ref={grandPriceRef}>
-                      {ordersData?.orderItems?.reduce(
-                        (acc: number, item: any) =>
-                          acc +
-                          item.cPrice * item.cQuantity +
-                          orderItemToppings?.reduce(
-                            (acc: number, curr: selectedToppingsProps) =>
-                              curr.toppingId.slice(0, -2) === item.cItemId
-                                ? acc +
-                                  curr.toppingPrice *
-                                    item.cToppings.reduce(
-                                      (acc: number, curr2: selectedToppingsProps) =>
-                                        curr2.toppingId === curr.toppingId
-                                          ? curr2.toppingQuantity
-                                          : acc,
-                                      0
-                                    )
-                                : acc,
-                            0
-                          ),
-                        0
+                      {formattedPrice(
+                        ordersData?.orderItems?.reduce(
+                          (acc: number, item: any) =>
+                            acc +
+                            item.cPrice * item.cQuantity +
+                            orderItemToppings?.reduce(
+                              (acc: number, curr: selectedToppingsProps) =>
+                                curr.toppingId.slice(0, -2) === item.cItemId
+                                  ? acc +
+                                    curr.toppingPrice *
+                                      item.cToppings.reduce(
+                                        (acc: number, curr2: selectedToppingsProps) =>
+                                          curr2.toppingId === curr.toppingId
+                                            ? curr2.toppingQuantity
+                                            : acc,
+                                        0
+                                      )
+                                  : acc,
+                              0
+                            ),
+                          0
+                        )
                       )}
                     </span>
                   </strong>

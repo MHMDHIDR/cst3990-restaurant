@@ -26,7 +26,7 @@ import { cardProps, orderInfoProps, orderProps, selectedToppingsProps } from '@t
 import { origin, ITEMS_PER_PAGE, USER } from '@constants'
 import goTo from 'functions/goTo'
 import { toggleCSSclasses } from 'functions/toggleCSSclasses'
-import { createLocaleDateString } from 'functions/convertDate'
+import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import scrollToView from 'functions/scrollToView'
 import { isNumber } from 'functions/isNumber'
 import Invoice from './Invoice'
@@ -371,7 +371,9 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
 
                                       <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
                                         Price Per Quantity:
-                                        <strong> £{item.cPrice * item.cQuantity!}</strong>
+                                        <strong>
+                                          {formattedPrice(item.cPrice * item.cQuantity!)}
+                                        </strong>
                                       </span>
                                     </div>
                                     <div className='flex flex-col gap-6'>
@@ -394,7 +396,8 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                                 ✅ &nbsp; {toppingName}
                                               </span>
                                               <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                                Topping Price £{toppingPrice}
+                                                Topping Price{' '}
+                                                {formattedPrice(toppingPrice)}
                                               </span>
                                               <span className='px-2 text-orange-900 bg-orange-200 rounded-lg'>
                                                 Topping Quantity {toppingQuantity}
@@ -402,7 +405,9 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                               <span className='px-2 text-green-900 bg-green-200 rounded-lg'>
                                                 Price Per Quantity:{' '}
                                                 <strong>
-                                                  £{toppingPrice * (toppingQuantity ?? 1)}
+                                                  {formattedPrice(
+                                                    toppingPrice * (toppingQuantity ?? 1)
+                                                  )}
                                                 </strong>
                                               </span>
                                             </div>
@@ -429,7 +434,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                         </td>
                         <td>
                           <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                            <strong> £{order.grandPrice}</strong>
+                            <strong> {formattedPrice(order.grandPrice)}</strong>
                           </span>
                         </td>
                         <td className='px-1 py-2'>{order.orderId}</td>
@@ -655,7 +660,10 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
 
                                     <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
                                       Price Per Quantity:
-                                      <strong> £{item.cPrice * item.cQuantity}</strong>
+                                      <strong>
+                                        {' '}
+                                        {formattedPrice(item.cPrice * item.cQuantity)}
+                                      </strong>
                                     </span>
                                   </div>
                                   <div className='flex flex-col gap-6'>
@@ -678,8 +686,10 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                               ✅ &nbsp; {toppingName}
                                             </span>
                                             <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
-                                              Topping Price:
-                                              <strong> £{toppingPrice}</strong>
+                                              Topping Price:{' '}
+                                              <strong>
+                                                {formattedPrice(toppingPrice)}
+                                              </strong>
                                             </span>
                                             <span className='p-1 my-auto text-orange-900 bg-orange-200 rounded-lg min-w-fit'>
                                               Topping Quantity:
@@ -688,7 +698,9 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                             <span className='p-1 my-auto text-green-900 bg-green-200 rounded-lg min-w-fit'>
                                               Price Per Quantity:{' '}
                                               <strong>
-                                                £{toppingPrice * toppingQuantity!}
+                                                {formattedPrice(
+                                                  toppingPrice * toppingQuantity!
+                                                )}
                                               </strong>
                                             </span>
                                           </div>
@@ -716,7 +728,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                     </td>
                     <td>
                       <span className='inline-block px-2 py-2 text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-                        <strong> £{order.grandPrice}</strong>
+                        <strong> {formattedPrice(order.grandPrice)}</strong>
                       </span>
                     </td>
                     <td className='px-1 py-2'>{order.orderId}</td>

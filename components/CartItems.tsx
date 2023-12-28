@@ -9,6 +9,7 @@ import { CartRemoveButton } from 'components/CartButton'
 import { selectedToppingsProps } from '@types'
 import { MAX_QUANTITY } from '@constants'
 import Image from 'next/image'
+import { formattedPrice } from 'utils/functions/format'
 
 const CartItems: any = ({ orderItems, orderToppings }: any) => {
   const { items } = useContext(CartContext)
@@ -133,7 +134,7 @@ const Items = ({
                         htmlFor={toppingId}
                         className='px-3 py-1 mr-2 -ml-2 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
                       >
-                        <strong>£{toppingPrice * toppingQuantity}</strong>
+                        <strong>{formattedPrice(toppingPrice * toppingQuantity)}</strong>
                       </label>
                     </div>
                   )
@@ -344,39 +345,40 @@ const Items = ({
               quantity for the additions and the meal :&nbsp;
             </span>
             <strong className='text-lg'>
-              £
-              {item.cPrice * item.cQuantity +
-                (orderToppings
-                  ? orderItemToppings?.reduce(
-                      (acc: number, curr: selectedToppingsProps) =>
-                        curr.toppingId.slice(0, -2) === item.cItemId
-                          ? acc +
-                            curr.toppingPrice *
-                              item.cToppings.reduce(
-                                (acc: number, curr2: selectedToppingsProps) =>
-                                  curr2.toppingId === curr.toppingId
-                                    ? curr2.toppingQuantity
-                                    : acc,
-                                0
-                              )
-                          : acc,
-                      0
-                    )
-                  : checkedToppings.reduce(
-                      (acc: number, curr: selectedToppingsProps) =>
-                        curr.toppingId.slice(0, -2) === item.cItemId
-                          ? acc +
-                            Number(curr.toppingPrice) *
-                              item.cToppings.reduce(
-                                (acc: number, curr2: selectedToppingsProps) =>
-                                  curr2.toppingId === curr.toppingId
-                                    ? curr2.toppingQuantity
-                                    : acc,
-                                0
-                              )
-                          : acc,
-                      0
-                    ))}
+              {formattedPrice(
+                item.cPrice * item.cQuantity +
+                  (orderToppings
+                    ? orderItemToppings?.reduce(
+                        (acc: number, curr: selectedToppingsProps) =>
+                          curr.toppingId.slice(0, -2) === item.cItemId
+                            ? acc +
+                              curr.toppingPrice *
+                                item.cToppings.reduce(
+                                  (acc: number, curr2: selectedToppingsProps) =>
+                                    curr2.toppingId === curr.toppingId
+                                      ? curr2.toppingQuantity
+                                      : acc,
+                                  0
+                                )
+                            : acc,
+                        0
+                      )
+                    : checkedToppings.reduce(
+                        (acc: number, curr: selectedToppingsProps) =>
+                          curr.toppingId.slice(0, -2) === item.cItemId
+                            ? acc +
+                              Number(curr.toppingPrice) *
+                                item.cToppings.reduce(
+                                  (acc: number, curr2: selectedToppingsProps) =>
+                                    curr2.toppingId === curr.toppingId
+                                      ? curr2.toppingQuantity
+                                      : acc,
+                                  0
+                                )
+                            : acc,
+                        0
+                      ))
+              )}
             </strong>
           </span>
 

@@ -7,6 +7,7 @@ import { removeSlug } from 'functions/slug'
 import Image from 'next/image'
 import { HEADER_BG_IMG } from '@constants'
 import { capitalizeText } from 'utils/functions/capitalize'
+import { formattedPrice } from 'utils/functions/format'
 
 const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -81,7 +82,7 @@ const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
               >
                 {priceByIndex(index) && (
                   <span className='absolute z-40 flex items-center justify-center px-4 py-2 text-base font-bold text-white bg-green-900 sm:px-6 sm:text-xl rounded-xl top-3 left-4'>
-                    £{priceByIndex(index)}
+                    {formattedPrice(priceByIndex(index))}
                   </span>
                 )}
                 <div

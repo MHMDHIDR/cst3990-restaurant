@@ -18,6 +18,7 @@ import { validPhone } from 'functions/validForm'
 import scrollToView from 'functions/scrollToView'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { useSession } from 'next-auth/react'
+import { formattedPrice } from 'utils/functions/format'
 
 const formDataFromLocalStorage =
   typeof window !== 'undefined'
@@ -309,29 +310,30 @@ const OrderFood = () => {
                   ref={formErr}
                 ></p>
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
-                  Total Price:
+                  Total Price:{' '}
                   <strong ref={grandPriceRef}>
-                    &nbsp;£
-                    {items.reduce(
-                      (acc: number, item: any) =>
-                        acc +
-                        item.cPrice * item.cQuantity +
-                        checkedToppings.reduce(
-                          (acc: number, curr: selectedToppingsProps) =>
-                            curr.toppingId.slice(0, -2) === item.cItemId
-                              ? acc +
-                                curr.toppingPrice *
-                                  item.cToppings.reduce(
-                                    (acc: number, curr2: selectedToppingsProps) =>
-                                      curr2.toppingId === curr.toppingId
-                                        ? curr2.toppingQuantity
-                                        : acc,
-                                    0
-                                  )
-                              : acc,
-                          0
-                        ),
-                      0
+                    {formattedPrice(
+                      items.reduce(
+                        (acc: number, item: any) =>
+                          acc +
+                          item.cPrice * item.cQuantity +
+                          checkedToppings.reduce(
+                            (acc: number, curr: selectedToppingsProps) =>
+                              curr.toppingId.slice(0, -2) === item.cItemId
+                                ? acc +
+                                  curr.toppingPrice *
+                                    item.cToppings.reduce(
+                                      (acc: number, curr2: selectedToppingsProps) =>
+                                        curr2.toppingId === curr.toppingId
+                                          ? curr2.toppingQuantity
+                                          : acc,
+                                      0
+                                    )
+                                : acc,
+                            0
+                          ),
+                        0
+                      )
                     )}
                   </strong>
                 </span>

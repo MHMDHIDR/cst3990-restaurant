@@ -8,6 +8,7 @@ import EmblaCarousel from './EmblaCarousel'
 import { removeSlug } from 'functions/slug'
 import Logo from './Icons/Logo'
 import { cardProps, CartProps, mediaProps, selectedToppingsProps } from '@types'
+import { formattedPrice } from 'utils/functions/format'
 
 const Card = ({
   cItemId,
@@ -73,7 +74,7 @@ const Card = ({
           ) : null}
           {cPrice ? (
             <span className='px-3 py-1 text-xl text-green-800 bg-green-300 rounded-xl bg-opacity-80'>
-              £{cPrice}
+              {formattedPrice(cPrice)}
             </span>
           ) : null}
           <p className='py-8 break-all'>{cDesc}</p>
@@ -115,7 +116,7 @@ const Card = ({
                       htmlFor={cToppingId}
                       className='px-3 py-1 mx-4 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
                     >
-                      £{toppingPrice}
+                      {formattedPrice(toppingPrice)}
                     </label>
                     <label
                       htmlFor={cToppingId}

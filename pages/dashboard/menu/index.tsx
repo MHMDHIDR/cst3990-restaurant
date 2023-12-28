@@ -14,7 +14,7 @@ import Pagination from 'components/Pagination'
 import abstractText from 'functions/abstractText'
 import { removeSlug } from 'functions/slug'
 import goTo from 'functions/goTo'
-import { createLocaleDateString } from 'functions/convertDate'
+import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import scrollToView from 'functions/scrollToView'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import NavMenu from 'components/NavMenu'
@@ -209,7 +209,7 @@ const DashboardMenu = () => {
                         <td className='px-1 py-2 min-w-[5.5rem]'>
                           <span>
                             <strong className='inline-block m-2 text-xl text-green-700 dark:text-green-400'>
-                              £{item.foodPrice}
+                              {formattedPrice(item.foodPrice)}
                             </strong>
                           </span>
                         </td>

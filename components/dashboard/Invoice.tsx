@@ -1,4 +1,4 @@
-import { createLocaleDateString } from 'functions/convertDate'
+import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import Divider, { DividerStylish } from 'components/Divider'
 import Image from 'next/image'
 import { PayPal } from 'components/Icons/Payments'
@@ -112,7 +112,7 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                               <span className='px-2 py-1'>
                                 Total Price:
                                 <strong className='px-2 text-green-900 bg-green-200 rounded-lg'>
-                                  £{toppingPrice * toppingQuantity!}
+                                  {formattedPrice(toppingPrice * toppingQuantity!)}
                                 </strong>
                               </span>
                             </div>
@@ -128,23 +128,24 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                     <span>
                       Item Price&nbsp;
                       <strong className='px-2 text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-                        £{item.cPrice || 1}
+                        {formattedPrice(item.cPrice || 1)}
                       </strong>
                     </span>
                     {orderToppings?.length > 0 && (
                       <span className='mt-4'>
                         Toppings Price &nbsp;
                         <strong className='px-2 text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-                          £
-                          {orderToppings.reduce((acc: any, topping: any) => {
-                            const item = orderItems_cToppings.find(
-                              (item: any) => item.toppingId === topping.toppingId
-                            )
-                            if (item) {
-                              return acc + topping.toppingPrice * item.toppingQuantity
-                            }
-                            return acc
-                          }, 0)}
+                          {formattedPrice(
+                            orderToppings.reduce((acc: any, topping: any) => {
+                              const item = orderItems_cToppings.find(
+                                (item: any) => item.toppingId === topping.toppingId
+                              )
+                              if (item) {
+                                return acc + topping.toppingPrice * item.toppingQuantity
+                              }
+                              return acc
+                            }, 0)
+                          )}
                         </strong>
                       </span>
                     )}
@@ -158,19 +159,20 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
         <div className='flex items-center justify-between'>
           <h3 className='font-bold'>TOTAL PRICE</h3>
           <h3 className='inline-block px-10 py-1 text-lg font-bold text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-            £
-            {orderItems?.map(
-              (item: any) =>
-                item.cPrice +
-                orderToppings.reduce((acc: any, topping: any) => {
-                  const item = orderItems_cToppings.find(
-                    (item: any) => item.toppingId === topping.toppingId
-                  )
-                  if (item) {
-                    return acc + topping.toppingPrice * item.toppingQuantity
-                  }
-                  return acc
-                }, 0)
+            {formattedPrice(
+              orderItems?.map(
+                (item: any) =>
+                  item.cPrice +
+                  orderToppings.reduce((acc: any, topping: any) => {
+                    const item = orderItems_cToppings.find(
+                      (item: any) => item.toppingId === topping.toppingId
+                    )
+                    if (item) {
+                      return acc + topping.toppingPrice * item.toppingQuantity
+                    }
+                    return acc
+                  }, 0)
+              )
             )}
           </h3>
         </div>
