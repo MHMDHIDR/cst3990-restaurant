@@ -66,7 +66,7 @@ const Search = () => {
 
       <div
         ref={searchWrapperRef}
-        className='absolute w-[inherit] bg-neutral-200 dark:bg-neutral-300 opacity-0 pointer-events-none border-2 border-b-orange-400 border-r-orange-400 border-l-orange-400 '
+        className='absolute w-[calc(100%-1rem)] bg-neutral-200 dark:bg-neutral-300 opacity-0 pointer-events-none border-2 border-b-orange-400 border-r-orange-400 border-l-orange-400 '
       >
         <ul className='overflow-y-auto max-h-60'>
           {search &&
