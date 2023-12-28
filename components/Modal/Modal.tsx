@@ -51,18 +51,18 @@ const Modal = ({
             <button className='flex items-center justify-center w-full gap-6'>
               {ctaConfirmBtns.map((btn, key) => {
                 const conditions = [
-                  'تفعيل',
-                  'موافق',
-                  'متأكد',
-                  'تأكيد',
-                  'تحويل الى مدير',
-                  'تحويل الى مستخدم'
+                  'Activate',
+                  'Acc',
+                  'Confirm',
+                  'Confirmation',
+                  'Make Admin',
+                  'Make User'
                 ]
-                const confirmColor = btn.includes('حظر')
+                const confirmColor = btn.includes('Block')
                   ? 'neutral'
-                  : btn.includes('كاشير')
+                  : btn.includes('Cashier')
                   ? 'orange'
-                  : btn.includes('طباعة')
+                  : btn.includes('Print')
                   ? 'blue'
                   : conditions.some(btnTxt => btn.includes(btnTxt))
                   ? 'green'

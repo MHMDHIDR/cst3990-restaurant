@@ -137,7 +137,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
       priceErr.current!.textContent === '' &&
       descErr.current!.textContent === ''
     ) {
-      setLoadingMsg(`جار تحديث ${foodName}`)
+      setLoadingMsg(`Updating ${foodName}`)
       modalLoading!.classList.remove('hidden')
 
       const { foodImgs } = await uploadS3(file)
@@ -301,7 +301,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
         deleteFoodStatus === 0 && (
           <Modal
             status={Error}
-            msg={`حدث خطأ ما أثناء حذف ${delFoodName}!`}
+            msg={`Something went wrong while deleting ${delFoodName}! Please try again later`}
             redirectLink={goTo(`food/edit/${data?._id}`)}
             redirectTime={3500}
           />
@@ -389,9 +389,9 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                           )
 
                           if (target > 0 && target < 5) {
-                            priceErr.current!.textContent = `سعر الوجبة أو المشروب يجب أن لا يقل عن 5 ريال`
+                            priceErr.current!.textContent = `Price can't be less than 5`
                           } else if (target > 500) {
-                            priceErr.current!.textContent = `سعر الوجبة أو المشروب يجب أن لا يزيد عن 500 ريال`
+                            priceErr.current!.textContent = `Price can't be more than 500`
                           } else {
                             priceErr.current!.textContent = ''
                           }
@@ -442,9 +442,9 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                           const target = e.target.value?.trim()
 
                           if (target.length > 0 && target.length < 30) {
-                            descErr.current!.textContent = `الوصف صغير ولا يكفي أن يصف العنصر المضاف`
+                            descErr.current!.textContent = `Description is too short, please add more characters`
                           } else if (target.length > 300) {
-                            descErr.current!.textContent = `الوصف لا يمكن أن يزيد عن 300 حرف`
+                            descErr.current!.textContent = `Description is too long, please remove some characters`
                           } else {
                             descErr.current!.textContent = ''
                           }

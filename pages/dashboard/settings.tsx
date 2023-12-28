@@ -15,6 +15,7 @@ import { responseTypes } from '@types'
 import goTo from 'functions/goTo'
 import { stringJson } from 'functions/jsonTools'
 import uploadS3 from 'utils/functions/uploadS3'
+import { validPhone } from 'utils/functions/validForm'
 
 const Settings = () => {
   useDocumentTitle('Settings')
@@ -441,11 +442,13 @@ const Settings = () => {
                   onChange={e => setWhatsAppNumber(e.target.value.trim())}
                   onKeyUp={e => {
                     const target = (e.target as HTMLInputElement).value.trim()
+                    const WhatsApp_NUM_LENGTH = 11
 
-                    if (target.length > 0 && target.length < 8) {
-                      whatsAppNumberErr.current!.textContent = `رقم الوتساب قصير يجب أن يتكون من ٨ أرقام`
-                    } else if (target.length > 8) {
-                      whatsAppNumberErr.current!.textContent = `رقم الوتساب طويل لا يمكن أن يزيد عن ٨ أرقام`
+                    if (target.length > 0 && target.length < WhatsApp_NUM_LENGTH) {
+                      whatsAppNumberErr.current!.textContent = `WhatsApp Number is too short! WhatsApp Number must be at least ${WhatsApp_NUM_LENGTH} characters`
+                    } else if (target.length > WhatsApp_NUM_LENGTH) {
+                      whatsAppNumberErr.current!.textContent = `WhatsApp Number is too long! WhatsApp Number must be less than ${WhatsApp_NUM_LENGTH} characters`
+                    } else if (!validPhone(target, WhatsApp_NUM_LENGTH)) {
                     } else {
                       whatsAppNumberErr.current!.textContent = ''
                     }

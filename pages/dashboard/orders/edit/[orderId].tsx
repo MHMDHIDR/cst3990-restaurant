@@ -120,11 +120,11 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
         ) : orderUpdated === 1 ? (
           <Modal
             status={Success}
-            msg={`Order Details Updated Successfully! 😄`}
+            msg={`Order Details Updated, Successfully! 😄, Redirecting to Orders Page...`}
             btnName='View Orders'
             btnLink={goTo(`orders`)}
             redirectLink={goTo(`orders`)}
-            redirectTime={10000}
+            redirectTime={4000}
           />
         ) : (
           orderUpdated === 0 && (

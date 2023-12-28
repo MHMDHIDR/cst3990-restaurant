@@ -1,5 +1,5 @@
 import { createLocaleDateString } from 'functions/convertDate'
-import Divider from 'components/Divider'
+import Divider, { DividerStylish } from 'components/Divider'
 import Image from 'next/image'
 import { PayPal } from 'components/Icons/Payments'
 import { selectedToppingsProps } from '@types'
@@ -45,8 +45,8 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
           </nav>
           <div className='flex items-center justify-between'>
             <p className='w-1/2'>
-              Hello, {personName}. Thank you for shopping from our store and for your
-              order.
+              It Was Our Pleasure Serving You, {personName}. We Hope You Enojoyed Your
+              Order, Hope to See You Soon.
             </p>
             <div className='flex flex-col'>
               <span>ORDER Number: {orderId}</span>
@@ -81,7 +81,7 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                         height={56}
                         className='object-cover rounded-lg shadow-md w-14 h-14'
                       />
-                      <span>{item.cHeading || 'اســـم الطلب'}</span>
+                      <span>{item.cHeading || 'Order Name'}</span>
                     </div>
                     <div className='flex flex-col gap-2'>
                       {inSeletedToppings
@@ -104,14 +104,16 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                                 {toppingName}
                               </span>
                               <span className='px-2 py-1 text-orange-900 bg-orange-200 rounded-lg'>
-                                سعر الوحدة {toppingPrice}
+                                Item Price {toppingPrice}
                               </span>
                               <span className='px-2 py-1 text-orange-900 bg-orange-200 rounded-lg'>
-                                الكمية المطلوبة {toppingQuantity}
+                                Ordered Quantity {toppingQuantity}
                               </span>
-                              <span className='px-2 py-1 text-green-900 bg-green-200 rounded-lg'>
-                                السعر حسب الكمية:
-                                {toppingPrice * toppingQuantity!} £
+                              <span className='px-2 py-1'>
+                                Total Price:
+                                <strong className='px-2 text-green-900 bg-green-200 rounded-lg'>
+                                  £{toppingPrice * toppingQuantity!}
+                                </strong>
                               </span>
                             </div>
                           )
@@ -120,27 +122,31 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                   </div>
                   <Divider marginY={2} thickness={0.5} />
                 </td>
-                <td>{item.cQuantity || 'الكمــــية'}</td>
+                <td>{item.cQuantity || 'Quantity'}</td>
                 <td>
-                  <span className='flex flex-col px-4 gap-y-2'>
-                    <strong className='inline-block text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-                      £{item.cPrice || 1} Item Price
-                    </strong>
-
-                    {orderToppings?.length > 0 && (
-                      <strong className='inline-block text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-                        سعر الاضافات&nbsp;
-                        {orderToppings.reduce((acc: any, topping: any) => {
-                          const item = orderItems_cToppings.find(
-                            (item: any) => item.toppingId === topping.toppingId
-                          )
-                          if (item) {
-                            return acc + topping.toppingPrice * item.toppingQuantity
-                          }
-                          return acc
-                        }, 0)}
-                        £
+                  <span className='flex flex-col gap-2'>
+                    <span>
+                      Item Price&nbsp;
+                      <strong className='px-2 text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
+                        £{item.cPrice || 1}
                       </strong>
+                    </span>
+                    {orderToppings?.length > 0 && (
+                      <span className='mt-4'>
+                        Toppings Price &nbsp;
+                        <strong className='px-2 text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
+                          £
+                          {orderToppings.reduce((acc: any, topping: any) => {
+                            const item = orderItems_cToppings.find(
+                              (item: any) => item.toppingId === topping.toppingId
+                            )
+                            if (item) {
+                              return acc + topping.toppingPrice * item.toppingQuantity
+                            }
+                            return acc
+                          }, 0)}
+                        </strong>
+                      </span>
                     )}
                   </span>
                 </td>
@@ -148,12 +154,11 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
             ))}
           </tbody>
         </table>
+
         <div className='flex items-center justify-between'>
-          <h3 className='font-bold'>
-            الســـــــــــــعر
-            الاجمــــــــــــــــــــــــــــــــــــــــــــــــــــــــالي
-          </h3>
-          <h3 className='inline-block px-10 py-1 font-bold text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
+          <h3 className='font-bold'>TOTAL PRICE</h3>
+          <h3 className='inline-block px-10 py-1 text-lg font-bold text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
+            £
             {orderItems?.map(
               (item: any) =>
                 item.cPrice +
@@ -167,9 +172,11 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
                   return acc
                 }, 0)
             )}
-            £
           </h3>
         </div>
+
+        <DividerStylish className='my-10' />
+
         <div className='flex items-center justify-between'>
           <div className='flex flex-col items-start justify-between w-1/2'>
             <h3 className='text-xs'>BILLING INFORMATION</h3>

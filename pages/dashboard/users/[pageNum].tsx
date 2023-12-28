@@ -196,7 +196,7 @@ const DashboardUsers = () => {
             <table className='table w-full text-center'>
               <thead className='text-white bg-orange-800'>
                 <tr>
-                  <th className='px-1 py-2'>Full Name</th>
+                  <th className='px-1 py-2'>Name</th>
                   <th className='px-1 py-2'>Email</th>
                   <th className='px-1 py-2'>User Type</th>
                   <th className='px-1 py-2'>User Status</th>
@@ -228,18 +228,18 @@ const DashboardUsers = () => {
                           <span
                             data-tooltip={
                               item.userAccountType === 'admin'
-                                ? 'المدير يملك صلاحية الدخول على لوحة التحكم، فعليه يستطيع إدارة الموقع من خلالها'
+                                ? 'The Admin has access to the dashboard, managing the app through it.'
                                 : item.userAccountType === 'cashier'
-                                ? 'الكاشير يملك صلاحية الدخول للوحة التحكم والوصول لصفحة الطلبات مع إمكانية الموافقة أو رفض الطلب'
-                                : 'المستخدم العادي يملك صلاحية الدخول على حسابه ورؤية الطلبات الخاصة به فقط'
+                                ? 'The Cashier has access to the orders page with the ability to approve or reject the order.'
+                                : 'The User has access their account, and orders only.'
                             }
                             className='w-40'
                           >
                             {item.userAccountType === 'admin'
-                              ? 'مدير'
+                              ? 'Admin'
                               : item.userAccountType === 'cashier'
-                              ? 'كاشير'
-                              : 'مستخدم عادي'}
+                              ? 'Cashier'
+                              : 'Normal User'}
                           </span>
                         </td>
                         <td
@@ -277,9 +277,9 @@ const DashboardUsers = () => {
                                   data-name={item.userFullName}
                                   data-action='active'
                                   className='py-1 text-white bg-green-600 border-2 rounded-md hover:bg-green-700 min-w-[4rem]'
-                                  data-tooltip='تفعيل المستخدم'
+                                  data-tooltip={`Activate ${item.userFullName}`}
                                 >
-                                  تفعيل
+                                  Activate {item.userFullName}
                                 </button>
                               ) : (
                                 <button
@@ -288,9 +288,9 @@ const DashboardUsers = () => {
                                   data-name={item.userFullName}
                                   data-action='block'
                                   className='py-1 px-2 text-white border-2 rounded-md bg-neutral-600 hover:bg-neutral-700 min-w-[6.5rem]'
-                                  data-tooltip='حظر المستخدم'
+                                  data-tooltip={`Block ${item.userFullName}`}
                                 >
-                                  حظر
+                                  Block {item.userFullName}
                                 </button>
                               )}
 
@@ -303,9 +303,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='user'
                                     className='py-1 px-2 text-white bg-green-600 border-2 rounded-md hover:bg-green-700 min-w-[6.5rem]'
-                                    data-tooltip='تحويل الى مستخدم عادي'
+                                    data-tooltip={`Make ${item.userFullName} as User`}
                                   >
-                                    تحويل لمستخدم
+                                    Make User
                                   </button>
                                   <button
                                     id='user'
@@ -313,9 +313,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='cashier'
                                     className='py-1 px-2 text-white bg-orange-600 border-2 rounded-md hover:bg-orange-700 min-w-[6.5rem]'
-                                    data-tooltip='تحويل الى لكاشير'
+                                    data-tooltip={`Make ${item.userFullName} as Cashier`}
                                   >
-                                    تحويل لكاشير
+                                    Make Cashier
                                   </button>
                                 </>
                               ) : item.userAccountType === 'cashier' ? (
@@ -326,9 +326,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='admin'
                                     className='py-1 px-2 text-white bg-green-600 border-2 rounded-md hover:bg-green-700 min-w-[6.5rem]'
-                                    data-tooltip='تحول الى مدير'
+                                    data-tooltip={`Make ${item.userFullName} as Admin`}
                                   >
-                                    تحول لمدير
+                                    Make Admin
                                   </button>
                                   <button
                                     id='user'
@@ -336,9 +336,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='user'
                                     className='py-1 px-2 text-white bg-green-600 border-2 rounded-md hover:bg-green-700 min-w-[6.5rem]'
-                                    data-tooltip='تحويل الى مستخدم عادي'
+                                    data-tooltip={`Make ${item.userFullName} as User`}
                                   >
-                                    تحويل لمستخدم
+                                    Make User
                                   </button>
                                 </>
                               ) : (
@@ -349,9 +349,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='admin'
                                     className='py-1 px-2 text-white bg-green-600 border-2 rounded-md hover:bg-green-700 min-w-[6.5rem]'
-                                    data-tooltip='تحول الى مدير'
+                                    data-tooltip={`Make ${item.userFullName} as Admin`}
                                   >
-                                    تحول لمدير
+                                    Make Admin
                                   </button>
                                   <button
                                     id='user'
@@ -359,9 +359,9 @@ const DashboardUsers = () => {
                                     data-name={item.userFullName}
                                     data-action='cashier'
                                     className='py-1 px-2 text-white bg-orange-600 border-2 rounded-md hover:bg-orange-700 min-w-[6.5rem]'
-                                    data-tooltip='تحويل الى لكاشير'
+                                    data-tooltip={`Make ${item.userFullName} as Cashier`}
                                   >
-                                    تحويل لكاشير
+                                    Make Cashier
                                   </button>
                                 </>
                               )}
@@ -373,9 +373,9 @@ const DashboardUsers = () => {
                                 data-name={item.userFullName}
                                 data-action='delete'
                                 className='py-1 px-2 text-white bg-red-600 rounded-md hover:bg-red-700 min-w-[6.5rem]'
-                                data-tooltip='حذف المستخدم'
+                                data-tooltip={`Delete ${item.userFullName}`}
                               >
-                                حذف
+                                Delete
                               </button>
                             </NavMenu>
                           )}
@@ -410,13 +410,13 @@ const DashboardUsers = () => {
                     <td />
                     <td className='flex flex-col px-1 py-2'>
                       <p className='my-2 md:text-2xl text-red-600 dark:text-red-400 font-[600] py-2 px-1'>
-                        عفواً، لم يتم العثور على مستخدمين
+                        Sorry No Users Found 😔
                       </p>
                       <Link
                         href='/dashboard'
                         className='w-fit mx-auto bg-orange-700 hover:bg-orange-800 text-white py-1.5 text-lg px-6 rounded-md'
                       >
-                        العودة للوحة التحكم
+                        Go to Dashboard
                       </Link>
                     </td>
                     <td />

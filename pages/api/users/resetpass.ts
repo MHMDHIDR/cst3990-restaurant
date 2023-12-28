@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (user && user.userAccountStatus === 'block') {
         res.json({
           newPassSet: 0,
-          message: 'حسابك مغلق حاليا، يرجى التواصل مع الادارة'
+          message: `Your Account Has Been Blocked, Please Contact The Admin`
         })
       } else if (user && user.userAccountStatus === 'active') {
         if (userToken === user.userResetPasswordToken) {
@@ -41,19 +41,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               })
 
               res.json({
-                message: 'تم تغيير كلمة المرور بنجاح، سيتم تحويلك لتسجيل الدخول',
+                message: `Your Password Has Been Reset Successfully, Redirecting You To Login Page...`,
                 newPassSet: 1
               })
             } catch (error) {
               res.json({
-                message: `عفواً، لقد حدث خطأ اثناء تغيير كلمة المرور الخاص بك: ${error}`,
+                message: `Ooops!, something went wrong!: ${error}`,
                 newPassSet: 1
               })
             }
           } else {
             res.json({
               newPassSet: 0,
-              message: 'عفواً، لقد انتهى صلاحية رابط اعادة تعيين كلمة المرور الخاص بك'
+              message: `Sorry, Your Password Reset Link Has Expired, Please Request A New One`
             })
           }
         }
@@ -77,13 +77,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           if (accepted.length > 0) {
             res.status(200).json({
-              message: 'تم ارسال رسالة تحديث كلمة المرور الى بريدك الالكتروني',
+              message: `An email has been sent to your email address: ${user.userEmail} with the new password`,
               newPassSet: 1
             })
           } else if (rejected.length > 0) {
             res.status(400).json({
               newPassSet: 0,
-              message: `عفواً، لم نستطع ارسال رسالة تحديث كلمة المرور الى بريدك الالكتروني: ${
+              message: `Sorry, we couldn't send the email to your email address: ${
                 rejected[0] /*.message*/
               }`
             })
@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.json({ message: `Ooops!, something went wrong!: ${error} `, mailSent: 0 })
         }
       } else if (!user) {
-        res.json({ newPassSet: 0, message: 'عفواً، ليس لديك حساب مسجل معنا' })
+        res.json({ newPassSet: 0, message: `Sorry, we couldn't find your account` })
       }
       break
     }
@@ -103,9 +103,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 }
-
-const generateToken = (id: any) =>
-  sign({ id }, process.env.JWT_SECRET || '', { expiresIn: '30d' })
 
 export const config = {
   api: { bodyParser: false }

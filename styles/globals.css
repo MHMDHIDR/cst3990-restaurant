@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'ltr';
 
 @layer utilities {
   ::-webkit-scrollbar {
@@ -85,6 +84,7 @@
 
 :root {
   --drkModeToggleSize: clamp(4.7em, 7vw, 6em);
+  @apply text-xs;
 }
 
 [data-tooltip] {
@@ -101,12 +101,28 @@
   @apply scale-100 opacity-100;
 }
 
+html[dir='ltr'] .form__input {
+  @apply ltr;
+}
+
+html[dir='ltr'] .form__label {
+  @apply left-1;
+}
+
+html[dir='ltr'] [data-tooltip]::before {
+  @apply rounded-bl-none left-2;
+}
+
 html.dark body {
   @apply text-gray-100 bg-gray-800;
 }
 
 textarea {
   @apply resize-y min-h-[10rem] max-h-96 pt-2;
+}
+
+.ltr {
+  direction: ltr;
 }
 
 /* clear search default styles */
@@ -122,28 +138,15 @@ input[type='search']::-webkit-search-results-decoration {
   @apply hidden;
 }
 
+.addToCart {
+  @apply fill-none stroke-black stroke-[2rem];
+}
+
 /* Loading Component */
 .animate-fly-in {
   left: -10%;
   top: 40%;
   animation: fly-in 3s cubic-bezier(0.25, 0.75, 0.75, 0.25) infinite;
-}
-
-/* Loading component animation */
-@keyframes fly-in {
-  0% {
-    left: -10%;
-    top: 45%;
-  }
-
-  30% {
-    top: 50%;
-  }
-
-  75%,
-  100% {
-    left: 110%;
-  }
 }
 
 .animate-delay-100 {
@@ -214,8 +217,21 @@ input[type='search']::-webkit-search-results-decoration {
   animation: status-icon-circle 2s linear both infinite;
 }
 
-.addToCart {
-  @apply fill-none stroke-black stroke-[2rem];
+/* Loading component animation */
+@keyframes fly-in {
+  0% {
+    left: -10%;
+    top: 45%;
+  }
+
+  30% {
+    top: 50%;
+  }
+
+  75%,
+  100% {
+    left: 110%;
+  }
 }
 
 @keyframes status-icon-circle {

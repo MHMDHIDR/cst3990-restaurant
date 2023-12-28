@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from 'utils/db'
 import UsersModel from 'models/User'
-import { sign } from 'jsonwebtoken'
 import { genSalt, hash } from 'bcryptjs'
+import { generateToken } from 'utils/functions/generateToken'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
@@ -65,6 +65,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 }
-
-const generateToken = (id: any) =>
-  sign({ id }, process.env.JWT_SECRET || '', { expiresIn: '30d' })

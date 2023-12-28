@@ -177,7 +177,7 @@ const DashboardUsers = () => {
               ? `Make ${userName} to a Cashier`
               : userAccountAction === 'user'
               ? `Make ${userName} to a User`
-              : 'الحذف'
+              : 'Delete'
           } this actoin can't be undone?`}
           ctaConfirmBtns={[
             userAccountAction === 'block'
@@ -411,13 +411,13 @@ const DashboardUsers = () => {
                     <td />
                     <td className='flex flex-col px-1 py-2'>
                       <p className='my-2 md:text-2xl text-red-600 dark:text-red-400 font-[600] py-2 px-1'>
-                        عفواً، لم يتم العثور على مستخدمين
+                        Sorry No Users Found 😔
                       </p>
                       <Link
                         href='dashboard'
                         className='w-fit mx-auto bg-orange-700 hover:bg-orange-800 text-white py-1.5 text-lg px-6 rounded-md'
                       >
-                        العودة للوحة التحكم
+                        Go to Dashboard
                       </Link>
                     </td>
                     <td />

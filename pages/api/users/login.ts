@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from 'utils/db'
 import UsersModel from 'models/User'
-import { sign } from 'jsonwebtoken'
 import { compare } from 'bcryptjs'
+import { generateToken } from 'utils/functions/generateToken'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } else {
         res.json({
           LoggedIn: 0,
-          message: 'البيانات المدخلة غير صحيحة'
+          message: 'Invalid Email/Telephone Number Or Password'
         })
       }
       break
@@ -50,6 +50,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 }
-
-const generateToken = (id: any) =>
-  sign({ id }, process.env.JWT_SECRET || '', { expiresIn: '30d' })

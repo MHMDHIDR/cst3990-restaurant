@@ -11,7 +11,6 @@ import Modal from 'components/Modal/Modal'
 import { Success, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
 import CartItems from 'components/CartItems'
-import PaymentButton from 'components/PaymentButton'
 import NoItems from 'components/NoItems'
 import Layout from 'components/Layout'
 import { selectedToppingsProps, orderMsgProps } from '@types'
@@ -57,7 +56,7 @@ const OrderFood = () => {
     Failure: ''
   })
   const [showLoginRegisterModal, setShowLoginRegisterModal] = useState(false)
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [showOrderInProcessModal, setShowOrderInProcessModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   //Declaring Referenced Element
@@ -109,7 +108,7 @@ const OrderFood = () => {
         setShowLoginRegisterModal(true)
       }
     } else {
-      formErr.current!.textContent = 'الرجاء إدخال البيانات المطلوبة بشكل صحيح'
+      formErr.current!.textContent = 'Please fill in the required fields'
     }
   }
 
@@ -165,25 +164,13 @@ const OrderFood = () => {
             btnName='Login or Register'
             btnLink={`/auth/login?redirect=${pathname}`}
           />
-        ) : showPaymentModal === true ? (
+        ) : showOrderInProcessModal === true ? (
           <Modal
             status={Loading}
             msg='Ordering is in the process, please wait a moment...'
             extraComponents={<>{handleSaveOrder(/*paymentData*/)}</>}
             btnName='Return'
             btnLink={`order-food`}
-            /* msg={`سيتم الدفع بالعملة (دولار أمريكي) وذلك بعد تحويل الإجمالي: ${grandPrice} ر.ق، سيتم دفع = ${(
-              grandPrice / 3.65
-            ).toFixed(2)} دولار أمريكي لدفع بأحد الوسائل التالية:`}
-            extraComponents={
-              <PaymentButton
-                value={(grandPrice / 3.65).toFixed(2)}
-                onSuccess={(paymentData: any) => {
-                  setShowPaymentModal(false)
-                  handleSaveOrder(paymentData)
-                }}
-              />
-            }*/
           />
         ) : null}
 

@@ -18,8 +18,9 @@ export const validPassword = (password: string) => {
   return password.match(passwordFormat) ? true : false
 }
 
-export const validPhone = (phone: string) => {
-  const phoneFormat = new RegExp('^[0-9]{1,8}$', 'g')
+export const validPhone = (phone: string, length: number | undefined = 10) => {
+  // valid phone number format max 11 digits UK phone number
+  const phoneFormat = new RegExp(`^(?:0|\\+?44)(?:\\d\\s?){${length}}$`) // e.g 07712345678
 
   return phone.match(phoneFormat) ? true : false
 }

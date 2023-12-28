@@ -6,8 +6,8 @@ const ModalNotFound = ({
   // status prop type react element
   status = Error,
   btnLink = '/',
-  btnName = 'الصفحة الرئيسية',
-  msg = `نعتذر على الازعاج، لكن يبدو أن الصفحة التي تبحث عنها غير متواجدة! أو أنك أخطأت في كتابة اسم الصفحة! للعودة الى ${btnName} إضغط الزر أدناه`
+  btnName = 'Home',
+  msg = `We apologize for the inconvenience, but it appears that the page you are looking for does not exist! Or you misspelled the page name! Click to ${btnName} Click the button below`
 }: ModalProps) => {
   return <Modal status={status} msg={msg} btnName={btnName} btnLink={btnLink} />
 }

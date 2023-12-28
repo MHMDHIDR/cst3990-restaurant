@@ -6,7 +6,7 @@ import Image from 'next/image'
 const NavMenu = ({
   children,
   isOptions = true,
-  label = 'الاجراء',
+  label = 'Action',
   className,
   src
 }: NavMenuPros) => {
@@ -38,13 +38,13 @@ const NavMenu = ({
         )}
 
         <span className='px-2 text-center text-gray-800 select-none dark:text-white'>
-          {isClient && abstractText(label ?? 'الإجراء', 30)}
+          {isClient && abstractText(label ?? 'Action', 30)}
         </span>
 
         {src && (
           <Image
             src={src || '/assets/img/icons/mobile/apple-icon-180.png'}
-            alt={label ?? 'الإجراء'}
+            alt={label ?? 'Action'}
             height={30}
             width={30}
             className={`rounded-full mx-1 border border-gray-300 w-8 h-8`}
@@ -64,7 +64,7 @@ const NavMenu = ({
         </svg>
       </div>
       <ul
-        className={`absolute flex flex-col gap-1.5 left-1/2 -translate-x-1/2 min-w-max p-1 mt-4 text-sm bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-700 z-[1000] rounded-lg shadow-l${
+        className={`absolute flex flex-col gap-1.5 left-1/2 -translate-x-1/2 min-w-max p-1 mt-4 text-sm bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-700 z-[9] rounded-lg shadow-l${
           !isOpen && ' hidden'
         }${className ? ' ' + className : ''}`}
         aria-label='submenu'

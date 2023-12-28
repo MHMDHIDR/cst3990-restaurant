@@ -67,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               { new: true }
             )
 
-            res.json({ message: 'تم تحديث الإعدادات بنجاح', settingsUpdated: 1 })
+            res.json({ message: `Settings Updated Successfully`, settingsUpdated: 1 })
           } catch (error) {
             res.json({
               message: `Sorry! Something went wrong, check the error => 😥: \n ${error}`,

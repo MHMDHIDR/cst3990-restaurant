@@ -54,8 +54,11 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
 
         await orders.save()
         res.json({ orderAdded: 1 })
-      } catch ({ message }) {
-        res.json({ message, orderAdded: 0 })
+      } catch (error) {
+        res.status(500).json({
+          message: error instanceof Error ? error.message : 'Something went wrong!',
+          orderAdded: 0
+        })
       }
       break
     }

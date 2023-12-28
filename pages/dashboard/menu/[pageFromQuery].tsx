@@ -35,18 +35,14 @@ const DashboardMenu = () => {
   const [menuFood, setMenuFood] = useState<any>()
   const { loading, userType } = useAuth()
   const { query } = useRouter()
-  const { pageNum }: any = query
+  const { pageFromQuery }: any = query
 
-  const pageNumber =
-    !pageNum || !isNumber(pageNum) || pageNum < 1
-      ? typeof window !== 'undefined'
-        ? parseInt(
-            window.location.pathname.split('/')[
-              window.location.pathname.split('/').length - 1
-            ]
-          )
-        : 1
-      : parseInt(pageNum)
+  const UrlSplit =
+    typeof window !== 'undefined' ? window.location.pathname.split('/') : [1]
+
+  const pageNumber = isNumber(Number(UrlSplit[UrlSplit.length - 1]))
+    ? Number(UrlSplit[UrlSplit.length - 1])
+    : 1
 
   useEffect(() => {
     axios

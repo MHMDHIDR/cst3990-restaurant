@@ -102,7 +102,9 @@ const Footer = () => {
           {settings?.whatsAppNumber && settings?.whatsAppNumber !== '' && (
             <a
               rel='noreferrer'
-              href={`https://web.whatsapp.com/send?phone=974${settings?.whatsAppNumber}&text=مرحبا+اسمي:+....،+معك+.....+أرغب+بالتواصل+معك+بخصوص:+....`}
+              href={decodeURIComponent(
+                `https://web.whatsapp.com/send?phone=974${settings?.whatsAppNumber}&text=Hello There,+My+Name: + ......., +I+Want+To+Ask+About+ ....`
+              )}
               target='_blank'
             >
               <WhatsApp fill='lime' />

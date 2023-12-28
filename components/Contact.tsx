@@ -25,7 +25,7 @@ const Contact = () => {
       subject.length === 0
     ) {
       setSendStatus(0)
-      setSendStatusMsg('الرجاء ملء جميع الحقول بطريقة صحيحة')
+      setSendStatusMsg('Please fill in all fields')
       return
     }
 

@@ -192,11 +192,9 @@ const AddFood = () => {
                       const target = (e.target as HTMLInputElement).value.trim()
 
                       if (target.length > 0 && target.length < 5) {
-                        foodNameErr.current!.textContent =
-                          'إسم الوجبة أو المشروب صغير ولا يوصف'
+                        foodNameErr.current!.textContent = `The name of the meal or drink is too short`
                       } else if (target.length > 30) {
-                        foodNameErr.current!.textContent =
-                          'الاسم لا يمكن أن يزيد عن 30 حرفاً، يمكنك إضافة وصف طويل إذا كنت تحتاج لذلك'
+                        foodNameErr.current!.textContent = `The name of the meal or drink is too long`
                       } else {
                         foodNameErr.current!.textContent = ''
                       }

@@ -146,7 +146,7 @@ export async function getServerSideProps({ query: { params } }: any) {
 
   const URL = `${API_URL}/foods?page=${
     isCategory ? pageNumWithCat : pageNum
-  }&limit=${ITEMS_PER_PAGE}${isCategory && `&category=${params[0]}`}`
+  }&limit=${ITEMS_PER_PAGE}${isCategory ? `&category=${params[0]}` : ''}`
 
   const viewFood = await fetch(URL).then(viewFood => viewFood.json())
   return { props: { viewFood } }

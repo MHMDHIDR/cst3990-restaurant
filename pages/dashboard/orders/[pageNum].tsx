@@ -10,7 +10,7 @@ const DashboardOrders = () => {
       <section className='container py-12 mx-auto my-8 xl:max-w-fit'>
         <div className='h-screen 2xl:flex 2xl:flex-col 2xl:items-center 2xl:w-full'>
           <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
-            آخر الطلبات
+            Latest Orders
           </h3>
           <OrdersTable />
         </div>

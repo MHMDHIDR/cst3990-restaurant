@@ -50,7 +50,7 @@ const ForgotPassword = () => {
 
     if (emailOrTel === '') {
       setForgotLinkSentStatus(0)
-      setForgotLinkMsg('الرجاء ملء جميع الحقول بطريقة صحيحة')
+      setForgotLinkMsg(`Please enter your email or phone number`)
 
       return
     }

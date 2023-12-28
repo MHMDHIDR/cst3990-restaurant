@@ -661,7 +661,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <div className='flex flex-col gap-6'>
                                     {inSeletedToppings
                                       .map(id => id.slice(0, -2))
-                                      ?.includes(item.cItemId) && <h3>الاضافات</h3>}
+                                      ?.includes(item.cItemId) && <h3>Toppings</h3>}
                                     {item?.cToppings?.map(
                                       ({
                                         toppingId,
@@ -777,6 +777,14 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   : order.userEmail
                               }
                             />
+                            <InvoiceBtn
+                              id={order._id}
+                              email={
+                                !order.userEmail
+                                  ? order.userEmail
+                                  : session!?.user!?.email
+                              }
+                            />
                           </>
                         ) : order.orderStatus === 'accept' ? (
                           <>
@@ -835,7 +843,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                             />
                           </>
                         ) : (
-                          <span>لا يوجد إجراء</span>
+                          <span>No Actions</span>
                         )}
                       </NavMenu>
                     </td>
@@ -880,14 +888,14 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                   data-form-msg
                 >
                   {ordersByUserEmail // if this is the user interface, then show the first msg
-                    ? 'لم يتم العثور على طلبات بعد، يمكنك إنشاء طلب جديد'
-                    : 'لم يتم العثور على طلبات بعد، يمكنك العودة للوحة التحكم بالضغط على'}
+                    ? 'No Orders Found, Create a New Order'
+                    : 'No Orders Found, Return to the Dashboard by clicking on'}
                 </p>
                 <Link
                   href={ordersByUserEmail ? `/view` : `/dashboard`}
                   className='min-w-[7rem] bg-blue-500 hover:bg-blue-600 text-white py-1.5 text-lg px-6 rounded-md'
                 >
-                  {ordersByUserEmail ? 'تصفح المنتجات' : 'لوحة التحكم'}
+                  {ordersByUserEmail ? 'View Products' : 'Dashboard'}
                 </Link>
               </td>
               <td />

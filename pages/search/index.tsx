@@ -17,7 +17,7 @@ const SearchResults: React.FC = () => {
   const { search, searchResults, loading } = useContext(SearchContext)
   const { items } = useContext(CartContext)
 
-  useDocumentTitle(search ? `${search} نتائج البحث عن` : 'ابحث عن طعامك المفضل')
+  useDocumentTitle(search ? `${search} You Wanted .. ` : 'Looking for something?')
 
   const searchResultsCount = searchResults.length
 
@@ -29,13 +29,13 @@ const SearchResults: React.FC = () => {
           {search ? (
             <>
               <h2 className='mb-10 text-xl md:text-2xl xl:text-4xl'>
-                نتائج البحث عن {search}
+                {searchResultsCount} Results for {search}
               </h2>
               <Search />
             </>
           ) : (
             <h2 className='mb-10 text-xl md:text-2xl xl:text-4xl'>
-              ابحث عن منتجات، وجبات، مشروبات، أو حلويات...
+              Look for Food, drinks, or sweets...
             </h2>
           )}
         </div>
@@ -79,7 +79,7 @@ const SearchResults: React.FC = () => {
             <LoadingCard />
           ) : (
             <h3 className='text-xl text-center md:text-2xl xl:text-4xl'>
-              لا يوجد نتائج بحث عن {search}
+              No Results Found For {search}
             </h3>
           )
         ) : (

@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (user && user.userAccountStatus === 'block') {
         res.json({
           forgotPassSent: 0,
-          message: 'حسابك مغلق حاليا، يرجى التواصل مع الادارة'
+          message: `Your Account Has Been Blocked, Please Contact The Admin`
         })
       } else if (
         (user && user.userResetPasswordToken !== null) ||
@@ -29,8 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ) {
         res.json({
           forgotPassSent: 0,
-          message:
-            'لقد تم إرسال رابط تغيير كلمة المرور بالفعل، الرجاء رؤية بريدك الالكتروني'
+          message: `Your Password Has Been Reset Successfully, Redirecting You To Login Page...`
         })
       } else if (user && user.userAccountStatus === 'active') {
         const userResetPasswordToken = randomUUID()
@@ -65,13 +64,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           if (accepted.length > 0) {
             res.status(200).json({
-              message: 'تم ارسال رابط اعادة تعيين كلمة المرور الى بريدك الالكتروني',
+              message: `An email has been sent to your email address: ${user.userEmail} with the new password`,
               forgotPassSent: 1
             })
           } else if (rejected.length > 0) {
             res.status(400).json({
               forgotPassSent: 0,
-              message: `عفواً، لم نستطع ارسال رابط اعادة تعيين كلمة المرور الى بريدك الالكتروني: ${
+              message: `Sorry, we couldn't send the email to your email address: ${
                 rejected[0] /*.message*/
               }`
             })
@@ -80,10 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.json({ message: `Ooops!, something went wrong!: ${error} `, mailSent: 0 })
         }
       } else {
-        res.json({
-          forgotPassSent: 0,
-          message: 'عفواً، ليس لديك حساب مسجل معنا'
-        })
+        res.json({ forgotPassSent: 0, message: `Sorry, we couldn't find your account` })
       }
       break
     }

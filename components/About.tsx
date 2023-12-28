@@ -22,7 +22,7 @@ const About = () => {
           }`}
         >
           {loading
-            ? `أطلب ألذ الأطعمة والمشروبات الطازجة من مطعمنا العالمي`
+            ? `Order the most delicious fresh food and drinks from our restaurant`
             : data?.appDesc}
         </p>
       </div>
