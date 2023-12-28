@@ -16,6 +16,7 @@ import { API_URL, ITEMS_PER_PAGE } from '@constants'
 import { isNumber } from 'functions/isNumber'
 import { CartAddButton, CartRemoveButton } from 'components/CartButton'
 import { capitalizeText } from 'utils/functions/capitalize'
+import NoItems from 'components/NoItems'
 
 const ViewFood = ({ viewFood }: any) => {
   useDocumentTitle('View Foods')
@@ -117,14 +118,14 @@ const ViewFood = ({ viewFood }: any) => {
           ) : (
             <div className='flex flex-col items-center justify-center text-base text-center lg:text-xl 2xl:text-3xl gap-14'>
               <span className='my-2 font-bold text-red-500'>
-                Sorry! The requested meal was not found 😥
+                <NoItems
+                  msg={`Sorry! No Items were found in the 😥 You can browse the Restaurant and add new meals or drinks to the cart`}
+                  links={[
+                    { to: `../`, label: 'HOME' },
+                    { to: `../categories`, label: 'View Categories' }
+                  ]}
+                />
               </span>
-              <Link
-                href={`/`}
-                className='px-3 py-1 text-orange-800 transition-colors bg-orange-100 border border-orange-700 rounded hover:bg-orange-200'
-              >
-                Return to Home
-              </Link>
             </div>
           )}
         </div>
