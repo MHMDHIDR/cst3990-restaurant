@@ -442,13 +442,14 @@ const Settings = () => {
                   onChange={e => setWhatsAppNumber(e.target.value.trim())}
                   onKeyUp={e => {
                     const target = (e.target as HTMLInputElement).value.trim()
-                    const WhatsApp_NUM_LENGTH = 11
+                    const WhatsApp_NUM_LENGTH = 10
 
                     if (target.length > 0 && target.length < WhatsApp_NUM_LENGTH) {
                       whatsAppNumberErr.current!.textContent = `WhatsApp Number is too short! WhatsApp Number must be at least ${WhatsApp_NUM_LENGTH} characters`
                     } else if (target.length > WhatsApp_NUM_LENGTH) {
                       whatsAppNumberErr.current!.textContent = `WhatsApp Number is too long! WhatsApp Number must be less than ${WhatsApp_NUM_LENGTH} characters`
                     } else if (!validPhone(target, WhatsApp_NUM_LENGTH)) {
+                      whatsAppNumberErr.current!.textContent = `WhatsApp Number is Invalid! WhatsApp Number must be a valid number`
                     } else {
                       whatsAppNumberErr.current!.textContent = ''
                     }

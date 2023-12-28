@@ -237,14 +237,13 @@ const OrderFood = () => {
                     onChange={e => setPersonPhone(e.target.value.trim())}
                     onKeyUp={(e: any) => {
                       const target = e.target.value.trim()
+                      const NUM_LENGTH = 10
 
-                      if (
-                        (target.length > 0 && target.length < 8) ||
-                        target.length > 8 ||
-                        !validPhone(target)
-                      ) {
+                      if (target.length > 0 && target.length < NUM_LENGTH) {
                         personPhoneErr.current!.textContent =
                           'Please enter a phone number in the same format as the phone number in the example'
+                      } else if (!validPhone(target, NUM_LENGTH)) {
+                        personPhoneErr.current!.textContent = `Phone Number is Invalid! WhatsApp Number must be a valid number`
                       } else {
                         personPhoneErr.current!.textContent = ''
                       }

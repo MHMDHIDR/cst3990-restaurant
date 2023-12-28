@@ -30,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.json({ message: `Sorry, No Order with this ID => ${orderId}` })
       }
 
-      //else update the order status
       try {
         const orderUpdated = personName
           ? await OrdersModel.findByIdAndUpdate(
@@ -47,9 +46,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               },
               { new: true }
             )
-          : await OrdersModel.findByIdAndUpdate(orderId, { orderStatus }, { new: true }) //else only update the order status
+          : //else update only order status
+            await OrdersModel.findByIdAndUpdate(orderId, { orderStatus }, { new: true })
 
-        //if order updated then send email to user
+        /**if order updated then send email to the customer */
         if (orderStatus && orderUpdated) {
           const emailData = {
             from: 'mr.hamood277@gmail.com',
@@ -114,18 +114,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break
     }
   }
-
-  // export const createPdf = async (req, res) => {
-  //   const { _id } = req.body
-
-  //   const order = await OrdersModel.findById(_id)
-
-  //   res.json({ orderInfoInvoice: order })
-  // }
-
-  // export const fetchPdf = async (_req, res) => {
-  //   res.sendFile(`../result.pdf`)
-  // }
 }
 
 export const config = {

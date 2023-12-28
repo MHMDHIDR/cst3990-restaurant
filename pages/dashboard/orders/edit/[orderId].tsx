@@ -35,6 +35,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
   }, [OrdersData, setOrderItemToppings, setOrdersData, grandPrice])
 
   //Form States
+  const [orderEmail] = useState(ordersData?.userEmail)
   const [personName, setPersonName] = useState(ordersData?.personName)
   const [personPhone, setPersonPhone] = useState(ordersData?.personPhone)
   const [personAddress, setPersonAddress] = useState(ordersData?.personAddress)
@@ -84,6 +85,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
   const handleSaveOrder = async () => {
     //using FormData to send constructed data
     const formData = new FormData()
+    formData.append('orderEmail', orderEmail || ordersData?.userEmail)
     formData.append('personName', personName || ordersData?.personName)
     formData.append('personPhone', personPhone || ordersData?.personPhone)
     formData.append('personAddress', personAddress || ordersData?.personAddress)
@@ -205,14 +207,13 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                     onChange={e => setPersonPhone(e.target.value.trim())}
                     onKeyUp={(e: any) => {
                       const target = e.target.value.trim()
+                      const NUM_LENGTH = 10
 
-                      if (
-                        (target.length > 0 && target.length < 8) ||
-                        target.length > 8 ||
-                        !validPhone(target)
-                      ) {
+                      if (target.length > 0 && target.length < NUM_LENGTH) {
                         personPhoneErr.current!.textContent =
                           'Please enter a phone number in the same format as the phone number in the example'
+                      } else if (!validPhone(target, NUM_LENGTH)) {
+                        personPhoneErr.current!.textContent = `Phone Number is Invalid! WhatsApp Number must be a valid number`
                       } else {
                         personPhoneErr.current!.textContent = ''
                       }
@@ -278,29 +279,31 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
                 ></p>
                 <span className='inline-block px-3 py-1 my-4 text-xl text-green-800 bg-green-300 border border-green-800 rounded-md select-none'>
                   Total Price:
-                  <strong ref={grandPriceRef}>
+                  <strong>
                     £
-                    {ordersData?.orderItems?.reduce(
-                      (acc: number, item: any) =>
-                        acc +
-                        item.cPrice * item.cQuantity +
-                        orderItemToppings?.reduce(
-                          (acc: number, curr: selectedToppingsProps) =>
-                            curr.toppingId.slice(0, -2) === item.cItemId
-                              ? acc +
-                                curr.toppingPrice *
-                                  item.cToppings.reduce(
-                                    (acc: number, curr2: selectedToppingsProps) =>
-                                      curr2.toppingId === curr.toppingId
-                                        ? curr2.toppingQuantity
-                                        : acc,
-                                    0
-                                  )
-                              : acc,
-                          0
-                        ),
-                      0
-                    )}
+                    <span ref={grandPriceRef}>
+                      {ordersData?.orderItems?.reduce(
+                        (acc: number, item: any) =>
+                          acc +
+                          item.cPrice * item.cQuantity +
+                          orderItemToppings?.reduce(
+                            (acc: number, curr: selectedToppingsProps) =>
+                              curr.toppingId.slice(0, -2) === item.cItemId
+                                ? acc +
+                                  curr.toppingPrice *
+                                    item.cToppings.reduce(
+                                      (acc: number, curr2: selectedToppingsProps) =>
+                                        curr2.toppingId === curr.toppingId
+                                          ? curr2.toppingQuantity
+                                          : acc,
+                                      0
+                                    )
+                                : acc,
+                            0
+                          ),
+                        0
+                      )}
+                    </span>
                   </strong>
                 </span>
 
