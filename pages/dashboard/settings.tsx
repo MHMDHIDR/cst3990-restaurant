@@ -84,7 +84,14 @@ const Settings = () => {
     const updatedList = [...list]
 
     if (['categoryValue', 'categoryName', 'appTaglineItemValue'].includes(name)) {
-      updatedList[index] = name === 'appTaglineItemValue' ? [value] : [otherValue, value]
+      if (name === 'categoryValue' && list === categoryList) {
+        updatedList[index] = [otherValue, value]
+      } else if (name === 'categoryName' && list === categoryList) {
+        updatedList[index] = [value, otherValue]
+      } else if (name === 'appTaglineItemValue' && list === appTaglinesList) {
+        updatedList[index] = [value]
+      }
+
       setList(updatedList)
     }
   }
@@ -126,9 +133,14 @@ const Settings = () => {
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number,
-    otherValue: any
+    otherValue: any,
+    inputType: string
   ) => {
-    handleListInputChange(e, index, otherValue, categoryList, setCategoryList)
+    if (inputType === 'categoryList') {
+      handleListInputChange(e, index, otherValue, categoryList, setCategoryList)
+    } else if (inputType === 'appTaglinesList') {
+      handleListInputChange(e, index, otherValue, appTaglinesList, setAppTaglinesList)
+    }
   }
 
   const HandleUpdate = async (e: { preventDefault: () => void }) => {
@@ -161,11 +173,11 @@ const Settings = () => {
     formData.append('prevLogoImgName', prevSettingImgName)
 
     if (
-      descErr.current!.textContent === '' ||
-      tagLineErr.current!.textContent === '' ||
-      whatsAppNumberErr.current!.textContent === '' ||
-      instagramAccountErr.current!.textContent === '' ||
-      twitterAccountErr.current!.textContent === ''
+      descErr.current!?.textContent === '' ||
+      tagLineErr.current!?.textContent === '' ||
+      whatsAppNumberErr.current!?.textContent === '' ||
+      instagramAccountErr.current!?.textContent === '' ||
+      twitterAccountErr.current!?.textContent === ''
     ) {
       setIsUpdating(true)
 
@@ -189,8 +201,12 @@ const Settings = () => {
         setIsUpdating(false)
       }
     } else {
-      formMsg.current!.textContent =
-        'Please make sure that all fields are filled correctly! 😃'
+      const message = 'Please make sure that all fields are filled correctly! 😃'
+      if (formMsg.current) {
+        formMsg.current.textContent = message
+      } else {
+        alert(message)
+      }
     }
   }
 
@@ -246,6 +262,7 @@ const Settings = () => {
                       }
                     ]
                   }}
+                  ignoreRequired={true}
                   ignoreDelete={true}
                 />
               </label>
@@ -318,7 +335,9 @@ const Settings = () => {
                       id='category'
                       min='5'
                       max='500'
-                      onChange={e => handleInputChange(e, idx, AppTaglineItem)}
+                      onChange={e =>
+                        handleInputChange(e, idx, AppTaglineItem, 'appTaglinesList')
+                      }
                       onKeyUp={e => {
                         const target = (e.target as HTMLTextAreaElement).value.trim()
 
@@ -548,7 +567,9 @@ const Settings = () => {
                       id='category'
                       min='5'
                       max='500'
-                      onChange={e => handleInputChange(e, idx, categoryItem[1])}
+                      onChange={e =>
+                        handleInputChange(e, idx, categoryItem[1], 'categoryList')
+                      }
                       className='w-2/4 px-2 py-1 text-xl text-gray-700 bg-transparent border-2 border-gray-500 border-solid rounded-lg outline-none focus-within:border-orange-500 dark:focus-within:border-gray-400 dark:text-gray-200'
                       dir='auto'
                       name='categoryName'
@@ -560,7 +581,9 @@ const Settings = () => {
                       id='category'
                       min='5'
                       max='500'
-                      onChange={e => handleInputChange(e, idx, categoryItem[0])}
+                      onChange={e =>
+                        handleInputChange(e, idx, categoryItem[0], 'categoryList')
+                      }
                       className='w-2/4 px-2 py-1 text-xl text-gray-700 bg-transparent border-2 border-gray-500 border-solid rounded-lg outline-none focus-within:border-orange-500 dark:focus-within:border-gray-400 dark:text-gray-200'
                       dir='auto'
                       name='categoryValue'

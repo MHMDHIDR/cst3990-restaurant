@@ -5,7 +5,11 @@ import { FileUploadComponentProps, FileUploadProps, FoodImgsProps } from '@types
 import { FILE_UPLOAD_IMG_SIZE } from '@constants'
 import { useContext } from 'react'
 
-const FileUpload = ({ data, ignoreDelete }: FileUploadComponentProps) => {
+const FileUpload = ({
+  data,
+  ignoreDelete,
+  ignoreRequired = false
+}: FileUploadComponentProps) => {
   const { file, fileURLs, onFileRemove, onFileAdd } =
     useContext<FileUploadProps>(FileUploadContext)
   let { id } = useRouter().query
@@ -109,7 +113,7 @@ const FileUpload = ({ data, ignoreDelete }: FileUploadComponentProps) => {
         accept='image/*'
         onChange={onFileAdd}
         multiple
-        required
+        required={ignoreRequired ? !ignoreRequired : true}
       />
     </>
   )
