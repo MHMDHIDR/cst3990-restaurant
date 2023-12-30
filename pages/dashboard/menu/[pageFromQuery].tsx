@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import axios from 'axios'
+import Axios from 'axios'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useEventListener from 'hooks/useEventListener'
 import useAuth from 'hooks/useAuth'
@@ -20,18 +20,25 @@ import { isNumber } from 'functions/isNumber'
 import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import scrollToView from 'functions/scrollToView'
 import { origin, ITEMS_PER_PAGE, USER } from '@constants'
-import { stringJson } from 'functions/jsonTools'
+import { parseJson, stringJson } from 'functions/jsonTools'
 import { ClickableButton } from 'components/Button'
 import Add from 'components/Icons/Add'
 import { capitalizeText } from 'utils/functions/capitalize'
+import type { FoodImgsProps } from '@types'
 
 const DashboardMenu = () => {
   useDocumentTitle('Menu')
 
   const [delFoodId, setDelFoodId] = useState('')
   const [delFoodName, setDelFoodName] = useState('')
+  const [delFoodImg, setDelFoodImg] = useState<FoodImgsProps[]>([
+    {
+      foodImgDisplayPath: '',
+      foodImgDisplayName: ''
+    }
+  ])
   const [deleteFoodStatus, setDeleteFoodStatus] = useState()
-  const [modalLoading, setModalLoading] = useState<boolean>(true)
+  const [modalLoading, setModalLoading] = useState<boolean>(false)
   const [menuFood, setMenuFood] = useState<any>()
   const { loading, userType } = useAuth()
   const { query } = useRouter()
@@ -47,44 +54,57 @@ const DashboardMenu = () => {
     : Number(UrlSplit[UrlSplit.length - 1])
 
   useEffect(() => {
-    axios
-      .get(`foods?page=${pageNumber}&limit=${ITEMS_PER_PAGE}&createdAt=-1`)
-      .then(({ data }) => setMenuFood(data))
+    Axios.get(`foods?page=${pageNumber}&limit=${ITEMS_PER_PAGE}&createdAt=-1`).then(
+      ({ data }) => setMenuFood(data)
+    )
     scrollToView()
   }, [pageNumber])
 
   useEventListener('click', (e: any) => {
-    if (e.target.id === 'deleteFood') {
-      setDelFoodId(e.target.dataset.id)
-      setDelFoodName(removeSlug(e.target.dataset.name))
-      setModalLoading(true)
-    }
+    switch (e.target.id) {
+      case 'deleteFood': {
+        setDelFoodId(e.target.dataset.id)
+        setDelFoodName(removeSlug(e.target.dataset.name))
+        setDelFoodImg(parseJson(e.target.dataset.imgname))
+        setModalLoading(true)
+        break
+      }
 
-    if (e.target.id === 'cancel') {
-      setModalLoading(false)
-    } else if (e.target.id === 'confirm') {
-      handleDeleteFood(delFoodId)
+      case 'confirm': {
+        handleDeleteFood(delFoodId)
+        break
+      }
+      case 'cancel': {
+        setModalLoading(false)
+        break
+      }
+
+      default: {
+        setModalLoading(false)
+        break
+      }
     }
   })
 
   const handleDeleteFood = async (
     foodId: string,
-    foodImgs?: { foodImgDisplayPath: string; foodImgDisplayName: string }[]
+    foodImgs: FoodImgsProps[] = delFoodImg
   ) => {
-    const prevFoodImgPathsAndNames = [
-      ...foodImgs!.map(({ foodImgDisplayPath, foodImgDisplayName }) => {
+    const prevFoodImgPathsAndNames = foodImgs.map(
+      ({ foodImgDisplayPath, foodImgDisplayName }) => {
         return {
           foodImgDisplayPath,
           foodImgDisplayName
         }
-      })
-    ]
+      }
+    )
+
     //Using FormData to send constructed data
     const formData = new FormData()
     formData.append('prevFoodImgPathsAndNames', stringJson(prevFoodImgPathsAndNames))
     try {
       //You need to name the body {data} so it can be recognized in (.delete) method
-      const response = await axios.delete(`${origin}/api/foods/${foodId}`, {
+      const response = await Axios.delete(`${origin}/api/foods/${foodId}`, {
         data: formData
       })
       const { foodDeleted } = response.data
@@ -104,7 +124,7 @@ const DashboardMenu = () => {
     <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
-      {/* {deleteFoodStatus === 1 ? (
+      {deleteFoodStatus === 1 ? (
         <Modal
           status={Success}
           msg={`${delFoodName} Has Been Deleted Successfully 😄!, Redirecting...`}
@@ -118,22 +138,20 @@ const DashboardMenu = () => {
           redirectLink={goTo('menu')}
           redirectTime={3500}
         />
-      ) : null} */}
+      ) : null}
 
       <Layout>
         <section className='py-12 my-8 dashboard'>
           <div className='container mx-auto'>
             {/* Confirm Box */}
-
-            {modalLoading && (
+            {modalLoading ? (
               <Modal
                 status={Loading}
-                modalHidden='hidden'
                 classes='text-blue-600 dark:text-blue-400 text-lg'
                 msg={`Are you sure you want to delete ${delFoodName}? You can not undo this action`}
                 ctaConfirmBtns={['Delete', 'Cancel']}
               />
-            )}
+            ) : null}
 
             <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>
               Foods, Drinks, and Sweets Menu

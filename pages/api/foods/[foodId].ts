@@ -2,7 +2,7 @@ import { NextApiResponse } from 'next'
 import dbConnect from 'utils/db'
 import FoodModel from 'models/Foods'
 import { fileRequestProps, FoodImgsProps, ToppingsProps } from '@types'
-import { AWSError, S3 } from 'aws-sdk'
+import { S3 } from 'aws-sdk'
 import formHandler from 'functions/form'
 import { parseJson } from 'functions/jsonTools'
 
@@ -143,42 +143,42 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
             .json({ message: `Error deleting image: ${result.error}`, ImgDeleted: 0 })
         }
       } else {
-        //else delete entire food data with its images
-        //delete the old images from s3 bucket using the prevFoodImgPathsAndNames
+        // else delete entire food data with its images
+        // delete the old images from s3 bucket using the prevFoodImgPathsAndNames
         const Objects = parseJson(prevFoodImgPathsAndNames).map(
           ({ foodImgDisplayName }: FoodImgsProps) => ({ Key: foodImgDisplayName })
         )
 
-        s3.deleteObjects(
-          {
-            Bucket: process.env.AWS_BUCKET_NAME || '',
-            Delete: { Objects }
-          },
-          async (error, _data) => {
-            if (error) {
-              res.status(500).json({
-                message: error,
-                foodDeleted: 0
-              })
-            }
+        try {
+          await s3
+            .deleteObjects({
+              Bucket: process.env.AWS_BUCKET_NAME || '',
+              Delete: { Objects }
+            })
+            .promise()
 
-            try {
-              await FoodModel.findByIdAndDelete(foodId)
+          // Continue with the rest of the code
+          try {
+            await FoodModel.findByIdAndDelete(foodId)
 
-              res.json({
-                message: 'Food Deleted Successfully',
-                foodDeleted: 1
-              })
-              return
-            } catch (error) {
-              res.json({
-                message: `Sorry! Something went wrong, check the error => 😥: \n ${error}`,
-                foodDeleted: 0
-              })
-              return
-            }
+            res.json({
+              message: 'Food Deleted Successfully',
+              foodDeleted: 1
+            })
+            return
+          } catch (error) {
+            res.json({
+              message: `Sorry! Something went wrong, check the error => 😥: \n ${error}`,
+              foodDeleted: 0
+            })
+            return
           }
-        )
+        } catch (error) {
+          res.status(500).json({
+            message: error,
+            foodDeleted: 0
+          })
+        }
       }
       break
     }

@@ -21,9 +21,9 @@ import NavMenu from 'components/NavMenu'
 import Layout from 'components/dashboard/Layout'
 import { ClickableButton } from 'components/Button'
 import { origin, ITEMS_PER_PAGE, USER } from '@constants'
-import { FoodImgsProps } from '@types'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { capitalizeText } from 'utils/functions/capitalize'
+import type { FoodImgsProps } from '@types'
 
 const DashboardMenu = () => {
   useDocumentTitle('Menu')
