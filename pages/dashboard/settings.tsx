@@ -185,10 +185,7 @@ const Settings = () => {
       formData.append('foodImgs', stringJson(foodImgs.length > 0 ? foodImgs : []))
 
       try {
-        const response = await axios.patch(
-          `${origin}/api/settings/${data?._id}`,
-          formData
-        )
+        const response = await axios.patch(`${API_URL}/settings/${data?._id}`, formData)
         const { settingsUpdated, message } = response.data
 
         setSettingsUpdated(settingsUpdated)

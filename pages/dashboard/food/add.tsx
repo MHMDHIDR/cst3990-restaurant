@@ -18,7 +18,7 @@ import { createSlug } from 'functions/slug'
 import goTo from 'functions/goTo'
 import scrollToView from 'functions/scrollToView'
 import { selectedToppingsProps } from '@types'
-import { origin, USER } from '@constants'
+import { API_URL, USER } from '@constants'
 import { stringJson } from 'functions/jsonTools'
 import { focus } from 'utils/functions/focus'
 import { capitalizeText } from 'utils/functions/capitalize'
@@ -91,7 +91,7 @@ const AddFood = () => {
       formData.append('foodImgs', stringJson(foodImgs.length > 0 ? foodImgs : []))
 
       try {
-        const response = await axios.post(`${origin}/api/foods`, formData)
+        const response = await axios.post(`${API_URL}/foods`, formData)
         const { foodAdded, message } = response.data
         setAddFoodStatus(foodAdded)
         setAddFoodMessage(message)

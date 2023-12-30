@@ -9,7 +9,7 @@ import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
-import { origin, PHONE_NUM_EXAMPLE, USER } from '@constants'
+import { API_URL, PHONE_NUM_EXAMPLE, USER } from '@constants'
 
 const Join = () => {
   useDocumentTitle('Join')
@@ -36,7 +36,7 @@ const Join = () => {
     setIsSendingJoinForm(true)
 
     try {
-      const joinUser = await axios.post(`${origin}/api/users/join`, {
+      const joinUser = await axios.post(`${API_URL}/users/join`, {
         userFullName,
         userEmail,
         userTel,

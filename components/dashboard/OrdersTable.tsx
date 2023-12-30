@@ -17,13 +17,13 @@ import Divider from '../Divider'
 import NavMenu from '../NavMenu'
 import {
   AcceptBtn,
-  DeleteBtn,
+  RejectBtn,
   EditBtn,
-  InvoiceBtn,
-  RejectBtn
+  DeleteBtn,
+  InvoiceBtn
 } from './OrdersTableActions'
 import { cardProps, orderInfoProps, orderProps, selectedToppingsProps } from '@types'
-import { origin, ITEMS_PER_PAGE, USER } from '@constants'
+import { ITEMS_PER_PAGE, USER, API_URL } from '@constants'
 import goTo from 'functions/goTo'
 import { toggleCSSclasses } from 'functions/toggleCSSclasses'
 import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
@@ -105,6 +105,8 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
           status: e?.target?.dataset?.status,
           email: e?.target?.dataset?.email
         })
+
+        console.log('e?.target?.dataset?.email :>> ', e?.target?.dataset?.email)
         //show modal
         modalLoading!.classList.remove('hidden')
         break
@@ -112,6 +114,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
 
       case 'confirm': {
         orderInfo.status === 'invoice' ? handlePrint() : handleOrder(orderInfo)
+        console.log('orderInfo :>> ', orderInfo)
         break
       }
 
@@ -143,7 +146,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
     if (orderInfo.status === 'delete') {
       try {
         //You need to name the body {data} so it can be recognized in (.delete) method
-        const response = await axios.delete(`${origin}/api/orders/${orderInfo.id}`)
+        const response = await axios.delete(`${API_URL}/orders/${orderInfo.id}`)
         const { orderDeleted } = response.data
         setDeleteOrderStatus(orderDeleted)
 
@@ -164,7 +167,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
 
     try {
       setIsLoading(true)
-      const response = await axios.patch(`${origin}/api/orders/${orderInfo.id}`, formData)
+      const response = await axios.patch(`${API_URL}/orders/${orderInfo.id}`, formData)
       const { OrderStatusUpdated } = response.data
       setOrderUpdated(OrderStatusUpdated)
 
@@ -479,7 +482,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <AcceptBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -487,7 +490,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <RejectBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -496,7 +499,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <InvoiceBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -504,7 +507,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <DeleteBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -515,7 +518,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <RejectBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -524,7 +527,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <InvoiceBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -532,7 +535,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <DeleteBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -543,7 +546,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <AcceptBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -552,7 +555,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <InvoiceBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -560,7 +563,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                                   <DeleteBtn
                                     id={order._id}
                                     email={
-                                      !order.userEmail
+                                      order.userEmail
                                         ? order.userEmail
                                         : session!?.user!?.email
                                     }
@@ -767,34 +770,26 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                             <AcceptBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <RejectBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <EditBtn id={order._id} />
                             <DeleteBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <InvoiceBtn
                               id={order._id}
                               email={
-                                !order.userEmail
-                                  ? order.userEmail
-                                  : session!?.user!?.email
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                           </>
@@ -803,26 +798,20 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                             <RejectBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <EditBtn id={order._id} />
                             <InvoiceBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <DeleteBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                           </>
@@ -831,26 +820,20 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                             <AcceptBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <EditBtn id={order._id} />
                             <InvoiceBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                             <DeleteBtn
                               id={order._id}
                               email={
-                                order.userEmail === undefined
-                                  ? session!?.user!?.email
-                                  : order.userEmail
+                                order.userEmail ? order.userEmail : session!?.user!?.email
                               }
                             />
                           </>

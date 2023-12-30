@@ -20,7 +20,7 @@ import ModalNotFound from 'components/Modal/ModalNotFound'
 import NavMenu from 'components/NavMenu'
 import Layout from 'components/dashboard/Layout'
 import { ClickableButton } from 'components/Button'
-import { origin, ITEMS_PER_PAGE, USER } from '@constants'
+import { API_URL, ITEMS_PER_PAGE, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { capitalizeText } from 'utils/functions/capitalize'
 import type { FoodImgsProps } from '@types'
@@ -98,7 +98,7 @@ const DashboardMenu = () => {
     formData.append('prevFoodImgPathsAndNames', stringJson(prevFoodImgPathsAndNames))
     try {
       //You need to name the body {data} so it can be recognized in (.delete) method
-      const response = await Axios.delete(`${origin}/api/foods/${foodId}`, {
+      const response = await Axios.delete(`${API_URL}/foods/${foodId}`, {
         data: formData
       })
       const { foodDeleted } = response.data

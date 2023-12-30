@@ -7,13 +7,7 @@ import { DashboardOrderContext } from 'contexts/DashboardOrderContext'
 import { CartContext } from 'contexts/CartContext'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import { validPhone } from 'functions/validForm'
-import {
-  origin,
-  API_URL,
-  MAX_QUANTITY,
-  PHONE_NUM_EXAMPLE,
-  ADDRESS_EXAMPLE
-} from '@constants'
+import { API_URL, MAX_QUANTITY, PHONE_NUM_EXAMPLE, ADDRESS_EXAMPLE } from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
@@ -103,7 +97,7 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
 
     try {
       setIsLoading(true)
-      const response = await axios.patch(`${origin}/api/orders/${orderId}`, formData)
+      const response = await axios.patch(`${API_URL}/orders/${orderId}`, formData)
       const { OrderStatusUpdated } = response.data
       setOrderUpdated(OrderStatusUpdated)
 

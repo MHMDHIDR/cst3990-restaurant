@@ -9,7 +9,7 @@ import useAxios from 'hooks/useAxios'
 import {
   ADDRESS_EXAMPLE,
   MAX_QUANTITY,
-  origin,
+  API_URL,
   PAYMENT_DATA_EXAMPLE,
   PHONE_NUM_EXAMPLE,
   USER
@@ -136,7 +136,7 @@ const OrderFood = () => {
     formData.append('paymentData', stringJson(PAYMENT_DATA_EXAMPLE))
 
     try {
-      const response = await axios.post(`${origin}/api/orders`, formData)
+      const response = await axios.post(`${API_URL}/orders`, formData)
       const { orderAdded, message } = response.data
       setIsLoading(false)
       setOrderFoodStatus(orderAdded)

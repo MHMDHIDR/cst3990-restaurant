@@ -19,7 +19,7 @@ import goTo from 'functions/goTo'
 import { isNumber } from 'functions/isNumber'
 import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import scrollToView from 'functions/scrollToView'
-import { origin, ITEMS_PER_PAGE, USER } from '@constants'
+import { API_URL, ITEMS_PER_PAGE, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { ClickableButton } from 'components/Button'
 import Add from 'components/Icons/Add'
@@ -104,7 +104,7 @@ const DashboardMenu = () => {
     formData.append('prevFoodImgPathsAndNames', stringJson(prevFoodImgPathsAndNames))
     try {
       //You need to name the body {data} so it can be recognized in (.delete) method
-      const response = await Axios.delete(`${origin}/api/foods/${foodId}`, {
+      const response = await Axios.delete(`${API_URL}/foods/${foodId}`, {
         data: formData
       })
       const { foodDeleted } = response.data

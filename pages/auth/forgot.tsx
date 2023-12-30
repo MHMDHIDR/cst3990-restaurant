@@ -8,7 +8,7 @@ import Layout from 'components/Layout'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
-import { origin } from '@constants'
+import { API_URL } from '@constants'
 import { parseJson } from 'functions/jsonTools'
 
 const ForgotDataFromLocalStorage =
@@ -65,7 +65,7 @@ const ForgotPassword = () => {
     setSendingForgotForm(true)
 
     try {
-      const { data } = await axios.post(`${origin}/api/users/forgotpass`, formData)
+      const { data } = await axios.post(`${API_URL}/users/forgotpass`, formData)
       //destructering response from backend
       const { forgotPassSent, message } = data
 

@@ -18,7 +18,7 @@ import ModalNotFound from 'components/Modal/ModalNotFound'
 import { removeSlug, createSlug } from 'functions/slug'
 import goTo from 'functions/goTo'
 import scrollToView from 'functions/scrollToView'
-import { origin, API_URL, DEFAULT_FOOD_DATA, USER } from '@constants'
+import { API_URL, DEFAULT_FOOD_DATA, USER } from '@constants'
 import { ToppingsProps, foodDataProps, FoodImgsProps } from '@types'
 import { stringJson } from 'functions/jsonTools'
 import uploadS3 from 'utils/functions/uploadS3'
@@ -144,10 +144,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
       formData.append('foodImgs', stringJson(foodImgs.length > 0 ? foodImgs : []))
 
       try {
-        const response = await axios.patch(
-          `${origin}/api/foods/${currentFoodId}`,
-          formData
-        )
+        const response = await axios.patch(`${API_URL}/foods/${currentFoodId}`, formData)
 
         const { foodUpdated } = response.data
         setUpdatedFoodStatus(foodUpdated)
@@ -179,7 +176,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
     formData.append('prevFoodImgPathsAndNames', stringJson(prevFoodImgPathsAndNames))
     try {
       //You need to name the body {data} so it can be recognized in (.delete) method
-      const response = await axios.delete(`${origin}/api/foods/${foodId}`, {
+      const response = await axios.delete(`${API_URL}/foods/${foodId}`, {
         data: formData
       })
       const { foodDeleted } = response.data
@@ -201,7 +198,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
     formData.append('imgName', foodImg)
     try {
       //You need to name the body {data} so it can be recognized in (.delete) method
-      const response = await axios.delete(`${origin}/api/foods/${foodId}`, {
+      const response = await axios.delete(`${API_URL}/foods/${foodId}`, {
         data: formData
       })
       const { ImgDeleted } = response.data

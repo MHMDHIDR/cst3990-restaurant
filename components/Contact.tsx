@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Notification from './Notification'
 import { LoadingSpinner } from './Loading'
 import { validEmail } from 'functions/validForm'
-import { origin } from '@constants'
+import { API_URL } from '@constants'
 import axios from 'axios'
 
 const Contact = () => {
@@ -42,7 +42,7 @@ const Contact = () => {
     setLoading(true)
 
     try {
-      const { data } = await axios.post(`${origin}/api/contact`, formData)
+      const { data } = await axios.post(`${API_URL}/contact`, formData)
       setSendStatus(data.mailSent)
       setSendStatusMsg(
         data?.message === 'Email Sent Successfully'

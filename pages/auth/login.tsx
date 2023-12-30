@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Image from 'next/image'
 import axios from 'axios'
-import { signIn, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
@@ -12,7 +11,7 @@ import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
 import { UserProps } from '@types'
-import { origin, APP_URL, USER } from '@constants'
+import { API_URL, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 
 const LoginDataFromLocalStorage =
@@ -54,7 +53,7 @@ const Login = () => {
     setIsSendingLoginForm(true)
 
     try {
-      const loginUser = await axios.post(`${origin}/api/users/login`, {
+      const loginUser = await axios.post(`${API_URL}/users/login`, {
         userPassword,
         userEmail: userEmailOrTel.trim().toLowerCase(),
         userTel: userEmailOrTel.trim().toLowerCase()
