@@ -28,7 +28,6 @@ const AddFood = () => {
 
   useEffect(() => {
     scrollToView()
-    setModalLoading(document.querySelector('#modal')!)
   }, [])
 
   //Form States
@@ -40,7 +39,6 @@ const AddFood = () => {
   const [addFoodMessage, setAddFoodMessage] = useState()
   const [categoryList, setCategoryList] = useState<string[]>([])
   const [toppings, setToppings] = useState<any>([{}])
-  const [modalLoading, setModalLoading] = useState<Element>()
   const { loading, userType } = useAuth()
 
   //Contexts
@@ -48,6 +46,7 @@ const AddFood = () => {
   const { file } = useContext(FileUploadContext)
 
   //Form errors messages
+  const modalLoadingRef = useRef<HTMLElement>(null)
   const ImgErr = useRef<HTMLSpanElement>(null)
   const foodNameErr = useRef<HTMLSpanElement>(null)
   const priceErr = useRef<HTMLSpanElement>(null)
@@ -84,7 +83,9 @@ const AddFood = () => {
       priceErr.current!.textContent === '' &&
       descErr.current!.textContent === ''
     ) {
-      modalLoading!.classList.remove('hidden')
+      if (modalLoadingRef.current) {
+        modalLoadingRef.current.classList.remove('hidden')
+      }
 
       const { foodImgs } = await uploadS3(file)
       formData.append('foodImgs', stringJson(foodImgs.length > 0 ? foodImgs : []))
@@ -96,7 +97,7 @@ const AddFood = () => {
         setAddFoodMessage(message)
 
         setTimeout(() => {
-          modalLoading!.classList.add('hidden')
+          modalLoadingRef!.current!.classList.add('hidden')
         }, 300)
       } catch (err) {
         formMsg.current!.textContent = `Something went wrong! 😥 Please try again later.`
@@ -136,10 +137,12 @@ const AddFood = () => {
           msg={`${category[1]} Has Been Added Successfully! 🎉, Wait a moment you will be redirected to the menu page`}
           redirectLink={goTo(`menu`)}
           redirectTime={3000}
+          ref={modalLoadingRef}
         />
       ) : (
         addFoodStatus === 0 && <Modal status={Error} msg={addFoodMessage} />
       )}
+
       <Layout>
         <section className='py-12 my-8 dashboard'>
           <div className='container mx-auto'>

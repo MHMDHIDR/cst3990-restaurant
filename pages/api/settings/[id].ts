@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     twitterAccount,
     CategoryList,
     foodImgs,
+    prevLogoImgPath,
     prevLogoImgName
   } = fields
 
@@ -35,49 +36,70 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case 'PATCH': {
       const { id }: any = query
-      const appTaglinesList = parseJson(AppTaglinesList)
-      const categories = parseJson(CategoryList)
+      const websiteLogoDisplayName: string = parseJson(foodImgs)[0]
+        ? parseJson(foodImgs)[0].foodImgDisplayName
+        : prevLogoImgName
+      const websiteLogoDisplayPath: string = parseJson(foodImgs)[0]
+        ? parseJson(foodImgs)[0].foodImgDisplayPath
+        : prevLogoImgPath
 
-      s3.deleteObject(
-        {
-          Bucket: AWS_BUCKET_NAME!,
-          Key: prevLogoImgName
-        },
-        async (error, _data) => {
-          if (error) return res.json({ message: error, settingsUpdated: 0 })
-
-          try {
-            await SettingsModel.findByIdAndUpdate(
-              id,
-              {
-                websiteLogoDisplayName: parseJson(foodImgs)[0].foodImgDisplayName,
-                websiteLogoDisplayPath: parseJson(foodImgs)[0].foodImgDisplayPath,
-                appName,
-                appDesc,
-                AppTaglinesList: appTaglinesList,
-                whatsAppNumber,
-                instagramAccount,
-                twitterAccount,
-                CategoryList: categories,
-                orderMsg: {
-                  Success: orderMsgSuccess,
-                  Failure: orderMsgFailure
-                }
-              },
-              { new: true }
-            )
-
-            res.json({ message: `Settings Updated Successfully`, settingsUpdated: 1 })
-          } catch (error) {
-            res.json({
-              message: `Sorry! Something went wrong, check the error => 😥: \n ${error}`,
-              settingsUpdated: 0
-            })
+      // If We have new Image parseJson(foodImgs)[0] will be true
+      if (parseJson(foodImgs)[0]) {
+        // Delete previous logo image from S3
+        s3.deleteObject(
+          {
+            Bucket: AWS_BUCKET_NAME!,
+            Key: prevLogoImgName
+          },
+          async (error, _data) => {
+            if (error)
+              return res
+                .status(500)
+                .json({ message: `Error: ${error}`, settingsUpdated: 0 })
           }
-        }
-      )
+        )
+        // Update other settings
+        updateSettings()
+      } else {
+        // Update other settings without logo
+        updateSettings()
 
-      break
+        break
+      }
+
+      async function updateSettings() {
+        try {
+          await SettingsModel.findByIdAndUpdate(
+            id,
+            {
+              websiteLogoDisplayName,
+              websiteLogoDisplayPath,
+              appName,
+              appDesc,
+              AppTaglinesList: parseJson(AppTaglinesList),
+              whatsAppNumber,
+              instagramAccount,
+              twitterAccount,
+              CategoryList: parseJson(CategoryList),
+              orderMsg: {
+                Success: orderMsgSuccess,
+                Failure: orderMsgFailure
+              }
+            },
+            { new: true }
+          )
+
+          res.status(200).json({
+            message: `Settings Updated Successfully`,
+            settingsUpdated: 1
+          })
+        } catch (error) {
+          res.status(500).json({
+            message: `Something went wrong => 😥: ${error}`,
+            settingsUpdated: 0
+          })
+        }
+      }
     }
 
     default: {

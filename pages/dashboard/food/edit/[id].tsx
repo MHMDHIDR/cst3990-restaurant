@@ -307,6 +307,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
           />
         )
       )}
+
       <Layout>
         <section className='py-12 my-8 dashboard'>
           <div className='container mx-auto'>

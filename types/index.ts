@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongoose'
-import { Key, MouseEventHandler } from 'react'
+import { Key, MouseEventHandler, RefObject } from 'react'
 import { NextApiRequest } from 'next'
 
 export type UserProps = {

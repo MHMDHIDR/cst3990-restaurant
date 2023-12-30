@@ -89,7 +89,7 @@ const Settings = () => {
       } else if (name === 'categoryName' && list === categoryList) {
         updatedList[index] = [value, otherValue]
       } else if (name === 'appTaglineItemValue' && list === appTaglinesList) {
-        updatedList[index] = [value]
+        updatedList[index] = value
       }
 
       setList(updatedList)
@@ -185,7 +185,10 @@ const Settings = () => {
       formData.append('foodImgs', stringJson(foodImgs.length > 0 ? foodImgs : []))
 
       try {
-        const response = await axios.patch(`${API_URL}/settings/${data?._id}`, formData)
+        const response = await axios.patch(
+          `${origin}/api/settings/${data?._id}`,
+          formData
+        )
         const { settingsUpdated, message } = response.data
 
         setSettingsUpdated(settingsUpdated)

@@ -272,7 +272,7 @@ const DashboardMenu = () => {
                         Sorry, No Items Found! 😥
                       </p>
                       <Link
-                        href={goTo('add-food')}
+                        href={goTo('food/add')}
                         className='min-w-[7rem] bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-6 rounded-md'
                       >
                         Add an Item

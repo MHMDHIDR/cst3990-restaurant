@@ -104,7 +104,7 @@ const DashboardMenu = () => {
     <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
   ) : (
     <>
-      {deleteFoodStatus === 1 ? (
+      {/* {deleteFoodStatus === 1 ? (
         <Modal
           status={Success}
           msg={`${delFoodName} Has Been Deleted Successfully 😄!, Redirecting...`}
@@ -118,7 +118,7 @@ const DashboardMenu = () => {
           redirectLink={goTo('menu')}
           redirectTime={3500}
         />
-      ) : null}
+      ) : null} */}
 
       <Layout>
         <section className='py-12 my-8 dashboard'>
