@@ -95,7 +95,6 @@ const EmblaCarousel = ({ slides, media, smallView = false }: any) => {
                   }`}
                 >
                   <Image
-                    loading='lazy'
                     className={`absolute z-30 block object-cover w-full min-h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 hover:scale-110 transition-transform duration-200`}
                     src={mediaByIndex(index) || '/assets/img/icons/logo.svg'}
                     alt={removeSlug(capitalizeText(nameByIndex(index)))}

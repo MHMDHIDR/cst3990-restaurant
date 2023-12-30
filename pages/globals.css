@@ -40,12 +40,12 @@
     @apply w-full px-6 text-xl text-gray-700 bg-transparent border-none outline-none dark:text-gray-200;
   }
 
-  .form__input[type='text'],
-  .form__input[type='email'],
-  .form__input[type='number'],
-  .form__input[type='tel'],
-  .form__input[type='url'] {
-    @apply min-h-[min(12vw,4rem)];
+  #descForm {
+    & .form__input[type='text'],
+    & .form__input[type='email'],
+    & .form__input[type='number'] {
+      @apply min-h-[min(12vw,4rem)];
+    }
   }
 
   .form__label {

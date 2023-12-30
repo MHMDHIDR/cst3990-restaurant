@@ -55,6 +55,7 @@ const Header = () => {
             ) : (
               <Image
                 src='/assets/img/icons/logo.svg'
+                priority={true}
                 alt='logo'
                 className='w-32 h-32 mb-12 md:w-60 md:h-60'
                 width={150}

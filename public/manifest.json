@@ -43,5 +43,21 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "https://mhmdhidr-restaurant-next.vercel.app/assets/img/icons/mobile/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Wonder Widgets"
+    },
+    {
+      "src": "https://mhmdhidr-restaurant-next.vercel.app/assets/img/icons/mobile/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Wonder Widgets"
+    }
   ]
 }
