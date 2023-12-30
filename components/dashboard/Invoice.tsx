@@ -21,6 +21,7 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
     orderDate,
     orderItems,
     orderToppings,
+    grandPrice,
     paymentData
   } = ordersData || ''
 
@@ -159,21 +160,7 @@ const Invoice = ({ ordersData, orderItemsIds, orderToppingsId, forwardedRef }: a
         <div className='flex items-center justify-between'>
           <h3 className='font-bold'>TOTAL PRICE</h3>
           <h3 className='inline-block px-10 py-1 text-lg font-bold text-green-800 bg-green-300 rounded-lg bg-opacity-70'>
-            {formattedPrice(
-              orderItems?.map(
-                (item: any) =>
-                  item.cPrice +
-                  orderToppings.reduce((acc: any, topping: any) => {
-                    const item = orderItems_cToppings.find(
-                      (item: any) => item.toppingId === topping.toppingId
-                    )
-                    if (item) {
-                      return acc + topping.toppingPrice * item.toppingQuantity
-                    }
-                    return acc
-                  }, 0)
-              )
-            )}
+            {formattedPrice(grandPrice)}
           </h3>
         </div>
 

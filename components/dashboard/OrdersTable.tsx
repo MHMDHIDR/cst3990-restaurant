@@ -106,7 +106,6 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
           email: e?.target?.dataset?.email
         })
 
-        console.log('e?.target?.dataset?.email :>> ', e?.target?.dataset?.email)
         //show modal
         modalLoading!.classList.remove('hidden')
         break
@@ -114,7 +113,6 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
 
       case 'confirm': {
         orderInfo.status === 'invoice' ? handlePrint() : handleOrder(orderInfo)
-        console.log('orderInfo :>> ', orderInfo)
         break
       }
 
