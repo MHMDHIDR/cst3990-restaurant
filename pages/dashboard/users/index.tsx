@@ -33,9 +33,9 @@ const DashboardUsers = () => {
   const [users, setUsers] = useState<any>('')
   const [modalLoading, setModalLoading] = useState(false)
 
-  const { userType } = useAuth()
+  const { userType, loading, userStatus, userId: LoggedInUserId } = useAuth()
 
-  const { loading, ...response } = useAxios({
+  const { loading: LoadingUsers, ...response } = useAxios({
     url: `/users/all?page=${pageNumber}&limit=${ITEMS_PER_PAGE}`
   })
 
@@ -114,10 +114,12 @@ const DashboardUsers = () => {
     }
   }
 
-  return loading || !userType ? (
+  return loading || LoadingUsers ? (
     <LoadingPage />
   ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
     <ModalNotFound />
+  ) : userStatus === 'block' ? (
+    logoutUser(LoggedInUserId)
   ) : (
     <>
       {deleteUserStatus === 1 ? (

@@ -125,11 +125,9 @@ const AddFood = () => {
     setToppings(list)
   }
 
-  console.log(userType)
-
   return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+  ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
     <ModalNotFound />
   ) : (
     <>

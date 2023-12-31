@@ -5,10 +5,10 @@ import Nav from './Nav'
 import ScrollDown from './ScrollDown'
 import Typewriter from 'typewriter-effect'
 import Image from 'next/image'
-import type { headerProps, responseTypes } from '@types'
+import type { responseTypes, settingsProps } from '@types'
 
 const Header = () => {
-  const [data, setData] = useState<headerProps>()
+  const [data, setData] = useState<settingsProps>()
   const [appTaglineList, setAppTaglineList] = useState<responseTypes['AppTaglineList']>([
     '😋 Finding new ways to make your food better'
   ])
@@ -47,10 +47,11 @@ const Header = () => {
             {data?.websiteLogoDisplayPath ? (
               <Image
                 src={data.websiteLogoDisplayPath}
+                priority={true}
                 width={128}
                 height={128}
                 className='w-32 h-32 mb-12 md:w-60 md:h-60 rounded-2xl opacity-30'
-                alt='Website Logo'
+                alt={data.appDesc}
               />
             ) : (
               <Image

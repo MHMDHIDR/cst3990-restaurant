@@ -249,9 +249,9 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
     }
   })
 
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
-  ) : USER?.userAccountType !== 'admin' || userType !== 'admin' ? (
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
     <ModalNotFound />
   ) : (
     <>

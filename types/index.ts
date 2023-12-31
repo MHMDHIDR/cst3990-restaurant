@@ -7,6 +7,7 @@ export type UserProps = {
   userFullName: string
   token?: string
   _id?: string
+  image?: string
   LoggedIn?: number
   message?: string
   userAccountType?: string

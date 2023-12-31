@@ -118,7 +118,7 @@ const DashboardMenu = () => {
     }
   }
 
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
   ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
     <ModalNotFound />

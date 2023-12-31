@@ -23,11 +23,11 @@ const DashboardHome = ({ orderItemsCount, menuItemsCount }: DashboardHomeProps) 
   useEventListener('keydown', (e: any) => e.key === 'Escape' && menuToggler())
 
   //check if userStatus is active and the userType is admin
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
   ) : userType === 'user' || USER?.userAccountType === 'user' ? (
     <ModalNotFound />
-  ) : !userStatus || userStatus === 'block' ? (
+  ) : userStatus === 'block' ? (
     logoutUser(userId)
   ) : (
     <Layout>
@@ -81,7 +81,7 @@ const DashboardHome = ({ orderItemsCount, menuItemsCount }: DashboardHomeProps) 
                 className='inline-flex flex-col items-center justify-center px-2 py-4 space-y-4 text-white bg-orange-800 hover:bg-orange-700 rounded-xl'
               >
                 <Image
-                  loading='lazy'
+                  priority={true}
                   width={160}
                   height={96}
                   src='/assets/img/icons/add_food.svg'

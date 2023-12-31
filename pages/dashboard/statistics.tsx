@@ -51,7 +51,7 @@ const DashboardStatistics = () => {
   const TITLE = 'The Number of Orders By Category'
 
   //check if userStatus is active and the userType is admin
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
   ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
     <ModalNotFound />

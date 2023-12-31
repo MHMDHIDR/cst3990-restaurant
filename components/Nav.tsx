@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { CartContext } from 'contexts/CartContext'
@@ -13,11 +12,12 @@ import NavMenu from './NavMenu'
 import Image from 'next/image'
 import useAuth from 'hooks/useAuth'
 import { handleSignout } from 'utils/functions/handleSignout'
+import { LoadingPage } from './Loading'
+import { USER } from '@constants'
 
 const Nav = () => {
   const { items } = useContext(CartContext)
-  const { data: session } = useSession()
-  const { user, isAuth, userType } = useAuth()
+  const { user, loading, userType } = useAuth()
   const [cartItemsLength, setCartItemsLength] = useState(0)
 
   const router = useRouter()
@@ -52,7 +52,9 @@ const Nav = () => {
     lastScrollY = window.scrollY
   })
 
-  return (
+  return loading || !user ? (
+    <LoadingPage />
+  ) : (
     <div className='fixed inset-0 bottom-auto z-[9999] w-full transition-transform duration-300 nav ltr'>
       <nav
         className={`flex flex-wrap items-center justify-between px-5 xl:px-10 lg:px-20 py-1 bg-gray-300 bg-opacity-90 dark:bg-neutral-900 dark:bg-opacity-90 shadow-xl backdrop-blur-sm
@@ -141,15 +143,11 @@ const Nav = () => {
               <MyLink to='contact'>Contact</MyLink>
             </li>
             <li className='flex gap-3'>
-              {user && isAuth ? (
+              {user ? (
                 <NavMenu
-                  label={`Welcome Back ${user.userFullName}`}
+                  label={`Welcome Back ${!user ? USER.userFullName : user.userFullName}`}
                   isOptions={false}
-                  src={
-                    session
-                      ? session!.user!?.image!
-                      : '/assets/img/icons/mobile/apple-icon-180.png'
-                  }
+                  src={user?.image ?? '/assets/img/icons/mobile/apple-icon-180.png'}
                 >
                   {(userType === 'admin' || userType === 'cashier') && (
                     <Link

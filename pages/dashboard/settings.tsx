@@ -16,6 +16,7 @@ import goTo from 'functions/goTo'
 import { stringJson } from 'functions/jsonTools'
 import uploadS3 from 'utils/functions/uploadS3'
 import { validPhone } from 'utils/functions/validForm'
+import logoutUser from 'utils/functions/logoutUser'
 
 const Settings = () => {
   useDocumentTitle('Settings')
@@ -44,7 +45,7 @@ const Settings = () => {
   )
   const [isUpdating, setIsUpdating] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
-  const { userType } = useAuth()
+  const { userType, userStatus, userId } = useAuth()
 
   //fetching description data
   const { response, loading } = useAxios({ url: '/settings' })
@@ -210,10 +211,12 @@ const Settings = () => {
     }
   }
 
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+  ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
     <ModalNotFound />
+  ) : userStatus === 'block' ? (
+    logoutUser(userId)
   ) : (
     <>
       {settingsUpdated === 1 ? (

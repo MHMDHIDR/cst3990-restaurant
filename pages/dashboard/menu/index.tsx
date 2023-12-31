@@ -41,9 +41,9 @@ const DashboardMenu = () => {
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const [menuFood, setMenuFood] = useState<any>()
 
-  const { userType, userStatus, userId } = useAuth()
+  const { userType, userStatus, userId, loading } = useAuth()
 
-  const { loading, ...response } = useAxios({
+  const { loading: LoadingMenu, ...response } = useAxios({
     url: `/foods?page=1&limit=${ITEMS_PER_PAGE}&createdAt=-1`
   })
 
@@ -114,11 +114,11 @@ const DashboardMenu = () => {
     }
   }
 
-  return loading ? (
+  return loading || LoadingMenu ? (
     <LoadingPage />
   ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
     <ModalNotFound />
-  ) : !userStatus || userStatus === 'block' ? (
+  ) : userStatus === 'block' ? (
     logoutUser(userId)
   ) : (
     <>
