@@ -1,11 +1,12 @@
 import { API_URL } from '@constants'
 import axios from 'axios'
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions, Session, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import type { JWT } from 'next-auth/jwt'
 
 const { NEXTAUTH_SECRET } = process.env
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -14,19 +15,36 @@ export const authOptions = {
         userPassword: { label: 'Password', type: 'password' }
       },
       async authorize(credentials, req) {
-        console.log('req --> ', req)
-        const loginUser = await axios.post(`${API_URL}/users/login`, credentials)
-        const { data: user } = loginUser
+        try {
+          const loginUser = await axios.post(`${API_URL}/users/login`, credentials)
+          const { data: user } = loginUser
 
-        if (user.LoggedIn === 1 && user) {
-          return user
+          if (user.LoggedIn === 1 && user) {
+            return Promise.resolve(user)
+          }
+
+          return Promise.resolve(null)
+        } catch (error) {
+          console.error('Error during authorization:', error)
+          return Promise.resolve(null)
         }
-        return null
       }
     })
   ],
   secret: NEXTAUTH_SECRET,
-  callbacks: {}
+  callbacks: {
+    async session(params: { session: Session; token: JWT }) {
+      const { session, token } = params
+      return Promise.resolve({ session, token, expires: session.expires })
+    },
+    async jwt(params: { token: JWT; user: User }) {
+      const { token, user } = params
+      if (user) {
+        token.user = user
+      }
+      return Promise.resolve(token)
+    }
+  }
 }
 
 export default NextAuth(authOptions)

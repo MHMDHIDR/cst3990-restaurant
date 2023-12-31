@@ -42,7 +42,7 @@ const Nav = () => {
       localStorage.removeItem('user')
       window.location.href = '/'
     } else {
-      signOut({ redirect: true, callbackUrl: '/' })
+      signOut({ redirect: true, callbackUrl: 'https://localhost:3000' })
     }
   }
 
@@ -160,12 +160,12 @@ const Nav = () => {
               {userData || session ? (
                 <NavMenu
                   label={`Welcome Back ${
-                    userData ? userData.userFullName : session ? session!.user!.name : ''
+                    userData ? userData.userFullName : session ? session!.user!?.name : ''
                   }`}
                   isOptions={false}
                   src={
                     session
-                      ? session!.user!.image!
+                      ? session!.user!?.image!
                       : '/assets/img/icons/mobile/apple-icon-180.png'
                   }
                 >

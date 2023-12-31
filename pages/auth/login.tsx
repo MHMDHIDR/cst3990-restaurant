@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import { getSession, signIn, useSession } from 'next-auth/react'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
@@ -10,9 +10,10 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { API_URL, USER } from '@constants'
+import { API_URL, DEFAULT_USER_DATA, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { UserProps } from '@types'
+import { Session } from 'next-auth'
 
 const LoginDataFromLocalStorage =
   typeof window !== 'undefined' && parseJson(localStorage.getItem('LoginData') || '{}')
@@ -48,37 +49,49 @@ const Login = () => {
     }
   })
 
+  type LoggedInUserProps =
+    | (Session & {
+        token?: {
+          user: UserProps
+        }
+      })
+    | null
+
   const sendLoginForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     setIsSendingLoginForm(true)
 
     try {
-      const loginUser = await axios.post(`${API_URL}/users/login`, {
-        userPassword,
+      const result = await signIn('credentials', {
+        redirect: false, // Set to true if you want to redirect after login
         userEmail: userEmailOrTel.trim().toLowerCase(),
-        userTel: userEmailOrTel.trim().toLowerCase()
+        userTel: userEmailOrTel.trim().toLowerCase(),
+        userPassword
       })
 
-      const { data } = loginUser
-      const {
-        LoggedIn,
-        _id,
-        userAccountType,
-        userFullName,
-        userEmail,
-        token,
-        message
-      }: UserProps = data
+      if (result!.error) {
+        setLoggedInStatus(0)
+        setLoginMsg(result!.error)
+      } else {
+        const session: LoggedInUserProps = await getSession()
 
-      setLoggedInStatus(LoggedIn)
-      setLoginMsg(message)
+        const { user } = session?.token ?? { user: DEFAULT_USER_DATA }
 
-      if (LoggedIn === 1) {
+        const {
+          LoggedIn,
+          _id,
+          userAccountType,
+          userFullName,
+          userEmail,
+          message
+        }: UserProps = user
+
         localStorage.setItem(
           'user',
-          stringJson({ _id, userAccountType, userFullName, userEmail, token })
+          stringJson({ _id, userAccountType, userFullName, userEmail })
         )
-
+        setLoggedInStatus(LoggedIn)
+        setLoginMsg(message)
         redirect
           ? router.push(`${redirect}`)
           : userAccountType === 'user'
@@ -97,7 +110,7 @@ const Login = () => {
     }
   }
 
-  return USER || loading || session!?.user ? (
+  return USER || loading || session?.user ? (
     <LoadingPage />
   ) : (
     <Layout>
