@@ -3,13 +3,18 @@ import { Key, MouseEventHandler, RefObject } from 'react'
 import { NextApiRequest } from 'next'
 
 export type UserProps = {
-  token?: string
-  userAccountType?: string
-  userEmail?: string
   userFullName: string
+  token?: string
   _id?: string
   LoggedIn?: number
   message?: string
+  userAccountType?: string
+  userEmail?: string
+  userTel?: string
+  userPassword?: string
+  userAccountStatus?: 'active' | 'block'
+  userResetPasswordToken?: string
+  userResetPasswordExpires?: string
 }
 
 export type ModalProps = {

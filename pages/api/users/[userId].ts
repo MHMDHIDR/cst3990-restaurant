@@ -9,7 +9,7 @@ export default async function handler(req: authUserRequestProps, res: NextApiRes
   const { method, query } = req
   const { userId }: any = query
   const { fields }: any = await formHandler(req)
-  const { userAccountAction } = fields
+  const { userAccountStatus } = fields
 
   dbConnect()
 
@@ -36,9 +36,9 @@ export default async function handler(req: authUserRequestProps, res: NextApiRes
         await UsersModel.findByIdAndUpdate(
           userId,
           //check if its a change of status or type
-          userAccountAction === 'active' || userAccountAction === 'block'
-            ? { userAccountStatus: userAccountAction }
-            : { userAccountType: userAccountAction },
+          userAccountStatus === 'active' || userAccountStatus === 'block'
+            ? { userAccountStatus: userAccountStatus }
+            : { userAccountType: userAccountStatus },
           { new: true }
         )
 

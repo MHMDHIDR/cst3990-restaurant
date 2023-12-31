@@ -64,7 +64,7 @@ const OrderFood = () => {
     Failure: ''
   })
   const [showLoginRegisterModal, setShowLoginRegisterModal] = useState(false)
-  const [showOrderInProcessModal, setShowOrderInProcessModal] = useState(false)
+  const [showOrderInProcessModal, _setShowOrderInProcessModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   //Declaring Referenced Element
@@ -252,7 +252,7 @@ const OrderFood = () => {
                         personPhoneErr.current!.textContent =
                           'Please enter a phone number in the same format as the phone number in the example'
                       } else if (!validPhone(target, NUM_LENGTH)) {
-                        personPhoneErr.current!.textContent = `Phone Number is Invalid! WhatsApp Number must be a valid number`
+                        personPhoneErr.current!.textContent = `Phone Number is Invalid! Phone Number must be a valid number`
                       } else {
                         personPhoneErr.current!.textContent = ''
                       }

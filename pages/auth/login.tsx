@@ -10,9 +10,9 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { UserProps } from '@types'
 import { API_URL, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
+import type { UserProps } from '@types'
 
 const LoginDataFromLocalStorage =
   typeof window !== 'undefined' && parseJson(localStorage.getItem('LoginData') || '{}')
@@ -32,9 +32,9 @@ const Login = () => {
   )
   const [userPassword, setPassword] = useState('')
   const [passwordVisible, setPasswordVisible] = useState(false)
-  const [loggedInStatus, setLoggedInStatus] = useState(0)
   const [isSendingLoginForm, setIsSendingLoginForm] = useState(false)
-  const [loginMsg, setLoginMsg] = useState('')
+  const [loggedInStatus, setLoggedInStatus] = useState<UserProps['LoggedIn']>(0)
+  const [loginMsg, setLoginMsg] = useState<UserProps['message']>('')
 
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
@@ -58,7 +58,7 @@ const Login = () => {
         userEmail: userEmailOrTel.trim().toLowerCase(),
         userTel: userEmailOrTel.trim().toLowerCase()
       })
-      //getting response from backend
+
       const { data } = loginUser
       const {
         LoggedIn,
@@ -69,28 +69,29 @@ const Login = () => {
         token,
         message
       }: UserProps = data
-      setLoggedInStatus(LoggedIn ?? 0)
 
-      if (LoggedIn === 0) {
-        return setLoginMsg(message ?? '')
+      setLoggedInStatus(LoggedIn)
+      setLoginMsg(message)
+
+      if (LoggedIn === 1) {
+        localStorage.setItem(
+          'user',
+          stringJson({ _id, userAccountType, userFullName, userEmail, token })
+        )
+
+        redirect
+          ? router.push(`${redirect}`)
+          : userAccountType === 'user'
+          ? window.location.replace('/')
+          : userAccountType === 'admin'
+          ? window.location.replace(`/dashboard`)
+          : null
       }
+    } catch (error: any) {
+      console.log(error)
 
-      //if user is logged in
-      setLoginMsg(message ?? '')
-      localStorage.setItem(
-        'user',
-        stringJson({ _id, userAccountType, userFullName, userEmail, token })
-      )
-
-      redirect
-        ? router.push(`/${redirect}`)
-        : userAccountType === 'user'
-        ? window.location.replace('/')
-        : userAccountType === 'admin'
-        ? window.location.replace(`/dashboard`)
-        : null
-    } catch (response: any) {
-      setLoginMsg(response?.response?.message)
+      setLoggedInStatus(error.response?.data?.LoggedIn)
+      setLoginMsg(error.response?.data?.message)
     } finally {
       setIsSendingLoginForm(false)
     }
@@ -102,7 +103,7 @@ const Login = () => {
     <Layout>
       <section className='py-12 my-8'>
         <div className='container mx-auto'>
-          <Notification sendStatus={loggedInStatus} sendStatusMsg={loginMsg} />
+          <Notification sendStatus={loggedInStatus!} sendStatusMsg={loginMsg!} />
 
           <h3
             className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'

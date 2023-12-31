@@ -25,7 +25,7 @@ const DashboardUsers = () => {
   const pageNumber = !pageNum || !isNumber(pageNum) || pageNum < 1 ? 1 : parseInt(pageNum)
 
   const [userId, setUserId] = useState('')
-  const [userAccountAction, setUserAccountAction] = useState('')
+  const [userAccountStatus, setuserAccountStatus] = useState('')
   const [userName, setUserName] = useState('')
   const [deleteUserStatus, setDeleteUserStatus] = useState()
   const [userUpdated, setUserUpdated] = useState()
@@ -54,7 +54,7 @@ const DashboardUsers = () => {
     ) {
       setUserId(e.target.dataset.id)
       setUserName(e.target.dataset.name)
-      setUserAccountAction(e.target.dataset.action)
+      setuserAccountStatus(e.target.dataset.action)
       //show modal
       setModalLoading(true)
     }
@@ -62,12 +62,12 @@ const DashboardUsers = () => {
     if (e.target.id === 'cancel') {
       setModalLoading(false)
     } else if (e.target.id === 'confirm') {
-      handleUser(userId, userAccountAction)
+      handleUser(userId, userAccountStatus)
     }
   })
 
-  const handleUser = async (userId: string, userAccountAction: string) => {
-    if (userAccountAction === 'delete') {
+  const handleUser = async (userId: string, userAccountStatus: string) => {
+    if (userAccountStatus === 'delete') {
       try {
         //You need to name the body {data} so it can be recognized in (.delete) method
         const response = await axios.delete(`${API_URL}/users/${userId}`, { data })
@@ -86,7 +86,7 @@ const DashboardUsers = () => {
       }
     } else {
       const formData = new FormData()
-      formData.append('userAccountAction', userAccountAction)
+      formData.append('userAccountStatus', userAccountStatus)
 
       try {
         const response = await axios.patch(`${API_URL}/users/${userId}`, formData)
@@ -127,15 +127,15 @@ const DashboardUsers = () => {
         <Modal
           status={Success}
           msg={`Done ${
-            userAccountAction === 'block'
+            userAccountStatus === 'block'
               ? `❗️ Blocking 😔 ${userName} `
-              : userAccountAction === 'active'
+              : userAccountStatus === 'active'
               ? `🎉 Activating 😄 ${userName}`
-              : userAccountAction === 'admin'
+              : userAccountStatus === 'admin'
               ? `🎉 Making ${userName} To Admin 😎`
-              : userAccountAction === 'cashier'
+              : userAccountStatus === 'cashier'
               ? `🎉 Making ${userName} To Cashier 😎`
-              : userAccountAction === 'user'
+              : userAccountStatus === 'user'
               ? `❗️ Making ${userName}  To User 😎`
               : null
           } Please wait while we redirect you to users list`}
@@ -158,28 +158,28 @@ const DashboardUsers = () => {
           modalHidden='hidden'
           classes='txt-blue text-center'
           msg={`Are you sure you want to ${
-            userAccountAction === 'block'
+            userAccountStatus === 'block'
               ? `Blocking ${userName}`
-              : userAccountAction === 'active'
+              : userAccountStatus === 'active'
               ? `Activating ${userName}`
-              : userAccountAction === 'admin'
+              : userAccountStatus === 'admin'
               ? `Make ${userName} an admin`
-              : userAccountAction === 'cashier'
+              : userAccountStatus === 'cashier'
               ? `Make ${userName} a cashier`
-              : userAccountAction === 'user'
+              : userAccountStatus === 'user'
               ? `Make ${userName} a user`
               : 'Cancel'
           } You can not undo this action`}
           ctaConfirmBtns={[
-            userAccountAction === 'block'
+            userAccountStatus === 'block'
               ? 'Block'
-              : userAccountAction === 'active'
+              : userAccountStatus === 'active'
               ? 'Activate'
-              : userAccountAction === 'admin'
+              : userAccountStatus === 'admin'
               ? 'Make Admin'
-              : userAccountAction === 'cashier'
+              : userAccountStatus === 'cashier'
               ? 'Make Cashier'
-              : userAccountAction === 'user'
+              : userAccountStatus === 'user'
               ? 'Make User'
               : 'Delete',
             'Cancel'
