@@ -10,9 +10,9 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { API_URL, DEFAULT_USER_DATA, USER } from '@constants'
+import { API_URL, DEFAULT_USER_DATA } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
-import type { UserProps } from '@types'
+import type { LoggedInUserProps, UserProps } from '@types'
 import { Session } from 'next-auth'
 
 const LoginDataFromLocalStorage =
@@ -22,10 +22,10 @@ const Login = () => {
   useDocumentTitle('Login')
   const router = useRouter()
   const { redirect } = router.query
-  const { data: session } = useSession()
+  const { data: session }: { data: LoggedInUserProps } = useSession()
 
   useEffect(() => {
-    USER || session!?.user ? router.push('/') : null
+    session?.token!.user ? router.push('/') : null
   }, [router, session])
 
   const [userEmailOrTel, setEmailOrTel] = useState(
@@ -48,14 +48,6 @@ const Login = () => {
       modalLoading!.classList.add('hidden')
     }
   })
-
-  type LoggedInUserProps =
-    | (Session & {
-        token?: {
-          user: UserProps
-        }
-      })
-    | null
 
   const sendLoginForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
@@ -110,7 +102,7 @@ const Login = () => {
     }
   }
 
-  return USER || loading || session?.user ? (
+  return loading || session?.user ? (
     <LoadingPage />
   ) : (
     <Layout>

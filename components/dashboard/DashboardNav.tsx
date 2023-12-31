@@ -1,25 +1,18 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import ThemeToggler from '../ThemeToggler'
 import Logo from '../Icons/Logo'
 import menuToggler from 'functions/menuToggler'
 import Image from 'next/image'
 import useAxios from 'hooks/useAxios'
-import { USER } from '@constants'
+import { handleSignout } from 'utils/functions/handleSignout'
 
 const DashboardNav = () => {
+  const router = useRouter()
+
   const [websiteLogoDisplayPath, setWebsiteLogoDisplayPath] = useState('')
   const { response } = useAxios({ url: '/settings' })
-
-  const handleLogout = () => {
-    if (USER) {
-      localStorage.removeItem('user')
-      window.location.href = '/'
-    } else {
-      signOut({ redirect: true, callbackUrl: '/' })
-    }
-  }
 
   useEffect(() => {
     if (response !== null) setWebsiteLogoDisplayPath(response.websiteLogoDisplayPath)
@@ -56,7 +49,11 @@ const DashboardNav = () => {
         <Link
           href='/#'
           className='inline-block px-2 py-1 text-white bg-orange-700 border rounded-lg cursor-pointer hover:bg-opacity-30'
-          onClick={handleLogout}
+          onClick={() => {
+            handleSignout()
+
+            router.push('/')
+          }}
         >
           Sign Out
         </Link>

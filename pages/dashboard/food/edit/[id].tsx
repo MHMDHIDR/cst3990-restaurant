@@ -249,10 +249,10 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
     }
   })
 
-  return loading ? (
+  return loading || !userType ? (
     <LoadingPage />
   ) : USER?.userAccountType !== 'admin' || userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+    <ModalNotFound />
   ) : (
     <>
       {updatedFoodStatus === 1 ? (

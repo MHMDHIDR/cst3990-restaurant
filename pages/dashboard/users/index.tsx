@@ -9,7 +9,7 @@ import useAuth from 'hooks/useAuth'
 import goTo from 'functions/goTo'
 import logoutUser from 'functions/logoutUser'
 import { isNumber } from 'functions/isNumber'
-import { API_URL, ITEMS_PER_PAGE } from '@constants'
+import { API_URL, ITEMS_PER_PAGE, USER } from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage } from 'components/Loading'
@@ -32,6 +32,7 @@ const DashboardUsers = () => {
   const [userUpdated, setUserUpdated] = useState()
   const [users, setUsers] = useState<any>('')
   const [modalLoading, setModalLoading] = useState(false)
+
   const { userType } = useAuth()
 
   const { loading, ...response } = useAxios({
@@ -115,8 +116,8 @@ const DashboardUsers = () => {
 
   return loading || !userType ? (
     <LoadingPage />
-  ) : userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+    <ModalNotFound />
   ) : (
     <>
       {deleteUserStatus === 1 ? (

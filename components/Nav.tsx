@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { CartContext } from 'contexts/CartContext'
 import ThemeToggler from './ThemeToggler'
 import Logo from './Icons/Logo'
@@ -10,24 +11,16 @@ import useEventListener from 'hooks/useEventListener'
 import useAxios from 'hooks/useAxios'
 import NavMenu from './NavMenu'
 import Image from 'next/image'
-import { DEFAULT_USER_DATA, USER } from '@constants'
-import { UserProps } from '@types'
 import useAuth from 'hooks/useAuth'
+import { handleSignout } from 'utils/functions/handleSignout'
 
 const Nav = () => {
   const { items } = useContext(CartContext)
   const { data: session } = useSession()
-  const { userType } = useAuth()
-  const [userData, setUserData] = useState<UserProps>()
+  const { user, isAuth, userType } = useAuth()
   const [cartItemsLength, setCartItemsLength] = useState(0)
 
-  useEffect(() => {
-    setUserData(USER)
-
-    return () => {
-      setUserData(DEFAULT_USER_DATA)
-    }
-  }, [])
+  const router = useRouter()
 
   useEffect(() => {
     setCartItemsLength(items.length)
@@ -36,15 +29,6 @@ const Nav = () => {
       setCartItemsLength(0)
     }
   }, [items])
-
-  const handleLogout = () => {
-    if (userData) {
-      localStorage.removeItem('user')
-      window.location.href = '/'
-    } else {
-      signOut({ redirect: true, callbackUrl: 'https://localhost:3000' })
-    }
-  }
 
   const [websiteLogoDisplayPath, setWebsiteLogoDisplayPath] = useState('')
   const { response } = useAxios({ url: '/settings' })
@@ -157,11 +141,9 @@ const Nav = () => {
               <MyLink to='contact'>Contact</MyLink>
             </li>
             <li className='flex gap-3'>
-              {userData || session ? (
+              {user && isAuth ? (
                 <NavMenu
-                  label={`Welcome Back ${
-                    userData ? userData.userFullName : session ? session!.user!?.name : ''
-                  }`}
+                  label={`Welcome Back ${user.userFullName}`}
                   isOptions={false}
                   src={
                     session
@@ -185,19 +167,22 @@ const Nav = () => {
                   </Link>
                   <button
                     className='px-3 py-1 text-sm text-center text-white transition-colors bg-red-700 border-2 rounded-lg select-none hover:bg-red-600 xl:border-0'
-                    onClick={handleLogout}
+                    onClick={() => {
+                      handleSignout()
+                      router.push('/')
+                    }}
                   >
                     Sign Out
                   </button>
                 </NavMenu>
-              ) : session === null && !userData && userData === false ? (
+              ) : (
                 <Link
                   href='/auth/login'
                   className='px-3 py-1 text-sm text-center text-white transition-colors bg-gray-800 border-2 rounded-lg select-none hover:bg-gray-700 xl:border-0'
                 >
                   Sign In
                 </Link>
-              ) : null}
+              )}
             </li>
           </ul>
         </div>

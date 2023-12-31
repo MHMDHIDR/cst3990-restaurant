@@ -9,14 +9,10 @@ import useAuth from 'hooks/useAuth'
 const MyOrders = () => {
   useDocumentTitle('My Orders')
 
-  const { userStatus, userId, loading } = useAuth()
+  const { userStatus } = useAuth()
 
-  return loading ? (
-    <LoadingPage />
-  ) : userStatus === 'block' ? (
+  return !userStatus || userStatus === 'block' ? (
     <ModalNotFound />
-  ) : !userStatus || userStatus === 'block' ? (
-    logoutUser(userId)
   ) : (
     <Layout>
       <section className='container py-12 mx-auto my-8 overflow-x-auto xl:max-w-full'>

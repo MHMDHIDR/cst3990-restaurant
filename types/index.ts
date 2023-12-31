@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongoose'
 import { Key, MouseEventHandler, RefObject } from 'react'
 import { NextApiRequest } from 'next'
+import { Session } from 'next-auth'
 
 export type UserProps = {
   userFullName: string
@@ -16,6 +17,14 @@ export type UserProps = {
   userResetPasswordToken?: string
   userResetPasswordExpires?: string
 }
+
+export type LoggedInUserProps =
+  | (Session & {
+      token?: {
+        user: UserProps
+      }
+    })
+  | null
 
 export type ModalProps = {
   msg?: string

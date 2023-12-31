@@ -24,6 +24,7 @@ import { API_URL, ITEMS_PER_PAGE, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { capitalizeText } from 'utils/functions/capitalize'
 import type { FoodImgsProps } from '@types'
+import logoutUser from 'utils/functions/logoutUser'
 
 const DashboardMenu = () => {
   useDocumentTitle('Menu')
@@ -39,7 +40,8 @@ const DashboardMenu = () => {
   const [deleteFoodStatus, setDeleteFoodStatus] = useState()
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const [menuFood, setMenuFood] = useState<any>()
-  const { userType } = useAuth()
+
+  const { userType, userStatus, userId } = useAuth()
 
   const { loading, ...response } = useAxios({
     url: `/foods?page=1&limit=${ITEMS_PER_PAGE}&createdAt=-1`
@@ -112,10 +114,12 @@ const DashboardMenu = () => {
     }
   }
 
-  return loading || !userType ? (
+  return loading ? (
     <LoadingPage />
   ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+    <ModalNotFound />
+  ) : !userStatus || userStatus === 'block' ? (
+    logoutUser(userId)
   ) : (
     <>
       {deleteFoodStatus === 1 ? (

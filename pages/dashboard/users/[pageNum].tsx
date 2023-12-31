@@ -5,7 +5,7 @@ import axios from 'axios'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useEventListener from 'hooks/useEventListener'
 import useAxios from 'hooks/useAxios'
-import { API_URL, USER, ITEMS_PER_PAGE } from '@constants'
+import { API_URL, ITEMS_PER_PAGE, USER } from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
@@ -14,8 +14,9 @@ import NavMenu from 'components/NavMenu'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import Layout from 'components/dashboard/Layout'
 import goTo from 'functions/goTo'
-import logoutUser from 'functions/logoutUser'
 import { isNumber } from 'functions/isNumber'
+import logoutUser from 'functions/logoutUser'
+import useAuth from 'hooks/useAuth'
 
 const DashboardUsers = () => {
   useDocumentTitle('Users')
@@ -31,6 +32,8 @@ const DashboardUsers = () => {
   const [userUpdated, setUserUpdated] = useState()
   const [data, setData] = useState<any>('')
   const [modalLoading, setModalLoading] = useState(false)
+
+  const { userType } = useAuth()
 
   //get users data only if the admin is authenticated and logged in
   const { loading, ...response } = useAxios({
@@ -103,10 +106,10 @@ const DashboardUsers = () => {
     }
   }
 
-  return loading ? (
+  return loading || !userType ? (
     <LoadingPage />
-  ) : USER?.userAccountType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+    <ModalNotFound />
   ) : (
     <>
       {deleteUserStatus === 1 ? (

@@ -12,6 +12,7 @@ import { cCategory } from '@types'
 import Layout from 'components/dashboard/Layout'
 import logoutUser from 'functions/logoutUser'
 import menuToggler from 'functions/menuToggler'
+import { USER } from '@constants'
 
 const DashboardStatistics = () => {
   useDocumentTitle('Home')
@@ -50,9 +51,9 @@ const DashboardStatistics = () => {
   const TITLE = 'The Number of Orders By Category'
 
   //check if userStatus is active and the userType is admin
-  return loading ? (
+  return loading || !userType ? (
     <LoadingPage />
-  ) : userType === 'user' ? (
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)

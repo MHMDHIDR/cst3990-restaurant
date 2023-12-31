@@ -125,10 +125,12 @@ const AddFood = () => {
     setToppings(list)
   }
 
+  console.log(userType)
+
   return loading ? (
     <LoadingPage />
-  ) : USER?.userAccountType !== 'admin' || userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+    <ModalNotFound />
   ) : (
     <>
       {addFoodStatus === 1 ? (

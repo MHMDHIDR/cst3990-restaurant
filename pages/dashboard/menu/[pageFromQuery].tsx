@@ -121,7 +121,7 @@ const DashboardMenu = () => {
   return loading || !userType ? (
     <LoadingPage />
   ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+    <ModalNotFound />
   ) : (
     <>
       {deleteFoodStatus === 1 ? (

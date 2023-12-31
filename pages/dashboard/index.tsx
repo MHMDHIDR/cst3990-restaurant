@@ -6,7 +6,7 @@ import useEventListener from 'hooks/useEventListener'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import { LoadingPage } from 'components/Loading'
 import Layout from 'components/dashboard/Layout'
-import { API_URL } from '@constants'
+import { API_URL, USER } from '@constants'
 import { DashboardHomeProps } from '@types'
 import goTo from 'functions/goTo'
 import logoutUser from 'functions/logoutUser'
@@ -16,18 +16,18 @@ import { toJson } from 'utils/functions/jsonTools'
 const DashboardHome = ({ orderItemsCount, menuItemsCount }: DashboardHomeProps) => {
   useDocumentTitle('Home')
 
-  const { userType, userStatus, userId, loading } = useAuth()
+  const { userType, userStatus, userId, loading, isAuth } = useAuth()
 
   typeof window !== 'undefined' && document.body.classList.add('dashboard')
 
   useEventListener('keydown', (e: any) => e.key === 'Escape' && menuToggler())
 
   //check if userStatus is active and the userType is admin
-  return loading ? (
+  return loading || !userType ? (
     <LoadingPage />
-  ) : userType === 'user' ? (
+  ) : userType === 'user' || USER?.userAccountType === 'user' ? (
     <ModalNotFound />
-  ) : userStatus === 'block' ? (
+  ) : !userStatus || userStatus === 'block' ? (
     logoutUser(userId)
   ) : (
     <Layout>

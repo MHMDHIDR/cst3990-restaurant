@@ -7,10 +7,7 @@ import { useRouter } from 'next/router'
  */
 const goTo = (subpath: string) => {
   const { pathname } = typeof window !== 'undefined' ? window.location : useRouter()
-  const subpathRoot = pathname.includes('/en')
-    ? pathname.split('/')[2]
-    : pathname.split('/')[1]
-
+  const subpathRoot = pathname.split('/')[1]
   return subpath === subpathRoot ? `/${subpathRoot}` : `/${subpathRoot}/` + subpath
 }
 

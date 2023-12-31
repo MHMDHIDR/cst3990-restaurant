@@ -10,7 +10,7 @@ import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import Layout from 'components/dashboard/Layout'
-import { API_URL } from '@constants'
+import { API_URL, USER } from '@constants'
 import { responseTypes } from '@types'
 import goTo from 'functions/goTo'
 import { stringJson } from 'functions/jsonTools'
@@ -212,8 +212,8 @@ const Settings = () => {
 
   return loading || !userType ? (
     <LoadingPage />
-  ) : userType !== 'admin' ? (
-    <ModalNotFound btnLink='/dashboard' btnName='Dashboard' />
+  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+    <ModalNotFound />
   ) : (
     <>
       {settingsUpdated === 1 ? (

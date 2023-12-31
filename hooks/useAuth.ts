@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { USER } from '@constants'
+import { getSession, useSession } from 'next-auth/react'
 import { stringJson } from 'functions/jsonTools'
 import useAxios from './useAxios'
+import { LoggedInUserProps, UserProps } from '@types'
 
 /**
  * Custom hook to check if user is logged in then redirect to dashboard or home page
@@ -13,19 +13,27 @@ const useAuth = () => {
   const [userType, setUserType] = useState<string>('')
   const [userStatus, setUserStatus] = useState<string>('')
   const [userId, setUserId] = useState<string>('')
-  const { data: session } = useSession()
-
-  //get user data using token if the user is logged-in and token is saved in localStorage then I'll get the current user data from the database
-  const headers = USER
-    ? typeof window !== 'undefined'
-      ? localStorage.getItem('user')
-      : ''
-    : stringJson(session!?.user!)
-
-  const { loading, ...response }: any = useAxios({ url: `/users`, headers })
+  const [headers, setHeaders] = useState<UserProps>()
+  const { data: session }: { data: LoggedInUserProps } = useSession()
 
   useEffect(() => {
-    if (!USER) {
+    const getUserSession = async () => {
+      const session: any = await getSession()
+      const { user }: { user: UserProps } = session?.token || { user: null }
+      setHeaders(user)
+      return user
+    }
+
+    getUserSession()
+  }, [])
+
+  const { loading, ...response }: any = useAxios({
+    url: `/users`,
+    headers: stringJson(headers!)
+  })
+
+  useEffect(() => {
+    if (!session?.token!.user) {
       setIsAuth(false)
       setUserType('')
     }
@@ -49,6 +57,7 @@ const useAuth = () => {
   }, [response.response])
 
   return {
+    user: session?.token!.user,
     isAuth,
     userType,
     userStatus,
