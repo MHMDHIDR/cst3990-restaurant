@@ -9,6 +9,7 @@ export type UserProps = {
   _id?: string
   image?: string
   LoggedIn?: number
+  userAdded?: number
   message?: string
   userAccountType?: string
   userEmail?: string

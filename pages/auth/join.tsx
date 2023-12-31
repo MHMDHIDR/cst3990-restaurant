@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -10,6 +10,8 @@ import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
 import { API_URL, PHONE_NUM_EXAMPLE, USER } from '@constants'
+import { validEmail, validPhone } from 'utils/functions/validForm'
+import { UserProps } from '@types'
 
 const Join = () => {
   useDocumentTitle('Join')
@@ -24,40 +26,56 @@ const Join = () => {
   const [userTel, setTel] = useState('')
   const [userPassword, setPassword] = useState('')
   const [passwordVisible, setPasswordVisible] = useState(false)
-  const [regStatus, setRegStatus] = useState()
   const [isSendingJoinForm, setIsSendingJoinForm] = useState(false)
+  const [regStatus, setRegStatus] = useState(0)
   const [errMsg, setErrMsg] = useState('')
 
   const { loading } = useAuth()
 
+  const personUserErr = useRef<HTMLSpanElement>(null)
+  const personPhoneErr = useRef<HTMLSpanElement>(null)
+  const personEmailErr = useRef<HTMLSpanElement>(null)
+
   const handleJoin = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
-    setIsSendingJoinForm(true)
+    if (
+      personUserErr.current!.textContent === '' &&
+      personPhoneErr.current!.textContent === '' &&
+      personEmailErr.current!.textContent === ''
+    ) {
+      setIsSendingJoinForm(true)
 
-    try {
-      const joinUser = await axios.post(`${API_URL}/users/join`, {
-        userFullName,
-        userEmail,
-        userTel,
-        userPassword
-      })
-      //getting response from backend
-      const { data } = joinUser
-      setRegStatus(data.userAdded)
+      try {
+        const joinUser: { data: UserProps } = await axios.post(`${API_URL}/users/join`, {
+          userFullName,
+          userEmail,
+          userTel,
+          userPassword
+        })
+        //getting response from backend
+        const { data } = joinUser
+        setRegStatus(data.userAdded ?? regStatus)
 
-      //if user is joined correctly
-      setErrMsg(data?.message)
-    } catch (response: any) {
-      setErrMsg(
-        response?.response?.status === 409
-          ? 'Sorry, this email is already taken'
-          : response?.response?.status === 400
-          ? 'Please fill all fields correctly'
-          : response?.response?.statusText
-      )
-    } finally {
-      setIsSendingJoinForm(false)
+        //if user is joined correctly
+        setErrMsg(data.message ?? errMsg)
+
+        //redirect to login page after 2 seconds
+        data.userAdded === 1 &&
+          setTimeout(() => {
+            router.push(`/auth/login`)
+          }, 2000)
+      } catch (response: any) {
+        setErrMsg(
+          response?.response?.status === 409
+            ? 'Sorry, this email is already taken'
+            : response?.response?.status === 400
+            ? 'Please fill all fields correctly'
+            : response?.response?.statusText
+        )
+      } finally {
+        setIsSendingJoinForm(false)
+      }
     }
   }
 
@@ -86,9 +104,25 @@ const Join = () => {
                   type='text'
                   onChange={e => setFullName(e.target.value)}
                   autoFocus
+                  onKeyUp={(e: any) => {
+                    const target = e.target.value.trim()
+
+                    if (target.length > 0 && target.length < 4) {
+                      personUserErr.current!.textContent = 'Please enter a valid name'
+                    } else if (target.length > 30) {
+                      personUserErr.current!.textContent =
+                        'The name is too long, please add a name of up to 30 characters'
+                    } else {
+                      personUserErr.current!.textContent = ''
+                    }
+                  }}
                   required
                 />
                 <span className='form__label'>Name</span>
+                <span
+                  className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
+                  ref={personUserErr}
+                ></span>
               </label>
 
               <label htmlFor='email' className='form__group'>
@@ -99,9 +133,22 @@ const Join = () => {
                   type='text'
                   onChange={e => setEmail(e.target.value)}
                   dir='auto'
+                  onKeyUp={(e: any) => {
+                    const target = e.target.value.trim()
+
+                    if (!validEmail(target)) {
+                      personEmailErr.current!.textContent = `Please Enter a Valid Email`
+                    } else {
+                      personEmailErr.current!.textContent = ''
+                    }
+                  }}
                   required
                 />
                 <span className='form__label'>Email</span>
+                <span
+                  className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
+                  ref={personEmailErr}
+                ></span>
               </label>
 
               <label htmlFor='tel' className='form__group'>
@@ -112,11 +159,28 @@ const Join = () => {
                   type='tel'
                   onChange={e => setTel(e.target.value)}
                   dir='auto'
+                  onKeyUp={(e: any) => {
+                    const target = e.target.value.trim()
+                    const NUM_LENGTH = 10
+
+                    if (target.length > 0 && target.length < NUM_LENGTH) {
+                      personPhoneErr.current!.textContent =
+                        'Please enter a phone number in the same format as the phone number in the example'
+                    } else if (!validPhone(target, NUM_LENGTH)) {
+                      personPhoneErr.current!.textContent = `Phone Number is Invalid! Phone Number must be a valid number`
+                    } else {
+                      personPhoneErr.current!.textContent = ''
+                    }
+                  }}
                   required
                 />
                 <span className='form__label'>
                   Phone Number, (e.g: {PHONE_NUM_EXAMPLE})
                 </span>
+                <span
+                  className='inline-block md:text-lg text-red-600 dark:text-red-400 font-[600] pt-2 px-1'
+                  ref={personPhoneErr}
+                ></span>
               </label>
 
               <label htmlFor='password' className='form__group'>
@@ -124,6 +188,7 @@ const Join = () => {
                   className='form__input'
                   id='password'
                   name='password'
+                  minLength={6}
                   type={passwordVisible ? 'text' : 'password'}
                   onChange={e => setPassword(e.target.value)}
                   dir='auto'
@@ -133,7 +198,7 @@ const Join = () => {
                   className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
                     locale === 'ar' ? 'left-1' : 'right-1'
                   }`}
-                  onClick={prevState2 => setPasswordVisible(prevState => !prevState)}
+                  onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
                     <EyeIconClose className={`stroke-red-700 dark:stroke-red-400`} />

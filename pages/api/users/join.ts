@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from 'utils/db'
 import UsersModel from 'models/User'
 import { genSalt, hash } from 'bcryptjs'
-import { generateToken } from 'utils/functions/generateToken'
+import { UserProps } from '@types'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
@@ -33,9 +33,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const hashedPassword = await hash(userPassword, salt)
 
       // Create user
-      const user = await UsersModel.create({
+      const user: UserProps = await UsersModel.create({
         userFullName,
-        userEmail,
+        userEmail: userEmail.trim().toLowerCase(),
         userTel,
         userPassword: hashedPassword
       })
@@ -43,10 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       //if user is created successfully
       if (user) {
         res.status(201).json({
-          _id: user.id,
-          email: user.email,
-          tel: user.tel,
-          token: generateToken(user._id),
+          _id: user._id,
+          email: user.userEmail,
+          tel: user.userTel,
           userAdded: 1,
           message: 'User Successfully Registered You Can Login 👍🏼'
         })

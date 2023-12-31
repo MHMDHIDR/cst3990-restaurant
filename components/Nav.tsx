@@ -52,7 +52,7 @@ const Nav = () => {
     lastScrollY = window.scrollY
   })
 
-  return loading || !user ? (
+  return loading ? (
     <LoadingPage />
   ) : (
     <div className='fixed inset-0 bottom-auto z-[9999] w-full transition-transform duration-300 nav ltr'>

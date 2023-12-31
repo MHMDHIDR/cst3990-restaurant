@@ -66,6 +66,7 @@ const Index = ({
     const randomIndex = Math.floor(Math.random() * drinkImgs?.length)
     return drinkImgs?.[randomIndex]?.foodImgs[0]?.foodImgDisplayPath
   }
+
   const getSweetsDrinkImg = () => {
     const randomIndex = Math.floor(Math.random() * sweetsImgs?.length)
     return sweetsImgs?.[randomIndex]?.foodImgs[0]?.foodImgDisplayPath
@@ -393,15 +394,11 @@ export async function getServerSideProps() {
     new: `${API_URL}/foods?page=1&limit=7&category=foods`
   }
 
-  const catFoodResponse = await fetch(fetchURLs.categories.foods).then(catFood =>
-    catFood.json()
-  )
-  const catDrinkResponse = await fetch(fetchURLs.categories.drinks).then(catDrink =>
-    catDrink.json()
-  )
-  const catSweetResponse = await fetch(fetchURLs.categories.sweets).then(catSweet =>
-    catSweet.json()
-  )
+  const { foods, drinks, sweets } = fetchURLs.categories
+
+  const catFoodResponse = await fetch(foods).then(catFood => catFood.json())
+  const catDrinkResponse = await fetch(drinks).then(catDrink => catDrink.json())
+  const catSweetResponse = await fetch(sweets).then(catSweet => catSweet.json())
   const menuFood = await fetch(fetchURLs.menu).then(menu => menu.json())
   const newFoodItems = await fetch(fetchURLs.new).then(newFoodItems =>
     newFoodItems.json()
