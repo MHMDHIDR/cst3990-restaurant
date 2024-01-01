@@ -16,11 +16,6 @@ const Pagination = ({
 }: PaginationProps) => {
   const numOfPages = [...Array(numberOfPages).keys()]
 
-  console.log('pageNum From Pagination: ', pageNum)
-
-  console.log('category value: ', Number(category))
-  console.log('category is Number?: ', isNumber(Number(category)))
-
   return !foodId && count > itemsPerPage ? (
     <div
       className='flex flex-wrap items-center justify-center mt-8 text-lg select-none ltr'
@@ -47,10 +42,13 @@ const Pagination = ({
             key={index}
             href={`/${routeName}${
               isNumber(Number(category)) || category === '0'
-                ? '/' + (page + 1)
+                ? '/' + (page + 1 === 1 ? '' : page + 1)
                 : page + 1 === 1 && category === '0'
                 ? ''
-                : '/' + category + '/' + (page + 1 === 1 ? '' : page + 1)
+                : (isNaN(Number(category)) ? '/' : '') +
+                  category +
+                  '/' +
+                  (page + 1 === 1 ? '' : page + 1)
             }`}
             className={`
                   ${
@@ -69,7 +67,10 @@ const Pagination = ({
         href={`/${routeName}${
           isNumber(Number(category)) || category === '0'
             ? '/' + (pageNum + 1)
-            : '/' + category + '/' + (pageNum + 1)
+            : (isNaN(Number(category)) ? '/' : '') +
+              category +
+              '/' +
+              (pageNum + 1 === 1 ? '' : pageNum + 1)
         }`}
         className={`${
           pageNum! < numOfPages.length ? 'opacity-100' : 'opacity-50 pointer-events-none'
