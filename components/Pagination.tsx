@@ -3,6 +3,7 @@ import scrollToView from 'functions/scrollToView'
 import { Key } from 'react'
 import { PaginationProps } from '@types'
 import { ITEMS_PER_PAGE } from '@constants'
+import { isNumber } from 'utils/functions/isNumber'
 
 const Pagination = ({
   routeName,
@@ -15,6 +16,11 @@ const Pagination = ({
 }: PaginationProps) => {
   const numOfPages = [...Array(numberOfPages).keys()]
 
+  console.log('pageNum From Pagination: ', pageNum)
+
+  console.log('category value: ', Number(category))
+  console.log('category is Number?: ', isNumber(Number(category)))
+
   return !foodId && count > itemsPerPage ? (
     <div
       className='flex flex-wrap items-center justify-center mt-8 text-lg select-none ltr'
@@ -23,11 +29,9 @@ const Pagination = ({
       {/* Previous Link Arrow */}
       <a
         href={`/${routeName}${
-          category
-            ? '/' + category + '/' + (pageNum! - 1 === 1 ? '' : pageNum! - 1)
-            : pageNum! - 1 === 1
-            ? ''
-            : '/' + (pageNum! - 1)
+          isNumber(Number(category))
+            ? '/' + (pageNum - 1)
+            : '/' + category + '/' + (pageNum - 1)
         }`}
         className={`${
           pageNum! > 1 ? 'opacity-100' : 'opacity-50 pointer-events-none'
@@ -42,11 +46,11 @@ const Pagination = ({
           <a
             key={index}
             href={`/${routeName}${
-              category
-                ? '/' + category + '/' + (page + 1 === 1 ? '' : page + 1)
+              isNumber(Number(category)) || category === '0'
+                ? '/' + (page + 1)
                 : page + 1 === 1
                 ? ''
-                : '/' + (page + 1)
+                : '/' + category + '/' + (page + 1 === 1 ? '' : page + 1)
             }`}
             className={`
                   ${
@@ -63,7 +67,9 @@ const Pagination = ({
       {/* Next Link Arrow */}
       <a
         href={`/${routeName}${
-          category ? '/' + category + '/' + (pageNum! + 1) : '/' + (pageNum! + 1)
+          isNumber(Number(category)) || category === '0'
+            ? '/' + (pageNum + 1)
+            : '/' + category + '/' + (pageNum + 1)
         }`}
         className={`${
           pageNum! < numOfPages.length ? 'opacity-100' : 'opacity-50 pointer-events-none'

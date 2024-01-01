@@ -24,19 +24,22 @@ const ViewFood = ({ viewFood }: any) => {
   const [data, setData] = useState<any>()
   const {
     asPath,
-    query: { params }
+    query: { params: pageFromQuery }
   }: any = useRouter()
 
   const loaction = (splitBy: number) =>
     asPath.split('/')[asPath.split('/').length - splitBy]
   const category =
-    loaction(2) !== 'view' ? loaction(2) : !isNumber(params[0]) && loaction(1)
+    loaction(2) !== 'view' ? loaction(2) : !isNumber(pageFromQuery[0]) && loaction(1)
 
-  const pageNumber = isNumber(params[0])
-    ? parseInt(params[0])
-    : params[1]
-    ? parseInt(params[1])
-    : 1
+  const UrlSplit =
+    typeof window !== 'undefined' ? window.location.pathname.split('/') : [1]
+
+  const pageNumber = isNumber(Number(pageFromQuery))
+    ? Number(pageFromQuery)
+    : !isNumber(Number(UrlSplit[UrlSplit.length - 1]))
+    ? 1
+    : Number(UrlSplit[UrlSplit.length - 1])
 
   const { items } = useContext(CartContext)
 
