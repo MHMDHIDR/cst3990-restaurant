@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import axios from 'axios'
 import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
@@ -76,6 +77,7 @@ const ResetPassword = () => {
 
       try {
         const { data } = await axios.post(`${API_URL}/users/resetpass`, formData)
+
         //destructering response from backend
         const { newPassSet, message } = data
 
@@ -86,7 +88,7 @@ const ResetPassword = () => {
           //if user has changed his password successfully
           setTimeout(() => {
             push('/auth/login')
-          }, 5000)
+          }, 2000)
         }
       } catch (error: any) {
         setNewPassMsg(error)
@@ -126,8 +128,11 @@ const ResetPassword = () => {
                     const parent = e.target.parentElement
                     if (e.target.value.length > 0 && !validPassword(e.target.value)) {
                       parent!.classList.add('notvalid')
-                      newPassErr.current!.textContent =
-                        'The password must consist of English letters and numbers only, and its length must be from at least 8 letters and numbers to a maximum of 50 letters and numbers'
+                      newPassErr.current!.textContent = `The password must contain English letters and numbers only,
+                        and it must contain at least one capital letter, one small letter, one special character, and one number
+                        and its length must be from at least 8 letters and numbers
+                        to a maximum of 50 letters and numbers
+                        (e.g "P@ssw0rd" or "passwOrd@123"))`
                     } else if (
                       newUserPassConfirm.length > 0 &&
                       e.target.value !== newUserPassConfirm
@@ -147,7 +152,7 @@ const ResetPassword = () => {
                   className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
                     locale === 'ar' ? 'left-1' : 'right-1'
                   }`}
-                  onClick={prevState2 => setPasswordVisible(prevState => !prevState)}
+                  onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
                     <EyeIconClose className={`stroke-red-700 dark:stroke-red-400`} />
@@ -192,7 +197,7 @@ const ResetPassword = () => {
                   className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
                     locale === 'ar' ? 'left-1' : 'right-1'
                   }`}
-                  onClick={prevState2 => setPasswordVisible(prevState => !prevState)}
+                  onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
                     <EyeIconClose className={`stroke-red-700 dark:stroke-red-400`} />
@@ -231,6 +236,12 @@ const ResetPassword = () => {
                     'Reset Password'
                   )}
                 </button>
+                <Link
+                  href='/auth/forgot'
+                  className='mx-auto text-center text-orange-700 underline-hover dark:text-orange-800 sm:dark:text-orange-500 w-fit'
+                >
+                  Forgot my password
+                </Link>
               </div>
             </form>
           </div>

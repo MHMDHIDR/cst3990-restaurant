@@ -46,7 +46,7 @@ const useAuth = () => {
   }, [])
 
   return {
-    user: session?.token!.user,
+    user: session?.token!?.user,
     isAuth,
     userType,
     userStatus,

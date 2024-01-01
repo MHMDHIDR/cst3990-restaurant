@@ -18,7 +18,8 @@ export const validPassword = (password: string) => {
    * - one number,
    * - one special character, and at least 8 characters AND maximum of 50 characters
    */
-  const passwordFormat = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/
+  const passwordFormat =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,50}$/
 
   return password.match(passwordFormat) ? true : false
 }

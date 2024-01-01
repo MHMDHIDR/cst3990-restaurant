@@ -4,7 +4,7 @@ import dbConnect from 'utils/db'
 import UsersModel from 'models/User'
 import SettingsModel from 'models/Settings'
 import { APP_URL, DEFAULT_USER_DATA } from '@constants'
-import email, { resetPasswordEmail } from 'functions/email'
+import email, { customEmail } from 'functions/email'
 import formHandler from 'functions/form'
 import { UserProps } from '@types'
 
@@ -38,15 +38,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             forgotPassSent: 0,
             message: `Your Account Has Been Blocked, Please Contact The Admin`
           })
-        } /*else if (
+        } else if (
           user.userResetPasswordToken &&
-          user.userResetPasswordExpires > Date.now()
+          Number(user.userResetPasswordExpires) > Date.now()
         ) {
           res.json({
             forgotPassSent: 0,
-            message: `Your Password Has Been Reset Successfully, Redirecting You To Login Page...`
+            message: `Your Already Have A Pending Password Reset Request, Please Check Your Email Inbox`
           })
-        }*/ else if (user.userAccountStatus === 'active') {
+        } else if (user.userAccountStatus === 'active') {
           const userResetPasswordToken = randomUUID()
           const userResetPasswordExpires = Date.now() + 3600000 // 1 hour
 
@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             from: 'mr.hamood277@gmail.com',
             to: user.userEmail,
             subject: 'Reset Password',
-            msg: resetPasswordEmail(resetLink, logoSrc)
+            msg: customEmail({ resetLink, logoSrc })
           }
 
           try {

@@ -177,6 +177,7 @@ const Nav = () => {
                 <Link
                   href='/auth/login'
                   className='px-3 py-1 text-sm text-center text-white transition-colors bg-gray-800 border-2 rounded-lg select-none hover:bg-gray-700 xl:border-0'
+                  onClick={() => menuToggler()}
                 >
                   Sign In
                 </Link>

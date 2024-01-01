@@ -32,9 +32,14 @@ const email = async ({ name, subject, from, to, msg }: any) => {
   return emailResponse
 }
 
-type resetPasswordEmailProps = (resetLink: string, logoSrc: string) => string
+type customEmailProps = (props: {
+  title?: string
+  msg?: string
+  resetLink?: string
+  logoSrc: string
+}) => string
 
-export const resetPasswordEmail: resetPasswordEmailProps = (resetLink, logoSrc) => {
+export const customEmail: customEmailProps = ({ title, msg, resetLink, logoSrc }) => {
   return `
 <!doctype html>
 <html lang="en-US">
@@ -79,19 +84,26 @@ export const resetPasswordEmail: resetPasswordEmailProps = (resetLink, logoSrc) 
                                 <tr>
                                     <td style="padding:0 35px;">
                                         <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
-                                            requested to reset your password</h1>
+                                            ${title ?? 'requested to reset your password'}
+                                        </h1>
                                         <span
                                             style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                                            We cannot simply send you your old password. A unique link to reset your
+                                            ${
+                                              msg ??
+                                              `We cannot simply send you your old password. A unique link to reset your
                                             password has been generated for you. To reset your password, click the
-                                            following link and follow the instructions.
-                                        </p>
-                                        <a  href="${resetLink}"
-                                            style="background: #c2410c;text-decoration: none !important;font-weight:500;margin-top:35px;color:#fff;text-transform: uppercase;font-size:14px;padding:10px 24px;display:inline-block;border-radius: 50px;"
-                                            target="_blank">
-                                          Reset Password
-                                        </a>
+                                            following link and follow the instructions.`
+                                            }
+                                        </p>${
+                                          resetLink
+                                            ? `<a href="${resetLink}"
+                                                style="background: #c2410c;text-decoration: none !important;font-weight:500;margin-top:35px;color:#fff;text-transform: uppercase;font-size:14px;padding:10px 24px;display:inline-block;border-radius: 50px;"
+                                                target="_blank">
+                                            Reset Password
+                                            </a>`
+                                            : ''
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -106,8 +118,11 @@ export const resetPasswordEmail: resetPasswordEmailProps = (resetLink, logoSrc) 
                         <td style="text-align:center;">
                             <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">
                               &copy; <strong>${APP_URL?.split('//')[1]}</strong>
-                              <br>
-                              <small>Note: This link will expire in 1 hour</small>
+                              ${
+                                resetLink
+                                  ? `<br><small>Note: This link will expire in 1 hour</small>`
+                                  : ''
+                              }
                             </p>
                         </td>
                     </tr>

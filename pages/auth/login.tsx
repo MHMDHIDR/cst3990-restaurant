@@ -10,10 +10,9 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { API_URL, DEFAULT_USER_DATA } from '@constants'
+import { DEFAULT_USER_DATA } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
-import { Session } from 'next-auth'
 
 const LoginDataFromLocalStorage =
   typeof window !== 'undefined' && parseJson(localStorage.getItem('LoginData') || '{}')
@@ -61,12 +60,11 @@ const Login = () => {
         userPassword
       })
 
-      if (result!.error) {
+      if (result!.error || result!.status === 400) {
         setLoggedInStatus(0)
-        setLoginMsg(result!.error)
+        setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
       } else {
         const session: LoggedInUserProps = await getSession()
-
         const { user } = session?.token ?? { user: DEFAULT_USER_DATA }
 
         const {

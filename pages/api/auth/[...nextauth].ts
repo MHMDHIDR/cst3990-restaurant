@@ -3,6 +3,7 @@ import axios from 'axios'
 import NextAuth, { AuthOptions, Session, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import type { JWT } from 'next-auth/jwt'
+import { UserProps } from '@types'
 
 const { NEXTAUTH_SECRET } = process.env
 
@@ -14,12 +15,11 @@ export const authOptions: AuthOptions = {
         userEmailOrTel: { label: 'EmailOrTel', type: 'text' },
         userPassword: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, _req) {
         try {
           const loginUser = await axios.post(`${API_URL}/users/login`, credentials)
           const { data: user } = loginUser
-
-          if (user.LoggedIn === 1 && user) {
+          if (user && user.LoggedIn === 1) {
             return Promise.resolve(user)
           }
 

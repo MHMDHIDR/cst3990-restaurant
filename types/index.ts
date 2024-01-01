@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongoose'
-import { Key, MouseEventHandler, RefObject } from 'react'
+import { Key, MouseEventHandler } from 'react'
 import { NextApiRequest } from 'next'
 import { Session } from 'next-auth'
 
 export type UserProps = {
-  userFullName: string
+  userFullName?: string
   token?: string
   _id?: string
   image?: string
