@@ -5,6 +5,7 @@ import axios from 'axios'
 import { CartContext } from 'contexts/CartContext'
 import { ToppingsContext } from 'contexts/ToppingsContext'
 import useDocumentTitle from 'hooks/useDocumentTitle'
+import useAuth from 'hooks/useAuth'
 import useAxios from 'hooks/useAxios'
 import {
   ADDRESS_EXAMPLE,
@@ -36,6 +37,8 @@ const formDataFromLocalStorage =
 const OrderFood = () => {
   useDocumentTitle('Cart Items')
   const { pathname } = useRouter()
+
+  const { isAuth } = useAuth()
 
   useEffect(() => {
     scrollToView()
@@ -109,7 +112,7 @@ const OrderFood = () => {
       formErr.current!.textContent = ''
 
       // IF USER IS LOGGED IN
-      if (USER || session!?.user) {
+      if (isAuth) {
         setShowLoginRegisterModal(false)
         handleSaveOrder()
       } else {

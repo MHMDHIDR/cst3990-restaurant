@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import axios from 'axios'
-import { getSession, signIn, useSession } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
@@ -10,7 +9,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { DEFAULT_USER_DATA } from '@constants'
+import { DEFAULT_USER_DATA, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -21,11 +20,13 @@ const Login = () => {
   useDocumentTitle('Login')
   const router = useRouter()
   const { redirect } = router.query
-  const { data: session }: { data: LoggedInUserProps } = useSession()
+  const { loading, userId } = useAuth()
 
   useEffect(() => {
-    session?.token!.user ? router.push('/') : null
-  }, [router, session])
+    if (USER._id || userId) {
+      router.push('/')
+    }
+  }, [router, userId])
 
   const [userEmailOrTel, setEmailOrTel] = useState(
     LoginDataFromLocalStorage.userEmailOrTel || ''
@@ -38,8 +39,6 @@ const Login = () => {
 
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
-
-  const { loading } = useAuth()
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -100,7 +99,7 @@ const Login = () => {
     }
   }
 
-  return loading || session?.user ? (
+  return loading || userId ? (
     <LoadingPage />
   ) : (
     <Layout>
