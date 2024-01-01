@@ -48,7 +48,7 @@ const Pagination = ({
             href={`/${routeName}${
               isNumber(Number(category)) || category === '0'
                 ? '/' + (page + 1)
-                : page + 1 === 1
+                : page + 1 === 1 && category === '0'
                 ? ''
                 : '/' + category + '/' + (page + 1 === 1 ? '' : page + 1)
             }`}
