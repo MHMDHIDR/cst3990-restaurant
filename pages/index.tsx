@@ -275,7 +275,7 @@ const Index = ({
               }}
             >
               <h3 className='flex items-center justify-center h-full text-sm font-bold text-white bg-gray-800 md:text-base 2xl:text-xl bg-opacity-80'>
-                All Foods and Drinks
+                Menu
               </h3>
             </Link>
 
