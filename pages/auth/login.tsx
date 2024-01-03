@@ -24,9 +24,9 @@ const Login = () => {
 
   useEffect(() => {
     if (USER._id || userId) {
-      router.push('/')
+      window.location.replace('/')
     }
-  }, [])
+  }, [router, userId])
 
   const [userEmailOrTel, setEmailOrTel] = useState(
     LoginDataFromLocalStorage.userEmailOrTel || ''
