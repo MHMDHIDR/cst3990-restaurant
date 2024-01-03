@@ -322,7 +322,7 @@ const Index = ({
             </Link>
           </div>
         </section>
-        <section id='new' className='py-12 my-8 overflow-x-hidden new'>
+        <section id='new' className='py-12 my-8 new'>
           <div className='container mx-auto text-center'>
             <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>New Food</h2>
             {newFood && newFood?.response?.length > 0 ? (
