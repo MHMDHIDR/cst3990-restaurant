@@ -26,7 +26,7 @@ const Login = () => {
     if (USER._id || userId) {
       router.push('/')
     }
-  }, [router, userId])
+  }, [])
 
   const [userEmailOrTel, setEmailOrTel] = useState(
     LoginDataFromLocalStorage.userEmailOrTel || ''
