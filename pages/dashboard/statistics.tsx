@@ -6,7 +6,9 @@ import {
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
+  PointElement,
+  LineElement
 } from 'chart.js'
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import useAxios from 'hooks/useAxios'
@@ -37,7 +39,16 @@ const DashboardStatistics = () => {
   const menu = useAxios({ url: `/foods?page=1&limit=0` })
   const orders = useAxios({ url: `/orders?page=1&limit=0` })
 
-  ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
+  ChartJS.register(
+    ArcElement,
+    Tooltip,
+    Legend,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    LineElement,
+    PointElement
+  )
 
   useEffect(() => {
     if (menu.response !== null) {
@@ -157,7 +168,9 @@ const DashboardStatistics = () => {
           countFoodOrdersByDate(orders.response!.response, date)
         ),
         backgroundColor: 'rgba(155, 52, 18, 0.7)',
-        borderColor: 'rgba(155, 52, 18, 0.95)'
+        borderColor: 'rgba(155, 52, 18, 0.95)',
+        borderWidth: 0.5,
+        borderRadius: 10
       },
       {
         label: ordersBycCategory && Object.keys(ordersBycCategory!)[2].capitalizeText(), // Drinks
@@ -165,7 +178,9 @@ const DashboardStatistics = () => {
           countDrinksOrdersByDate(orders.response!.response, date)
         ),
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
-        borderColor: 'rgba(255, 206, 86, 1)'
+        borderColor: 'rgba(255, 206, 86, 1)',
+        borderWidth: 0.5,
+        borderRadius: 10
       },
       {
         label: ordersBycCategory && Object.keys(ordersBycCategory!)[1].capitalizeText(), // Sweets
@@ -173,7 +188,9 @@ const DashboardStatistics = () => {
           countSweetsOrdersByDate(orders.response!.response, date)
         ),
         backgroundColor: 'rgba(171, 0, 87, 0.2)',
-        borderColor: 'rgba(171, 0, 87, 1)'
+        borderColor: 'rgba(171, 0, 87, 1)',
+        borderWidth: 0.5,
+        borderRadius: 10
       }
     ]
   }
@@ -203,6 +220,13 @@ const DashboardStatistics = () => {
         <div className='container max-w-screen-md mx-auto'>
           <h2 className='my-3 text-xl font-bold text-center'>Bar Chart</h2>
           <Bar height={250} width={400} data={BarData} />
+        </div>
+
+        <DividerStylish className='my-24' />
+
+        <div className='container max-w-screen-md mx-auto'>
+          <h2 className='my-3 text-xl font-bold text-center'>Line Chart</h2>
+          <Line height={200} width={400} data={BarData} />
         </div>
       </div>
     </Layout>
