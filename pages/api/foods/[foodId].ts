@@ -46,7 +46,7 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
       //if the user has uploaded a new image
       if (foodImgs) {
         try {
-          await (FoodModel.findByIdAndUpdate as any)(
+          await FoodModel.findByIdAndUpdate(
             foodId,
             {
               foodName,
@@ -77,7 +77,7 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
       } else {
         //else update food data without affecting images
         try {
-          await (FoodModel.findByIdAndUpdate as any)(foodId, {
+          await FoodModel.findByIdAndUpdate(foodId, {
             foodName,
             foodPrice,
             category,
@@ -113,7 +113,7 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
             await s3.deleteObject({ Bucket: AWS_BUCKET_NAME!, Key: imgName }).promise()
 
             // Find the food and delete the image by using the imgName
-            const food = await (FoodModel.findById as any)(foodId)
+            const food = await FoodModel.findById(foodId)
             if (!food) {
               return { success: false, error: 'Food not found' }
             }
@@ -124,7 +124,7 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
             )
 
             // Update the food model
-            await (FoodModel.findByIdAndUpdate as any)(foodId, { foodImgs })
+            await FoodModel.findByIdAndUpdate(foodId, { foodImgs })
 
             return { success: true }
           } catch (error) {
@@ -159,7 +159,7 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
 
           // Continue with the rest of the code
           try {
-            await (FoodModel.findByIdAndDelete as any)(foodId)
+            await FoodModel.findByIdAndDelete(foodId)
 
             res.json({
               message: 'Food Deleted Successfully',
