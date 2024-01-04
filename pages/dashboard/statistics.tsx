@@ -18,8 +18,8 @@ const DashboardStatistics = () => {
   useDocumentTitle('Home')
   const { userType, userStatus, userId, loading } = useAuth()
 
-  const [categories, setCategories] = useState<string[]>([''])
-  const [ordersBycCategory, setOrdersBycCategory] = useState<cCategory>()
+  const [_categories, setCategories] = useState<string[]>([''])
+  const [_ordersBycCategory, setOrdersBycCategory] = useState<cCategory>()
 
   //if there's food id then fetch with food id, otherwise fetch everything
   const getCategories = useAxios({ url: `/settings` })
@@ -53,7 +53,7 @@ const DashboardStatistics = () => {
   //check if userStatus is active and the userType is admin
   return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)

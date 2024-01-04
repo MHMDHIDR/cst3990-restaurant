@@ -213,7 +213,7 @@ const Settings = () => {
 
   return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)

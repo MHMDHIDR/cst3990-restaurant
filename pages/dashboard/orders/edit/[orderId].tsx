@@ -6,8 +6,15 @@ import { ToppingsContext } from 'contexts/ToppingsContext'
 import { DashboardOrderContext } from 'contexts/DashboardOrderContext'
 import { CartContext } from 'contexts/CartContext'
 import useDocumentTitle from 'hooks/useDocumentTitle'
+import useAuth from 'hooks/useAuth'
 import { validPhone } from 'functions/validForm'
-import { API_URL, MAX_QUANTITY, PHONE_NUM_EXAMPLE, ADDRESS_EXAMPLE } from '@constants'
+import {
+  API_URL,
+  MAX_QUANTITY,
+  PHONE_NUM_EXAMPLE,
+  ADDRESS_EXAMPLE,
+  USER
+} from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Error, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
@@ -21,12 +28,16 @@ import goTo from 'functions/goTo'
 import abstractText from 'functions/abstractText'
 import { stringJson } from 'functions/jsonTools'
 import { formattedPrice, unformattedPrice } from 'utils/functions/format'
+import ModalNotFound from 'components/Modal/ModalNotFound'
+import logoutUser from 'utils/functions/logoutUser'
 
 const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => {
   const { orderItemToppings, setOrderItemToppings } = useContext(ToppingsContext)
   const { ordersData, setOrdersData, orderItemsGrandPrice, setOrderItemsGrandPrice } =
     useContext(DashboardOrderContext)
   const { grandPrice } = useContext(CartContext)
+
+  const { userType, userStatus, userId, loading } = useAuth()
 
   const { orderId } = useRouter().query
 
@@ -111,7 +122,13 @@ const DashboardOrdersEdit = ({ OrdersData }: { OrdersData: orderDataProps }) => 
     }
   }
 
-  return (
+  return loading ? (
+    <LoadingPage />
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+    <ModalNotFound />
+  ) : userStatus === 'block' ? (
+    logoutUser(userId)
+  ) : (
     <Layout>
       <section id='orderFood' className='py-12 my-8'>
         {isLoading ? (

@@ -251,7 +251,7 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
 
   return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
     <ModalNotFound />
   ) : (
     <>
@@ -411,7 +411,11 @@ const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
                         onChange={e =>
                           setCategory([
                             e.target.value.trim(),
-                            e.target.options[e.target.selectedIndex].textContent ?? ''
+                            (
+                              e.target.options[
+                                e.target.selectedIndex
+                              ] as HTMLOptionElement
+                            ).textContent ?? ''
                           ])
                         }
                         defaultValue={data?.category}

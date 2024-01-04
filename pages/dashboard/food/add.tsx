@@ -72,7 +72,7 @@ const AddFood = () => {
     const formData = new FormData()
     formData.append('foodName', foodName)
     formData.append('foodPrice', foodPrice)
-    formData.append('category', category[0])
+    formData.append('category', category[0] ?? '')
     formData.append('foodDesc', foodDesc)
     formData.append('foodToppings', stringJson(toppings))
     formData.append('foodTags', stringJson(tags))
@@ -127,7 +127,7 @@ const AddFood = () => {
 
   return loading ? (
     <LoadingPage />
-  ) : userType !== 'admin' || (USER && USER?.userAccountType !== 'admin') ? (
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
     <ModalNotFound />
   ) : (
     <>
@@ -245,7 +245,8 @@ const AddFood = () => {
                     onChange={e =>
                       setCategory([
                         e.target.value.trim(),
-                        e.target.options[e.target.selectedIndex].textContent!
+                        (e.target.options[e.target.selectedIndex] as HTMLOptionElement)
+                          .textContent ?? ''
                       ])
                     }
                     required
@@ -253,7 +254,7 @@ const AddFood = () => {
                     <option value=''>Pick a Category</option>
                     {categoryList?.map((category, idx) => (
                       <option key={idx} value={category[0]}>
-                        {capitalizeText(category[0])}
+                        {capitalizeText(category[0] ?? '')}
                       </option>
                     ))}
                   </select>
