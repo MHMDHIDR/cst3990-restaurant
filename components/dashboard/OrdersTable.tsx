@@ -30,6 +30,8 @@ import { createLocaleDateString, formattedPrice } from 'utils/functions/format'
 import scrollToView from 'functions/scrollToView'
 import { isNumber } from 'functions/isNumber'
 import Invoice from './Invoice'
+import ModalNotFound from 'components/Modal/ModalNotFound'
+import logoutUser from 'utils/functions/logoutUser'
 
 const OrdersTable = ({ ordersByUserEmail = false }) => {
   useEffect(() => {
@@ -49,7 +51,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
 
-  const { userType } = useAuth()
+  const { loading, userType, userId, userStatus } = useAuth()
 
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
@@ -206,8 +208,12 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
     }
   }, [setIsLoading])
 
-  return LoadingOrders ? (
+  return loading || LoadingOrders ? (
     <LoadingPage />
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+    <ModalNotFound />
+  ) : userStatus === 'block' ? (
+    logoutUser(userId)
   ) : (
     <>
       {orderUpdated === 1 || deleteOrderStatus === 1 ? (

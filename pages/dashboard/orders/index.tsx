@@ -14,7 +14,7 @@ const DashboardOrders = () => {
 
   return loading || !userType ? (
     <LoadingPage />
-  ) : userType !== 'admin' ? (
+  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)

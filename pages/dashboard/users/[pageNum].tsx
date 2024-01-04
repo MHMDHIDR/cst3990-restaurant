@@ -108,7 +108,7 @@ const DashboardUsers = () => {
 
   return loading || !userType ? (
     <LoadingPage />
-  ) : userType !== 'admin' || USER?.userAccountType !== 'admin' ? (
+  ) : !USER || userType !== 'admin' ? (
     <ModalNotFound />
   ) : (
     <>
