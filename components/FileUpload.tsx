@@ -57,7 +57,7 @@ const FileUpload = ({
                 <button
                   type='button'
                   className='px-6 py-1 text-white transition-colors bg-red-500 rounded-full hover:bg-red-700'
-                  onClick={() => onFileRemove(fileURL, file[index]?.name)}
+                  onClick={() => onFileRemove(fileURL, file[index]?.name ?? '')}
                 >
                   Delete
                 </button>
