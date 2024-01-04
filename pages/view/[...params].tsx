@@ -57,10 +57,12 @@ const ViewFood = ({ viewFood }: any) => {
               ? //single food item (Title)
                 data?.response && (
                   <Link href={`/view/item/${data?.response?._id}`}>
-                    {removeSlug(data?.response?.foodName)}
+                    {removeSlug(data?.response?.foodName).capitalizeText()}
                   </Link>
                 )
-              : 'View Meals'}
+              : isNumber(Number(pageFromQuery[0]))
+              ? 'View Menu'
+              : `View ${pageFromQuery[0].capitalizeText()} Items`}
           </h2>
 
           {data !== undefined && data?.response?.length > 0 ? (

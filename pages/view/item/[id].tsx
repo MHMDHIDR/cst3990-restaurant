@@ -29,7 +29,7 @@ const IndexId = ({ item }: any) => {
             <>
               <h2 className='text-xl font-bold text-center mb-28 md:text-2xl'>
                 <Link href={`/view/item/${item?.response?._id}`}>
-                  {removeSlug(item?.response?.foodName)}
+                  {removeSlug(item?.response?.foodName).capitalizeText()}
                 </Link>
               </h2>
               <Card
@@ -37,7 +37,7 @@ const IndexId = ({ item }: any) => {
                 cItemId={item?.response?._id}
                 cHeading={
                   <Link href={`/view/item/${item?.response?._id}`}>
-                    {removeSlug(item?.response?.foodName)}
+                    {removeSlug(item?.response?.foodName).capitalizeText()}
                   </Link>
                 }
                 cPrice={item?.response?.foodPrice}

@@ -8,7 +8,7 @@ import {
   LinearScale,
   BarElement
 } from 'chart.js'
-import { Bar, Doughnut } from 'react-chartjs-2'
+import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import useAxios from 'hooks/useAxios'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useEventListener from 'hooks/useEventListener'
@@ -76,6 +76,57 @@ const DashboardStatistics = () => {
     getCategories?.response?.CategoryList
   ])
 
+  const countFoodOrdersByDate = (ordersData: any, targetDate: any) => {
+    return ordersData.reduce((count: any, order: any) => {
+      const orderDate = order.orderDate.split('T')[0]
+
+      if (orderDate === targetDate) {
+        const foodOrdersCount = order.orderItems.reduce((foodCount: any, item: any) => {
+          if (item.cCategory === 'foods') {
+            return foodCount + item.cQuantity
+          }
+          return foodCount
+        }, 0)
+        return count + foodOrdersCount
+      }
+      return count
+    }, 0)
+  }
+
+  const countDrinksOrdersByDate = (ordersData: any, targetDate: any) => {
+    return ordersData.reduce((count: any, order: any) => {
+      const orderDate = order.orderDate.split('T')[0]
+
+      if (orderDate === targetDate) {
+        const foodOrdersCount = order.orderItems.reduce((foodCount: any, item: any) => {
+          if (item.cCategory === 'drinks') {
+            return foodCount + item.cQuantity
+          }
+          return foodCount
+        }, 0)
+        return count + foodOrdersCount
+      }
+      return count
+    }, 0)
+  }
+
+  const countSweetsOrdersByDate = (ordersData: any, targetDate: any) => {
+    return ordersData.reduce((count: any, order: any) => {
+      const orderDate = order.orderDate.split('T')[0]
+
+      if (orderDate === targetDate) {
+        const foodOrdersCount = order.orderItems.reduce((foodCount: any, item: any) => {
+          if (item.cCategory === 'sweets') {
+            return foodCount + item.cQuantity
+          }
+          return foodCount
+        }, 0)
+        return count + foodOrdersCount
+      }
+      return count
+    }, 0)
+  }
+
   const DoughnutData = {
     labels: ordersBycCategory && Object.keys(ordersBycCategory), // categories?.map(category => category[1]),
     datasets: [
@@ -98,34 +149,28 @@ const DashboardStatistics = () => {
   }
 
   const BarData = {
-    labels: orders?.response?.response && ordersByDate,
+    labels: orders?.response?.response && ordersByDate, // X axis => ['2024-01-01', '2024-01-02', '2024-01-03']
     datasets: [
       {
-        label:
-          ordersBycCategory &&
-          capitalizeText(Object.keys(ordersBycCategory)[0]!) + ' Orders',
-        data: ordersBycCategory && Object.values(ordersBycCategory),
-        backgroundColor: ['rgba(155, 52, 18, 0.7)'],
-        borderColor: ['rgba(155, 52, 18, 0.95)'],
-        borderWidth: 0.5
+        label: 'foods',
+        data: ordersByDate?.map(date =>
+          countFoodOrdersByDate(orders.response!.response, date)
+        ),
+        backgroundColor: 'pink'
       },
       {
-        label:
-          ordersBycCategory &&
-          capitalizeText(Object.keys(ordersBycCategory)[1]!) + ' Orders',
-        data: ordersBycCategory && Object.values(ordersBycCategory),
-        backgroundColor: ['rgba(171, 0, 87, 0.2)'],
-        borderColor: ['rgba(171, 0, 87, 1)'],
-        borderWidth: 0.5
+        label: 'drinks',
+        data: ordersByDate?.map(date =>
+          countDrinksOrdersByDate(orders.response!.response, date)
+        ),
+        backgroundColor: 'gray'
       },
       {
-        label:
-          ordersBycCategory &&
-          capitalizeText(Object.keys(ordersBycCategory)[2]!) + ' Orders',
-        data: ordersBycCategory && Object.values(ordersBycCategory),
-        backgroundColor: ['rgba(255, 206, 86, 0.2)'],
-        borderColor: ['rgba(255, 206, 86, 1)'],
-        borderWidth: 0.5
+        label: 'sweets',
+        data: ordersByDate?.map(date =>
+          countSweetsOrdersByDate(orders.response!.response, date)
+        ),
+        backgroundColor: 'lightblue'
       }
     ]
   }
@@ -152,8 +197,10 @@ const DashboardStatistics = () => {
 
         <DividerStylish className='my-24' />
 
-        <h2 className='my-3 text-xl font-bold text-center'>Bar Chart</h2>
-        <Bar height={200} data={DoughnutData} />
+        <div className='container max-w-screen-md mx-auto'>
+          <h2 className='my-3 text-xl font-bold text-center'>Bar Chart</h2>
+          <Bar height={250} width={400} data={BarData} />
+        </div>
       </div>
     </Layout>
   )
