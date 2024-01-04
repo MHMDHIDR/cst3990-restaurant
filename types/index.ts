@@ -11,7 +11,7 @@ export type UserProps = {
   LoggedIn?: number
   userAdded?: number
   message?: string
-  userAccountType?: 'admin' | 'cashier'
+  userAccountType?: string
   userEmail?: string
   userTel?: string
   userPassword?: string
