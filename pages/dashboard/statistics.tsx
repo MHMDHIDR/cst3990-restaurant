@@ -169,7 +169,7 @@ const DashboardStatistics = () => {
         ),
         backgroundColor: 'rgba(155, 52, 18, 0.7)',
         borderColor: 'rgba(155, 52, 18, 0.95)',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderRadius: 10
       },
       {
@@ -179,7 +179,7 @@ const DashboardStatistics = () => {
         ),
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
         borderColor: 'rgba(255, 206, 86, 1)',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderRadius: 10
       },
       {
@@ -189,7 +189,7 @@ const DashboardStatistics = () => {
         ),
         backgroundColor: 'rgba(171, 0, 87, 0.2)',
         borderColor: 'rgba(171, 0, 87, 1)',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderRadius: 10
       }
     ]
