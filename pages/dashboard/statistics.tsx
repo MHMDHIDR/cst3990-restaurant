@@ -29,7 +29,6 @@ const DashboardStatistics = () => {
 
   const { userType, userStatus, userId, loading } = useAuth()
 
-  const [_categories, setCategories] = useState<string[]>([''])
   const [ordersBycCategory, setOrdersBycCategory] = useState<cCategory>()
   const [ordersByDate, setOrdersByDate] = useState<cCategory[]>()
 
@@ -42,8 +41,6 @@ const DashboardStatistics = () => {
 
   useEffect(() => {
     if (menu.response !== null) {
-      //Statistics
-      setCategories(getCategories?.response?.CategoryList || [])
       setOrdersBycCategory(
         orders?.response?.response
           ?.flatMap(({ orderItems }: any) =>
@@ -128,7 +125,9 @@ const DashboardStatistics = () => {
   }
 
   const DoughnutData = {
-    labels: ordersBycCategory && Object.keys(ordersBycCategory), // categories?.map(category => category[1]),
+    labels:
+      ordersBycCategory &&
+      Object.keys(ordersBycCategory).map(item => capitalizeText(item)),
     datasets: [
       {
         label: 'Orders',
@@ -151,26 +150,30 @@ const DashboardStatistics = () => {
   const BarData = {
     labels: orders?.response?.response && ordersByDate, // X axis => ['2024-01-01', '2024-01-02', '2024-01-03']
     datasets: [
+      // Y axis => [1, 2, 3]
       {
-        label: 'foods',
+        label: ordersBycCategory && Object.keys(ordersBycCategory!)[0].capitalizeText(), // Foods
         data: ordersByDate?.map(date =>
           countFoodOrdersByDate(orders.response!.response, date)
         ),
-        backgroundColor: 'pink'
+        backgroundColor: 'rgba(155, 52, 18, 0.7)',
+        borderColor: 'rgba(155, 52, 18, 0.95)'
       },
       {
-        label: 'drinks',
+        label: ordersBycCategory && Object.keys(ordersBycCategory!)[2].capitalizeText(), // Drinks
         data: ordersByDate?.map(date =>
           countDrinksOrdersByDate(orders.response!.response, date)
         ),
-        backgroundColor: 'gray'
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(255, 206, 86, 1)'
       },
       {
-        label: 'sweets',
+        label: ordersBycCategory && Object.keys(ordersBycCategory!)[1].capitalizeText(), // Sweets
         data: ordersByDate?.map(date =>
           countSweetsOrdersByDate(orders.response!.response, date)
         ),
-        backgroundColor: 'lightblue'
+        backgroundColor: 'rgba(171, 0, 87, 0.2)',
+        borderColor: 'rgba(171, 0, 87, 1)'
       }
     ]
   }
