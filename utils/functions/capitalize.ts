@@ -1,11 +1,16 @@
+declare global {
+  interface String {
+    capitalizeText(): string
+  }
+}
+
 /**
- *
  * @param text a function that returns text string to capitalize,
  *  (e.g: hey How arE YoU ThiS is TeXt => Hey How Are You This Is Text)
  * @returns string
  */
-export const capitalizeText = (text: string) => {
-  return text.replace(/\b\w+\b/g, word => {
+String.prototype.capitalizeText = function () {
+  return this.replace(/\b\w+\b/g, word => {
     if (word === word.toUpperCase()) {
       return word
     } else {
@@ -13,3 +18,5 @@ export const capitalizeText = (text: string) => {
     }
   })
 }
+
+export const capitalizeText = (text: string = '') => text.capitalizeText()
