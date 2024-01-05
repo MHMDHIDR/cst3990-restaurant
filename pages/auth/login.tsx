@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -19,15 +19,15 @@ const LoginDataFromLocalStorage =
 
 const Login = () => {
   useDocumentTitle('Login')
-  const { push, query } = useRouter()
+  const { push, query, replace } = useRouter()
   const { redirect } = query
   const { loading, userId, isAuth } = useAuth()
 
-  console.log(`loading is: ${loading} = isAuth is: ${isAuth}`)
-
-  if (USER._id || userId) {
-    push('/')
-  }
+  useEffect(() => {
+    if (USER._id || userId || isAuth) {
+      replace('/')
+    }
+  }, [isAuth, userId, replace])
 
   const [userEmailOrTel, setEmailOrTel] = useState(
     LoginDataFromLocalStorage.userEmailOrTel || ''
@@ -100,7 +100,7 @@ const Login = () => {
     }
   }
 
-  return loading || userId ? (
+  return loading || userId || isAuth ? (
     <LoadingPage />
   ) : (
     <Layout>

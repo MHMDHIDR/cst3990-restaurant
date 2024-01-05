@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -15,13 +15,15 @@ import { UserProps } from '@types'
 
 const Join = () => {
   useDocumentTitle('Join')
-  const { push } = useRouter()
+  const { replace } = useRouter()
 
-  const { loading, userId } = useAuth()
+  const { loading, userId, isAuth } = useAuth()
 
-  if (USER._id || userId) {
-    push('/')
-  }
+  useEffect(() => {
+    if (USER._id || userId || isAuth) {
+      replace('/')
+    }
+  }, [isAuth, userId, replace])
 
   const [userFullName, setFullName] = useState('')
   const [userEmail, setEmail] = useState('')
@@ -63,7 +65,7 @@ const Join = () => {
         //redirect to login page after 2 seconds
         data.userAdded === 1 &&
           setTimeout(() => {
-            push(`/auth/login`)
+            replace(`/auth/login`)
           }, 2000)
       } catch (response: any) {
         setErrMsg(
@@ -80,7 +82,7 @@ const Join = () => {
   }
 
   // if done loading (NOT Loading) then show the login form
-  return loading ? (
+  return loading || userId || isAuth ? (
     <LoadingPage />
   ) : (
     <>

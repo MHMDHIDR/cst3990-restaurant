@@ -6,6 +6,7 @@ import { Session } from 'next-auth'
 export type UserProps = {
   userFullName?: string
   token?: string
+  id?: string
   _id?: string
   image?: string
   LoggedIn?: number

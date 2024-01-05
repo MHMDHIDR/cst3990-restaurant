@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -8,7 +8,7 @@ import Layout from 'components/Layout'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
-import { API_URL } from '@constants'
+import { API_URL, USER } from '@constants'
 import { parseJson } from 'functions/jsonTools'
 
 const ForgotDataFromLocalStorage =
@@ -27,15 +27,15 @@ const ForgotPassword = () => {
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
 
-  const { push } = useRouter()
+  const { replace } = useRouter()
 
-  const { isAuth, loading, userType, userId } = useAuth()
+  const { isAuth, loading, userId } = useAuth()
 
-  if (isAuth && userType === 'admin') {
-    push('/dashboard')
-  } else if ((isAuth && userType === 'user') || (isAuth && userType === 'cashier')) {
-    push('/')
-  }
+  useEffect(() => {
+    if (USER._id || userId || isAuth) {
+      replace('/')
+    }
+  }, [isAuth, userId, replace])
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
   }
 
   // if done loading (NOT Loading) then show the login form
-  return loading || userId ? (
+  return loading || userId || isAuth ? (
     <LoadingPage />
   ) : (
     <Layout>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -8,7 +8,7 @@ import Layout from 'components/Layout'
 import useEventListener from 'hooks/useEventListener'
 import useDocumentTitle from 'hooks/useDocumentTitle'
 import useAuth from 'hooks/useAuth'
-import { API_URL } from '@constants'
+import { API_URL, USER } from '@constants'
 import { validPassword } from 'functions/validForm'
 import { stringJson } from 'functions/jsonTools'
 import { EyeIconClose, EyeIconOpen } from 'components/Icons/EyeIcon'
@@ -29,16 +29,16 @@ const ResetPassword = () => {
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
 
-  const { push, query } = useRouter()
+  const { replace, query } = useRouter()
   const { t: token } = query
 
-  const { isAuth, userType, loading } = useAuth()
+  const { isAuth, userId, loading } = useAuth()
 
-  if (isAuth && userType === 'admin') {
-    push('/dashboard')
-  } else if ((isAuth && userType === 'user') || (isAuth && userType === 'cashier')) {
-    push('/')
-  }
+  useEffect(() => {
+    if (USER._id || userId || isAuth) {
+      replace('/')
+    }
+  }, [isAuth, userId, replace])
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -85,7 +85,7 @@ const ResetPassword = () => {
         if (newPassSet === 1) {
           //if user has changed his password successfully
           setTimeout(() => {
-            push('/auth/login')
+            replace('/auth/login')
           }, 2000)
         }
       } catch (error: any) {
@@ -97,7 +97,9 @@ const ResetPassword = () => {
   }
 
   // if done loading (NOT Loading) then show the login form
-  return !loading ? (
+  return loading || userId || isAuth ? (
+    <LoadingPage />
+  ) : (
     <Layout>
       <section className='py-12 my-8'>
         <div className='container mx-auto'>
@@ -240,8 +242,6 @@ const ResetPassword = () => {
         </div>
       </section>
     </Layout>
-  ) : (
-    <LoadingPage />
   )
 }
 export default ResetPassword
