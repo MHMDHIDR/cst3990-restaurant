@@ -16,7 +16,7 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        userEmailOrTel: { label: 'EmailOrTel', type: 'text' },
+        userEmailOrTel: { label: 'Email or Phone Number', type: 'text' },
         userPassword: { label: 'Password', type: 'password' }
       },
       async authorize(credentials, _req) {
