@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { getSession, signIn } from 'next-auth/react'
@@ -9,7 +10,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { DEFAULT_USER_DATA, USER } from '@constants'
+import { APP_URL, DEFAULT_USER_DATA, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -20,7 +21,9 @@ const Login = () => {
   useDocumentTitle('Login')
   const { push, query } = useRouter()
   const { redirect } = query
-  const { loading, userId } = useAuth()
+  const { loading, userId, isAuth } = useAuth()
+
+  console.log(`loading is: ${loading} = isAuth is: ${isAuth}`)
 
   if (USER._id || userId) {
     push('/')
@@ -166,6 +169,21 @@ const Login = () => {
                     ) : (
                       'Login'
                     )}
+                  </button>
+                  <button
+                    type='button'
+                    className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
+                    onClick={() => signIn('google', { callbackUrl: APP_URL })}
+                    aria-label='Login With Google'
+                  >
+                    Login With Google
+                    <Image
+                      src={`/assets/img/icons/google.svg`}
+                      className='w-8 h-8'
+                      width='28'
+                      height='28'
+                      alt='Google Login button'
+                    />
                   </button>
                 </div>
 

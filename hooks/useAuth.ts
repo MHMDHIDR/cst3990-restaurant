@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { getSession, useSession } from 'next-auth/react'
-import { stringJson } from 'functions/jsonTools'
 import { LoggedInUserProps, UserProps } from '@types'
 
 /**
@@ -26,7 +25,10 @@ const useAuth = () => {
         setLoading(false)
       }
 
-      if (['admin', 'cashier', 'user'].includes(user?.userAccountType!)) {
+      if (
+        ['admin', 'cashier', 'user'].includes(user?.userAccountType!) ||
+        session?.token!?.user.name
+      ) {
         setIsAuth(true)
         setUserType(user.userAccountType!)
         setUserStatus(user.userAccountStatus!)

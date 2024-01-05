@@ -18,11 +18,14 @@ export type UserProps = {
   userAccountStatus?: 'active' | 'block'
   userResetPasswordToken?: string
   userResetPasswordExpires?: string
-}
+} & Session['user']
 
 export type LoggedInUserProps =
   | (Session & {
       token?: {
+        user: UserProps
+      }
+      session?: {
         user: UserProps
       }
     })

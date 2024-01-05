@@ -1,13 +1,18 @@
-import { API_URL } from '@constants'
-import axios from 'axios'
 import NextAuth, { AuthOptions, Session, User } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import axios from 'axios'
+import { API_URL } from '@constants'
 import type { JWT } from 'next-auth/jwt'
 
-const { NEXTAUTH_SECRET } = process.env
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET } = process.env
 
 export const authOptions: AuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: GOOGLE_CLIENT_ID!,
+      clientSecret: GOOGLE_CLIENT_SECRET!
+    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -42,6 +47,19 @@ export const authOptions: AuthOptions = {
         token.user = user
       }
       return Promise.resolve(token)
+    },
+    async signIn({ account, profile }): Promise<string | boolean> {
+      if (!profile?.email) {
+        throw new Error('No email found')
+      }
+
+      if (account?.provider === 'google') {
+        // must return true to allow sign in
+        return true
+      }
+
+      // else must return false to prevent sign in
+      return false
     }
   }
 }

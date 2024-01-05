@@ -145,7 +145,9 @@ const Nav = () => {
             <li className='flex gap-3'>
               {user ? (
                 <NavMenu
-                  label={`Welcome Back ${!user ? USER.userFullName : user.userFullName}`}
+                  label={`Welcome Back ${
+                    !user ? USER.userFullName : user.userFullName ?? user.name
+                  }`}
                   isOptions={false}
                   src={user?.image ?? '/assets/img/icons/mobile/apple-icon-180.png'}
                 >

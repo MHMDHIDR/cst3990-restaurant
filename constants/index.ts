@@ -43,7 +43,7 @@ const url = {
 
 export const APP_URL =
   process.env.NODE_ENV === 'development'
-    ? `https://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
+    ? `http://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
     : process.env.NEXT_PUBLIC_APP_PUBLIC_URL
 
 export const API_URL = APP_URL + '/api'

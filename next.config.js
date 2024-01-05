@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'source.unsplash.com',
         pathname: '/random'
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com'
       }
     ]
   }
