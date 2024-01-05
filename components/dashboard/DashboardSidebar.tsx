@@ -4,7 +4,6 @@ import useAuth from 'hooks/useAuth'
 import { USER } from '@constants'
 import goTo from 'functions/goTo'
 import menuToggler from 'functions/menuToggler'
-import { useRouter } from 'next/router'
 
 const DashboardSidebar = () => {
   const menuTogglerRef = useRef<any>()
@@ -13,8 +12,6 @@ const DashboardSidebar = () => {
   useEffect(() => {
     setTop(menuTogglerRef?.current?.getBoundingClientRect().top)
   }, [])
-
-  const { locale } = useRouter()
 
   return (
     <aside>
@@ -28,10 +25,10 @@ const DashboardSidebar = () => {
       <label
         data-tooltip='Menu'
         htmlFor='menuToggler'
-        className={`block z-20 w-10 h-10 transition-all translate-x-0 bg-orange-700 border-2 border-gray-800 cursor-pointer hover:bg-orange-800 dark:border-white translate-y-36 sm:translate-y-36 peer-checked:-translate-x-56 ${
+        className={`block z-20 w-10 h-10 transition-all translate-x-0 bg-orange-700 border-2 border-gray-800 cursor-pointer hover:bg-orange-800 dark:border-white translate-y-36 sm:translate-y-36 peer-checked:-translate-x-56 border-l-0 ${
           top < 100 &&
           `after:content-[attr(tooltip)] after:bottom-[calc(var(--top)*2)] after:mt-2 before:dark:border-t-transparent before:border-t-transparent before:border-b-gray-800 before:dark:border-b-gray-300 before:top-[var(--bottom)]`
-        } ${locale === 'ar' ? 'border-r-0' : 'border-l-0'}`}
+        }`}
         style={{ margin: '0' }}
         ref={menuTogglerRef}
       >
@@ -57,9 +54,7 @@ const DashboardSidebar = () => {
 
       {!loading && (
         <ul
-          className={`fixed z-10 flex flex-col w-56 h-full pt-24 overflow-x-hidden overflow-y-auto transition-all bg-orange-800 shadow-inner dashboard__sidebar sm:pt-20 peer-checked:translate-x-0 ${
-            locale === 'ar' ? 'translate-x-full' : '-translate-x-full'
-          }`}
+          className={`fixed z-10 flex flex-col w-56 h-full pt-24 overflow-x-hidden overflow-y-auto transition-all bg-orange-800 shadow-inner dashboard__sidebar sm:pt-20 peer-checked:translate-x-0 -translate-x-full`}
           id='menu'
         >
           <SideBarLink href={'dashboard'}>Dashboard</SideBarLink>

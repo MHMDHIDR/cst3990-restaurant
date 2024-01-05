@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -15,11 +15,13 @@ import { UserProps } from '@types'
 
 const Join = () => {
   useDocumentTitle('Join')
-  const router = useRouter()
+  const { push } = useRouter()
 
-  useEffect(() => {
-    USER && router.push('/')
-  }, [router])
+  const { loading, userId } = useAuth()
+
+  if (USER._id || userId) {
+    push('/')
+  }
 
   const [userFullName, setFullName] = useState('')
   const [userEmail, setEmail] = useState('')
@@ -29,8 +31,6 @@ const Join = () => {
   const [isSendingJoinForm, setIsSendingJoinForm] = useState(false)
   const [regStatus, setRegStatus] = useState(0)
   const [errMsg, setErrMsg] = useState('')
-
-  const { loading } = useAuth()
 
   const personUserErr = useRef<HTMLSpanElement>(null)
   const personPhoneErr = useRef<HTMLSpanElement>(null)
@@ -63,7 +63,7 @@ const Join = () => {
         //redirect to login page after 2 seconds
         data.userAdded === 1 &&
           setTimeout(() => {
-            router.push(`/auth/login`)
+            push(`/auth/login`)
           }, 2000)
       } catch (response: any) {
         setErrMsg(
@@ -79,10 +79,10 @@ const Join = () => {
     }
   }
 
-  const { locale } = useRouter()
-
   // if done loading (NOT Loading) then show the login form
-  return !loading ? (
+  return loading ? (
+    <LoadingPage />
+  ) : (
     <>
       <Header />
       <section className='py-12 my-8'>
@@ -195,9 +195,7 @@ const Join = () => {
                   required
                 />
                 <span
-                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
-                    locale === 'ar' ? 'left-1' : 'right-1'
-                  }`}
+                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60 right-1`}
                   onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
@@ -244,8 +242,6 @@ const Join = () => {
       </section>
       <Footer />
     </>
-  ) : (
-    <LoadingPage />
   )
 }
 export default Join

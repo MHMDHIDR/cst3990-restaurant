@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { getSession, signIn } from 'next-auth/react'
@@ -18,15 +18,13 @@ const LoginDataFromLocalStorage =
 
 const Login = () => {
   useDocumentTitle('Login')
-  const router = useRouter()
-  const { redirect } = router.query
+  const { push, query } = useRouter()
+  const { redirect } = query
   const { loading, userId } = useAuth()
 
-  useEffect(() => {
-    if (USER._id || userId) {
-      window.location.replace('/')
-    }
-  }, [router, userId])
+  if (USER._id || userId) {
+    push('/')
+  }
 
   const [userEmailOrTel, setEmailOrTel] = useState(
     LoginDataFromLocalStorage.userEmailOrTel || ''
@@ -82,7 +80,7 @@ const Login = () => {
         setLoggedInStatus(LoggedIn)
         setLoginMsg(message)
         redirect
-          ? router.push(`${redirect}`)
+          ? push(`${redirect}`)
           : userAccountType === 'user'
           ? window.location.replace('/')
           : userAccountType === 'admin'

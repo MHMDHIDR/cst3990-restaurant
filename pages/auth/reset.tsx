@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -34,13 +34,11 @@ const ResetPassword = () => {
 
   const { isAuth, userType, loading } = useAuth()
 
-  useEffect(() => {
-    isAuth && userType === 'admin'
-      ? push('/dashboard')
-      : isAuth && userType === 'user'
-      ? push('/')
-      : null
-  }, [isAuth, userType, push])
+  if (isAuth && userType === 'admin') {
+    push('/dashboard')
+  } else if ((isAuth && userType === 'user') || (isAuth && userType === 'cashier')) {
+    push('/')
+  }
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -98,8 +96,6 @@ const ResetPassword = () => {
     }
   }
 
-  const { locale } = useRouter()
-
   // if done loading (NOT Loading) then show the login form
   return !loading ? (
     <Layout>
@@ -149,9 +145,7 @@ const ResetPassword = () => {
                   required
                 />
                 <span
-                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
-                    locale === 'ar' ? 'left-1' : 'right-1'
-                  }`}
+                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60 right-1`}
                   onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (
@@ -194,9 +188,7 @@ const ResetPassword = () => {
                   required
                 />
                 <span
-                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60  ${
-                    locale === 'ar' ? 'left-1' : 'right-1'
-                  }`}
+                  className={`absolute cursor-pointer px-2 text-xs text-black capitalize transition-all bg-gray-200 select-none sm:text-sm md:text-lg dark:text-gray-100 dark:bg-gray-800 opacity-60 right-1`}
                   onClick={() => setPasswordVisible(prevState => !prevState)}
                 >
                   {passwordVisible ? (

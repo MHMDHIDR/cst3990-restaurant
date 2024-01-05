@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -27,16 +27,15 @@ const ForgotPassword = () => {
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
 
-  const router = useRouter()
+  const { push } = useRouter()
 
-  const { isAuth, userType, loading } = useAuth()
-  useEffect(() => {
-    isAuth && userType === 'admin'
-      ? router.push('/dashboard')
-      : isAuth && userType === 'user'
-      ? router.push('/')
-      : null
-  }, [isAuth, userType, router])
+  const { isAuth, loading, userType, userId } = useAuth()
+
+  if (isAuth && userType === 'admin') {
+    push('/dashboard')
+  } else if ((isAuth && userType === 'user') || (isAuth && userType === 'cashier')) {
+    push('/')
+  }
 
   useEventListener('click', (e: any) => {
     //confirm means cancel Modal message (hide it)
@@ -85,7 +84,9 @@ const ForgotPassword = () => {
   }
 
   // if done loading (NOT Loading) then show the login form
-  return !loading ? (
+  return loading || userId ? (
+    <LoadingPage />
+  ) : (
     <Layout>
       <section className='py-12 my-8'>
         <div className='container mx-auto'>
@@ -162,8 +163,6 @@ const ForgotPassword = () => {
         </div>
       </section>
     </Layout>
-  ) : (
-    <LoadingPage />
   )
 }
 export default ForgotPassword
