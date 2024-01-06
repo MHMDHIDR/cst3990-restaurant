@@ -10,7 +10,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { APP_URL, DEFAULT_USER_DATA, USER } from '@constants'
+import { /*APP_URL,*/ DEFAULT_USER_DATA, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -91,7 +91,7 @@ const Login = () => {
           : null
       }
     } catch (error: any) {
-      console.log(error)
+      console.error(error)
 
       setLoggedInStatus(error.response?.data?.LoggedIn)
       setLoginMsg(error.response?.data?.message)
@@ -173,7 +173,9 @@ const Login = () => {
                   <button
                     type='button'
                     className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
-                    onClick={() => signIn('google', { callbackUrl: APP_URL })}
+                    onClick={() => {
+                      alert('Google Login is not available yet!')
+                    }}
                     aria-label='Login With Google'
                   >
                     Login With Google

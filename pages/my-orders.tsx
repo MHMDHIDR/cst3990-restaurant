@@ -1,15 +1,27 @@
+import { useEffect } from 'react'
 import useDocumentTitle from 'hooks/useDocumentTitle'
+import useAuth from 'hooks/useAuth'
 import OrdersTable from 'components/dashboard/OrdersTable'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import Layout from 'components/Layout'
-import useAuth from 'hooks/useAuth'
+import { useRouter } from 'next/router'
+import { LoadingPage } from 'components/Loading'
+import { USER } from '@constants'
 
 const MyOrders = () => {
   useDocumentTitle('My Orders')
+  const { replace } = useRouter()
+  const { loading, userStatus, userId, isAuth } = useAuth()
 
-  const { userStatus } = useAuth()
+  useEffect(() => {
+    if (USER._id || userId || isAuth) {
+      replace('/')
+    }
+  }, [isAuth, userId, replace])
 
-  return !userStatus || userStatus === 'block' ? (
+  return loading || userId || isAuth ? (
+    <LoadingPage />
+  ) : userStatus === 'block' ? (
     <ModalNotFound />
   ) : (
     <Layout>
