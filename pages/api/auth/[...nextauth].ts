@@ -37,6 +37,18 @@ export const authOptions: AuthOptions = {
   ],
   secret: NEXTAUTH_SECRET,
   callbacks: {
+    async signIn({ account, profile }): Promise<string | boolean> {
+      const { email } = profile!
+      if (!email) {
+        throw new Error('No email found')
+      }
+
+      if (account?.provider === 'google') {
+        return true
+      }
+
+      return false
+    },
     async session(params: { session: Session; token: JWT }) {
       const { session, token } = params
       return Promise.resolve({ session, token, expires: session.expires })
@@ -47,19 +59,6 @@ export const authOptions: AuthOptions = {
         token.user = user
       }
       return Promise.resolve(token)
-    },
-    async signIn({ account, profile }): Promise<string | boolean> {
-      if (!profile?.email) {
-        throw new Error('No email found')
-      }
-
-      if (account?.provider === 'google') {
-        // must return true to allow sign in
-        return true
-      }
-
-      // else must return false to prevent sign in
-      return false
     }
   }
 }

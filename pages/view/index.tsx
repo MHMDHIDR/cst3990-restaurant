@@ -14,7 +14,6 @@ import scrollToView from 'functions/scrollToView'
 import { foodDataProps } from '@types'
 import { API_URL, ITEMS_PER_PAGE } from '@constants'
 import { CartAddButton, CartRemoveButton } from 'components/CartButton'
-import { capitalizeText } from 'utils/functions/capitalize'
 
 const ViewFood = ({ viewFood }: any) => {
   useDocumentTitle('View Foods')

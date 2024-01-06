@@ -1,4 +1,4 @@
-const Add = ({ width = '10', height = '10', className = '', color = '' }) => (
+const Add = ({ width = '10', height = '10', className = '' }) => (
   <svg
     aria-hidden='true'
     focusable='false'

@@ -45,7 +45,7 @@ const Items = ({
   } = useContext(ToppingsContext)
   const { items, setItems, removeFromCart, setGrandPrice } = useContext(CartContext)
   const { removeOrderFromItems } = useContext(DashboardOrderContext)
-  const [orderItemQuantity, setOrderItemQuantity] = useState(0)
+  const [_orderItemQuantity, setOrderItemQuantity] = useState(0)
 
   useEffect(() => {
     setOrderItemToppings(orderToppings)

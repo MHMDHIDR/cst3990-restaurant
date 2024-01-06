@@ -1,6 +1,4 @@
 import useDocumentTitle from 'hooks/useDocumentTitle'
-import logoutUser from 'functions/logoutUser'
-import { LoadingPage } from 'components/Loading'
 import OrdersTable from 'components/dashboard/OrdersTable'
 import ModalNotFound from 'components/Modal/ModalNotFound'
 import Layout from 'components/Layout'
