@@ -14,8 +14,6 @@ import useAuth from 'hooks/useAuth'
 import { handleSignout } from 'utils/functions/handleSignout'
 import { LoadingPage } from './Loading'
 import { USER } from '@constants'
-import { getSession } from 'next-auth/react'
-import { UserProps } from '@types'
 
 const Nav = () => {
   const { items } = useContext(CartContext)
@@ -23,15 +21,6 @@ const Nav = () => {
   const [cartItemsLength, setCartItemsLength] = useState(0)
 
   const router = useRouter()
-
-  // const getUserSession = async () => {
-  //   const session = await getSession()
-  //   // const { user }: { user: UserProps } = session || { user: null }
-
-  //   console.log('User Nav.jsx from getSession => ', session)
-  // }
-
-  // getUserSession()
 
   console.log('User useAuth => ', user)
 
@@ -156,7 +145,7 @@ const Nav = () => {
               <MyLink to='contact'>Contact</MyLink>
             </li>
             <li className='flex gap-3'>
-              {user ? (
+              {user.LoggedIn === 1 ? (
                 <NavMenu
                   label={`Welcome Back ${
                     !user ? USER.userFullName : user.userFullName ?? user.name

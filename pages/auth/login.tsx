@@ -66,7 +66,7 @@ const Login = () => {
               userPassword
             })
 
-      if (result!.error || result!.status === 400) {
+      if (result && (result.error || result.status === 400)) {
         setLoggedInStatus(0)
         setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
       } else {
@@ -98,8 +98,6 @@ const Login = () => {
           : null
       }
     } catch (error: any) {
-      console.error(error)
-
       setLoggedInStatus(error.response?.data?.LoggedIn)
       setLoginMsg(error.response?.data?.message)
     } finally {
