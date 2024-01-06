@@ -1,18 +1,18 @@
 import NextAuth, { AuthOptions, Session, User } from 'next-auth'
-// import GoogleProvider from 'next-auth/providers/google'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import axios from 'axios'
 import { API_URL } from '@constants'
 import type { JWT } from 'next-auth/jwt'
 
-const { /*GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,*/ NEXTAUTH_SECRET } = process.env
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET } = process.env
 
 export const authOptions: AuthOptions = {
   providers: [
-    // GoogleProvider({
-    //   clientId: GOOGLE_CLIENT_ID!,
-    //   clientSecret: GOOGLE_CLIENT_SECRET!
-    // }),
+    GoogleProvider({
+      clientId: GOOGLE_CLIENT_ID!,
+      clientSecret: GOOGLE_CLIENT_SECRET!
+    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -37,18 +37,41 @@ export const authOptions: AuthOptions = {
   ],
   secret: NEXTAUTH_SECRET,
   callbacks: {
-    // async signIn({ account, profile }): Promise<string | boolean> {
-    //   const { email } = profile!
-    //   if (!email) {
-    //     throw new Error('No email found')
-    //   }
+    async signIn({ user, account, profile }): Promise<string | boolean> {
+      const { email } = profile!
+      if (!email) {
+        throw new Error('No email found')
+      }
 
-    //   if (account?.provider === 'google') {
-    //     return true
-    //   }
+      const { data: userExists } = await axios.post(`${API_URL}/users/emailExists`, {
+        email
+      })
 
-    //   return false
-    // },
+      const data = {
+        userFullName: profile?.name,
+        userEmail: profile?.email,
+        signupMethod: account?.provider
+      }
+      const { data: newUser } = await axios.post(`${API_URL}/users/join`, data)
+      console.log('NewUser from Join API ==>', newUser)
+
+      if (userExists && userExists.userAccountType === 'admin') {
+        // return Promise.resolve('/dashboard')
+        return true
+      } else if (userExists && userExists.userAccountType !== 'admin') {
+        // return Promise.resolve('/')
+        return true
+      }
+
+      return true
+
+      //this works for google only
+      // if (account?.provider === 'google') {
+      //   return true
+      // }
+
+      // return false
+    },
     async session(params: { session: Session; token: JWT }) {
       const { session, token } = params
       return Promise.resolve({ session, token, expires: session.expires })

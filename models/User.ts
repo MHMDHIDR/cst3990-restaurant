@@ -2,7 +2,7 @@ import { Schema, models, model } from 'mongoose'
 
 const reqString = { type: String, required: true }
 
-const typeString = { type: String }
+const typeString = { type: String, required: false }
 
 const userAccountStatus = { ...reqString, enum: ['active', 'block'], default: 'active' }
 
@@ -15,10 +15,11 @@ const userAccountType = {
 const UserSchema = new Schema({
   userFullName: reqString,
   userEmail: reqString,
-  userTel: reqString,
-  userPassword: reqString,
+  userTel: typeString,
+  userPassword: typeString,
   userAccountStatus,
   userAccountType,
+  signupMethod: typeString,
   userResetPasswordToken: typeString,
   userResetPasswordExpires: typeString
 })
