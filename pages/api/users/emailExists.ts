@@ -10,10 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (method) {
     case 'POST': {
-      const { email }: UserProps = body
+      const { userEmail }: UserProps = body
 
       // Check for user by using his/her email or telephone number
-      const user: UserProps | null = await UsersModel.findOne({ userEmail: email })
+      const user: UserProps | null = await UsersModel.findOne({ userEmail })
 
       // Handle case when user is not found
       if (!user) {

@@ -19,16 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const user: UserProps = await UsersModel.create({
             userFullName,
             userEmail: userEmail.trim().toLowerCase(),
-            userAccountType: 'user',
             signupMethod
           })
-          console.log('User from Database : ', user)
 
           res.json({
             _id: user._id,
             email: user.userEmail,
             userAdded: 1,
-            message: 'User Successfully Registered You Can Login 👍🏼'
+            message: 'Google User Successfully Registered You Can Login 👍🏼'
           })
         } catch (error) {
           console.error('Error creating user:', error)

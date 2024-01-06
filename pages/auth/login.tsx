@@ -10,7 +10,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { APP_URL, DEFAULT_USER_DATA, USER } from '@constants'
+import { DEFAULT_USER_DATA, USER } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -48,23 +48,32 @@ const Login = () => {
     }
   })
 
-  const sendLoginForm = async (e: { preventDefault: () => void }) => {
+  const sendLoginForm = async (
+    e: { preventDefault: () => void },
+    signInType: { signInType: string }
+  ) => {
     e.preventDefault()
     setIsSendingLoginForm(true)
 
     try {
-      const result = await signIn('credentials', {
-        redirect: false, // Set to true if you want to redirect after login
-        userEmail: userEmailOrTel.trim().toLowerCase(),
-        userTel: userEmailOrTel.trim().toLowerCase(),
-        userPassword
-      })
+      const result =
+        signInType.signInType === 'google'
+          ? await signIn('google' /*, { callbackUrl: '/' }*/)
+          : await signIn('credentials', {
+              redirect: false, // Set to true if you want to redirect after login
+              userEmail: userEmailOrTel.trim().toLowerCase(),
+              userTel: userEmailOrTel.trim().toLowerCase(),
+              userPassword
+            })
+      // alert(`result from Login.tsx page => ${result}`)
+      console.log('results from Login.tsx page => ', result)
 
       if (result!.error || result!.status === 400) {
         setLoggedInStatus(0)
         setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
       } else {
         const session: LoggedInUserProps = await getSession()
+        // extract user data from session
         const { user } = session?.token ?? { user: DEFAULT_USER_DATA }
 
         const {
@@ -82,13 +91,13 @@ const Login = () => {
         )
         setLoggedInStatus(LoggedIn)
         setLoginMsg(message)
-        redirect
-          ? push(`${redirect}`)
-          : userAccountType === 'user'
-          ? window.location.replace('/')
-          : userAccountType === 'admin'
-          ? window.location.replace(`/dashboard`)
-          : null
+        // redirect
+        //   ? push(`${redirect}`)
+        //   : userAccountType === 'user'
+        //   ? window.location.replace('/')
+        //   : userAccountType === 'admin'
+        //   ? window.location.replace(`/dashboard`)
+        //   : null
       }
     } catch (error: any) {
       console.error(error)
@@ -115,7 +124,14 @@ const Login = () => {
             Login
           </h3>
           <div className='max-w-6xl mx-auto'>
-            <form className='mt-32' onSubmit={sendLoginForm}>
+            <form
+              className='mt-32'
+              onSubmit={e =>
+                sendLoginForm(e, {
+                  signInType: 'credentials'
+                })
+              }
+            >
               <label htmlFor='email' className='form__group'>
                 <input
                   className='form__input'
@@ -173,9 +189,7 @@ const Login = () => {
                   <button
                     type='button'
                     className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
-                    onClick={() => {
-                      signIn('google', { callbackUrl: '/' })
-                    }}
+                    onClick={e => sendLoginForm(e, { signInType: 'google' })}
                     aria-label='Login With Google'
                   >
                     Login With Google

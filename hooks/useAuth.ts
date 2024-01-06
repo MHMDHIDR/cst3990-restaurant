@@ -27,7 +27,9 @@ const useAuth = () => {
 
       if (
         ['admin', 'cashier', 'user'].includes(user?.userAccountType!) ||
-        session?.token!?.user.name
+        session?.token!?.user.name ||
+        // google login session
+        session?.token!?.name
       ) {
         setIsAuth(true)
         setUserType(user.userAccountType!)

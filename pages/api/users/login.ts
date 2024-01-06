@@ -20,10 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (!user) {
         // Handle case when user is not found
-        return res.status(404).json({
-          LoggedIn: 0,
-          message: 'User not found'
-        })
+        return res.status(404).json({ LoggedIn: 0, message: 'User not found' })
       }
 
       // If user is found, check if his/her account is active or blocked

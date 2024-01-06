@@ -21,6 +21,14 @@ export type UserProps = {
   userResetPasswordExpires?: string
 } & Session['user']
 
+export type UserGoogleProps = {
+  userFullName?: string
+  userEmail?: string
+  userAccountStatus?: string
+  userAccountType?: string
+  signupMethod?: string
+}
+
 export type LoggedInUserProps =
   | (Session & {
       token?: {
