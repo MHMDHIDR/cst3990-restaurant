@@ -27,12 +27,14 @@ export type UserGoogleProps = {
   userAccountStatus?: string
   userAccountType?: string
   signupMethod?: string
+  picture?: string
 }
 
 export type LoggedInUserProps =
   | (Session & {
       token?: {
         user: UserProps
+        picture: UserGoogleProps['picture']
       }
       session?: {
         user: UserProps

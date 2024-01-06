@@ -50,7 +50,7 @@ const useAuth = () => {
   }, [])
 
   return {
-    user: session?.token!?.user,
+    user: { ...session?.token?.user, image: session?.token?.picture },
     isAuth,
     userType,
     userStatus,

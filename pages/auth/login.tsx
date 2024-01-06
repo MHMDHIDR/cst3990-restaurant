@@ -10,7 +10,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { DEFAULT_USER_DATA, USER } from '@constants'
+import { DEFAULT_USER_DATA, USER, APP_URL } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -58,15 +58,13 @@ const Login = () => {
     try {
       const result =
         signInType.signInType === 'google'
-          ? await signIn('google' /*, { callbackUrl: '/' }*/)
+          ? await signIn('google', { callbackUrl: APP_URL })
           : await signIn('credentials', {
               redirect: false, // Set to true if you want to redirect after login
               userEmail: userEmailOrTel.trim().toLowerCase(),
               userTel: userEmailOrTel.trim().toLowerCase(),
               userPassword
             })
-      // alert(`result from Login.tsx page => ${result}`)
-      console.log('results from Login.tsx page => ', result)
 
       if (result!.error || result!.status === 400) {
         setLoggedInStatus(0)
@@ -91,13 +89,13 @@ const Login = () => {
         )
         setLoggedInStatus(LoggedIn)
         setLoginMsg(message)
-        // redirect
-        //   ? push(`${redirect}`)
-        //   : userAccountType === 'user'
-        //   ? window.location.replace('/')
-        //   : userAccountType === 'admin'
-        //   ? window.location.replace(`/dashboard`)
-        //   : null
+        redirect
+          ? push(`${redirect}`)
+          : userAccountType === 'user'
+          ? window.location.replace('/')
+          : userAccountType === 'admin'
+          ? window.location.replace(`/dashboard`)
+          : null
       }
     } catch (error: any) {
       console.error(error)

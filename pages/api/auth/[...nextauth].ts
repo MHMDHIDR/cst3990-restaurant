@@ -61,7 +61,8 @@ export const authOptions: AuthOptions = {
           data
         )
 
-        return true
+        // if (newUser) created then return true (redirect to homepage)
+        return newUser ? true : false
       } else {
         if (userExists && userExists.userAccountType === 'admin') {
           // return Promise.resolve('/dashboard')
@@ -73,13 +74,6 @@ export const authOptions: AuthOptions = {
       }
 
       return false
-
-      //this works for google only
-      // if (account?.provider === 'google') {
-      //   return true
-      // }
-
-      // return false
     },
     async session(params: { session: Session; token: JWT; user: User }) {
       const { session, token } = params
@@ -102,19 +96,12 @@ export const authOptions: AuthOptions = {
         if (userExists) {
           token.user = userExists
 
-          // token.name = userExists.userFullName
-          // token.email = userExists.userEmail
-          // token.userAccountType = userExists.userAccountType
-          // token.userAccountStatus = userExists.userAccountStatus
-
           return token
         } else {
           token.user = user
           return token
         }
       }
-
-      console.log('token nextAuth ==>', token)
 
       return token
     }
