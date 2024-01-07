@@ -22,8 +22,6 @@ const Nav = () => {
 
   const router = useRouter()
 
-  console.log('User useAuth => ', user)
-
   useEffect(() => {
     setCartItemsLength(items.length)
 

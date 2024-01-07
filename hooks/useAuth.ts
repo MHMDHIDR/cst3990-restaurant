@@ -19,8 +19,6 @@ const useAuth = () => {
       const session: any = await getSession()
       const { user }: { user: UserProps } = session?.token || { user: null }
 
-      console.log('session useAuth ==> ', session)
-
       if (!user) {
         setIsAuth(false)
         setUserType('')

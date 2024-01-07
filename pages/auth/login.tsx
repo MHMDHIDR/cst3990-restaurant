@@ -66,9 +66,6 @@ const Login = () => {
               userPassword
             })
 
-      console.log('result error ==> ', result?.error)
-      // alert(`result==> ${result}`)
-
       if (result && (result.error || result.status === 400)) {
         setLoggedInStatus(0)
         setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)

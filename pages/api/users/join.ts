@@ -13,8 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await dbConnect()
 
       if (signupMethod === 'google') {
-        console.log('Data from nextAuth=> ', userFullName, userEmail, signupMethod)
-
         try {
           const user: UserProps = await UsersModel.create({
             userFullName,
