@@ -41,37 +41,37 @@ export const authOptions: AuthOptions = {
   ],
   secret: NEXTAUTH_SECRET,
   callbacks: {
-    async signIn(/*{ account, profile }*/): Promise<string | boolean> {
-      // const { email } = profile!
-      // if (!email) throw new Error('No email found')
-
-      // const { data: userExists }: { data: UserProps } = await axios.post(
-      //   `${API_URL}/users/emailExists`,
-      //   { userEmail: email }
-      // )
-      // if (!userExists) {
-      //   // Create new user if doesn't exist
-      //   const data = {
-      //     userFullName: profile?.name,
-      //     userEmail: profile?.email,
-      //     signupMethod: account?.provider
-      //   }
-      //   const { data: newUser }: { data: UserGoogleProps } = await axios.post(
-      //     `${API_URL}/users/join`,
-      //     data
-      //   )
-
-      //   // if (newUser) created then return true (redirect to homepage)
-      //   return newUser ? true : false
-      // } else {
-      //   if (userExists && userExists.userAccountType === 'admin') {
-      //     // return Promise.resolve('/dashboard')
-      //     return true
-      //   } else if (userExists && userExists.userAccountType !== 'admin') {
-      //     // return Promise.resolve('/')
-      //     return true
-      //   }
-      // }
+    async signIn({ account, profile }): Promise<string | boolean> {
+      if (account?.provider === 'google') {
+        const { email } = profile!
+        if (!email) throw new Error('No email found')
+        const { data: userExists }: { data: UserProps } = await axios.post(
+          `${API_URL}/users/emailExists`,
+          { userEmail: email }
+        )
+        if (!userExists) {
+          // Create new user if doesn't exist
+          const data = {
+            userFullName: profile?.name,
+            userEmail: profile?.email,
+            signupMethod: account?.provider
+          }
+          const { data: newUser }: { data: UserGoogleProps } = await axios.post(
+            `${API_URL}/users/join`,
+            data
+          )
+          // if (newUser) created then return true (redirect to homepage)
+          return newUser ? true : false
+        } else {
+          if (userExists && userExists.userAccountType === 'admin') {
+            // return Promise.resolve('/dashboard')
+            return true
+          } else if (userExists && userExists.userAccountType !== 'admin') {
+            // return Promise.resolve('/')
+            return true
+          }
+        }
+      }
 
       return true
     },
