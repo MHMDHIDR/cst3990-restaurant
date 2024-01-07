@@ -26,7 +26,10 @@ const Pagination = ({
         href={`/${routeName}${
           isNumber(Number(category))
             ? '/' + (pageNum - 1)
-            : '/' + category + '/' + (pageNum - 1)
+            : '/' +
+              (category ?? '') +
+              (!category && isNaN(Number(category)) ? '' : '/') +
+              (pageNum - 1)
         }`}
         className={`${
           pageNum! > 1 ? 'opacity-100' : 'opacity-50 pointer-events-none'
@@ -46,8 +49,8 @@ const Pagination = ({
                 : page + 1 === 1 && category === '0'
                 ? ''
                 : (isNaN(Number(category)) ? '/' : '') +
-                  category +
-                  '/' +
+                  (category ?? '') +
+                  (!category && isNaN(Number(category)) ? '' : '/') +
                   (page + 1 === 1 ? '' : page + 1)
             }`}
             className={`
@@ -68,8 +71,8 @@ const Pagination = ({
           isNumber(Number(category)) || category === '0'
             ? '/' + (pageNum + 1)
             : (isNaN(Number(category)) ? '/' : '') +
-              category +
-              '/' +
+              (category ?? '') +
+              (!category && isNaN(Number(category)) ? '' : '/') +
               (pageNum + 1 === 1 ? '' : pageNum + 1)
         }`}
         className={`${

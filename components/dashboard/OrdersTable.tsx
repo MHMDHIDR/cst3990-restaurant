@@ -51,7 +51,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
 
-  const { loading, userType, userId, userStatus } = useAuth()
+  const { loading, userType, userId, userStatus, isAuth, user } = useAuth()
 
   const modalLoading =
     typeof window !== 'undefined' ? document.querySelector('#modal') : null
@@ -208,9 +208,9 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
     }
   }, [setIsLoading])
 
-  return loading || LoadingOrders ? (
+  return loading || LoadingOrders || !user?.userEmail ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && !isAuth ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)
@@ -316,12 +316,14 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                 //show only orders by user email ==> FILTER by email
                 ordersData?.response?.filter(
                   (order: any) =>
-                    order.userEmail === (USER.userEmail ?? session!?.user!?.email)
+                    order.userEmail ===
+                    (USER.userEmail ?? session!?.user!?.email ?? user?.userEmail)
                 ).length > 0 ? ( //means there is at least one order by the current user email
                   ordersData?.response
                     ?.filter(
                       (order: any) =>
-                        order.userEmail === (USER.userEmail ?? session!?.user!?.email)
+                        order.userEmail ===
+                        (USER.userEmail ?? session!?.user!?.email ?? user?.userEmail)
                     )
                     .map((order: any, idx: number) => (
                       <tr

@@ -6,20 +6,19 @@ import ModalNotFound from 'components/Modal/ModalNotFound'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
 import { LoadingPage } from 'components/Loading'
-import { USER } from '@constants'
 
 const MyOrders = () => {
   useDocumentTitle('My Orders')
   const { replace } = useRouter()
-  const { loading, userStatus, userId, isAuth } = useAuth()
+  const { loading, userStatus, isAuth } = useAuth()
 
   useEffect(() => {
-    if (USER._id || userId || isAuth) {
+    if (!loading && !isAuth) {
       replace('/')
     }
-  }, [isAuth, userId, replace])
+  }, [loading, isAuth])
 
-  return loading || userId || isAuth ? (
+  return loading || !isAuth ? (
     <LoadingPage />
   ) : userStatus === 'block' ? (
     <ModalNotFound />
