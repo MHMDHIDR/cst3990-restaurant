@@ -19,7 +19,7 @@ const Pagination = ({
   return !foodId && count > itemsPerPage ? (
     <div
       className='flex flex-wrap items-center justify-center mt-8 text-lg select-none ltr'
-      onClick={scrollToView}
+      onClick={() => scrollToView(700)}
     >
       {/* Previous Link Arrow */}
       <a
