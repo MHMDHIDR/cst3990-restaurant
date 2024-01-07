@@ -101,9 +101,11 @@ export const authOptions: AuthOptions = {
           token.user = user
           return token
         }
+      } else if (user) {
+        token.user = user
       }
-
-      return token
+      return Promise.resolve(token)
+      // return token
     }
   }
 }

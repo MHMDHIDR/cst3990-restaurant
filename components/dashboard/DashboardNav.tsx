@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import ThemeToggler from '../ThemeToggler'
 import Logo from '../Icons/Logo'
 import menuToggler from 'functions/menuToggler'
@@ -9,8 +8,6 @@ import useAxios from 'hooks/useAxios'
 import { handleSignout } from 'utils/functions/handleSignout'
 
 const DashboardNav = () => {
-  const router = useRouter()
-
   const [websiteLogoDisplayPath, setWebsiteLogoDisplayPath] = useState('')
   const { response } = useAxios({ url: '/settings' })
 
@@ -51,8 +48,7 @@ const DashboardNav = () => {
           className='inline-block px-2 py-1 text-white bg-orange-700 border rounded-lg cursor-pointer hover:bg-opacity-30'
           onClick={() => {
             handleSignout()
-
-            router.push('/')
+            window.location.replace('/')
           }}
         >
           Sign Out

@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           message: 'Your Account Has Been Blocked, Please Contact The Admin'
         })
       } else if (user && (await compare(userPassword, user.userPassword!))) {
-        res.status(200).json({
+        return res.status(200).json({
           LoggedIn: 1,
           message: `Logged In Successfully, Welcome Back To ${
             user.userAccountType === 'admin' ? 'The Dashboard' : 'Your Account'

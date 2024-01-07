@@ -10,7 +10,7 @@ import Notification from 'components/Notification'
 import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
-import { DEFAULT_USER_DATA, USER, APP_URL } from '@constants'
+import { USER, APP_URL } from '@constants'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
@@ -60,11 +60,14 @@ const Login = () => {
         signInType.signInType === 'google'
           ? await signIn('google', { callbackUrl: APP_URL })
           : await signIn('credentials', {
-              redirect: false, // Set to true if you want to redirect after login
+              redirect: false,
               userEmail: userEmailOrTel.trim().toLowerCase(),
               userTel: userEmailOrTel.trim().toLowerCase(),
               userPassword
             })
+
+      console.log('result error ==> ', result?.error)
+      // alert(`result==> ${result}`)
 
       if (result && (result.error || result.status === 400)) {
         setLoggedInStatus(0)
@@ -72,7 +75,7 @@ const Login = () => {
       } else {
         const session: LoggedInUserProps = await getSession()
         // extract user data from session
-        const { user } = session?.token ?? { user: DEFAULT_USER_DATA }
+        const { user } = session?.token!
 
         const {
           LoggedIn,
@@ -83,10 +86,12 @@ const Login = () => {
           message
         }: UserProps = user
 
-        localStorage.setItem(
-          'user',
-          stringJson({ _id, userAccountType, userFullName, userEmail })
-        )
+        if (session?.token) {
+          localStorage.setItem(
+            'user',
+            stringJson({ _id, userAccountType, userFullName, userEmail })
+          )
+        }
         setLoggedInStatus(LoggedIn)
         setLoginMsg(message)
         redirect

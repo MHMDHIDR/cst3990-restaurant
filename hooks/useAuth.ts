@@ -19,6 +19,8 @@ const useAuth = () => {
       const session: any = await getSession()
       const { user }: { user: UserProps } = session?.token || { user: null }
 
+      console.log('session useAuth ==> ', session)
+
       if (!user) {
         setIsAuth(false)
         setUserType('')
@@ -27,7 +29,7 @@ const useAuth = () => {
 
       if (
         ['admin', 'cashier', 'user'].includes(user?.userAccountType!) ||
-        session?.token!?.user.name ||
+        session?.token!?.user?.name ||
         // google login session
         session?.token!?.name
       ) {
