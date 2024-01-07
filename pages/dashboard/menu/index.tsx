@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Axios from 'axios'
@@ -28,6 +28,9 @@ import logoutUser from 'utils/functions/logoutUser'
 
 const DashboardMenu = () => {
   useDocumentTitle('Menu')
+  useLayoutEffect(() => {
+    scrollToView()
+  }, [])
 
   const [delFoodId, setDelFoodId] = useState('')
   const [delFoodName, setDelFoodName] = useState('')
@@ -52,10 +55,6 @@ const DashboardMenu = () => {
       setMenuFood(response.response)
     }
   }, [response.response])
-
-  useEffect(() => {
-    scrollToView()
-  }, [])
 
   useEventListener('click', (e: any) => {
     switch (e.target.id) {

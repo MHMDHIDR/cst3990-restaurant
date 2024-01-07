@@ -8,7 +8,8 @@ import {
   LinearScale,
   BarElement,
   PointElement,
-  LineElement
+  LineElement,
+  type BarControllerDatasetOptions
 } from 'chart.js'
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import useAxios from 'hooks/useAxios'
@@ -24,6 +25,7 @@ import menuToggler from 'functions/menuToggler'
 import { USER } from '@constants'
 import { capitalizeText } from 'utils/functions/capitalize'
 import type { cCategory, orderProps } from '@types'
+import { _DeepPartialObject } from 'chart.js/dist/types/utils'
 
 const DashboardStatistics = () => {
   useDocumentTitle('Home')
@@ -195,6 +197,10 @@ const DashboardStatistics = () => {
     ]
   }
 
+  const options: _DeepPartialObject<BarControllerDatasetOptions> | any = {
+    barPercentage: 0.5
+  }
+
   //check if userStatus is active and the userType is admin
   return loading || !(ordersBycCategory && Object.values(ordersBycCategory)) ? (
     <LoadingPage />
@@ -219,14 +225,18 @@ const DashboardStatistics = () => {
 
         <div className='container max-w-screen-md mx-auto'>
           <h2 className='my-3 text-xl font-bold text-center'>Bar Chart</h2>
-          <Bar height={250} width={400} data={BarData} />
+          <Bar height={250} width={400} data={BarData} options={options} />
         </div>
 
         <DividerStylish className='my-24' />
 
         <div className='container max-w-screen-md mx-auto'>
           <h2 className='my-3 text-xl font-bold text-center'>Line Chart</h2>
-          <Line height={200} width={400} data={BarData} />
+          <Line
+            height={200}
+            width={400}
+            data={ordersByDate?.length! > 1 ? BarData : DoughnutData}
+          />
         </div>
       </div>
     </Layout>

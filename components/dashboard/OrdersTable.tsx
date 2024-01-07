@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -34,7 +34,7 @@ import ModalNotFound from 'components/Modal/ModalNotFound'
 import logoutUser from 'utils/functions/logoutUser'
 
 const OrdersTable = ({ ordersByUserEmail = false }) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollToView()
   }, [])
 
@@ -62,7 +62,7 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
   const pageNumber = !pageNum || !isNumber(pageNum) || pageNum < 1 ? 1 : parseInt(pageNum)
 
   const { loading: LoadingOrders, ...response } = useAxios({
-    url: `/orders?page=${pageNumber}&limit=${ITEMS_PER_PAGE}?orderDate=-1`
+    url: `/orders?page=${pageNumber}&limit=${ITEMS_PER_PAGE}&orderDate=-1`
   })
 
   useEffect(() => {

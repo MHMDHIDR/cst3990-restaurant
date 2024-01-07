@@ -58,7 +58,7 @@ const Login = () => {
     try {
       const result =
         signInType.signInType === 'google'
-          ? await signIn('google', { callbackUrl: APP_URL })
+          ? await signIn('google', { callbackUrl: redirect ? String(redirect) : APP_URL })
           : await signIn('credentials', {
               redirect: false,
               userEmail: userEmailOrTel.trim().toLowerCase(),

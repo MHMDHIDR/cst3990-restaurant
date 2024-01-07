@@ -1,8 +1,8 @@
-const scrollToView = () =>
+const scrollToView = (scrollY: number | undefined = 500) =>
   setTimeout(
     () =>
       window.scrollTo({
-        top: (document.querySelector(`#hero`) as HTMLElement)?.offsetHeight || 500, //window.scrollY / 3
+        top: scrollY ?? (document.querySelector(`#hero`) as HTMLElement)?.offsetHeight, // ==> window.scrollY / 3
         behavior: 'smooth'
       }),
     100

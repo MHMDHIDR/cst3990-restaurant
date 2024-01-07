@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import Link from 'next/link'
 import { ServerSideProps } from '@types'
 import { CartContext } from 'contexts/CartContext'
@@ -12,12 +12,14 @@ import { CartAddButton, CartRemoveButton } from 'components/CartButton'
 
 const IndexId = ({ item }: any) => {
   useDocumentTitle('View Foods')
+  useLayoutEffect(() => {
+    scrollToView()
+  }, [])
 
   const { items } = useContext(CartContext)
   const [cartItems, setCartItems] = useState<any>()
 
   useEffect(() => {
-    scrollToView()
     setCartItems(items)
   }, [items])
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, Suspense } from 'react'
+import { useState, useEffect, useContext, Suspense, useLayoutEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
@@ -20,6 +20,9 @@ import NoItems from 'components/NoItems'
 
 const ViewFood = ({ viewFood }: any) => {
   useDocumentTitle('View Foods')
+  useLayoutEffect(() => {
+    scrollToView()
+  }, [])
 
   const [data, setData] = useState<any>()
   const {

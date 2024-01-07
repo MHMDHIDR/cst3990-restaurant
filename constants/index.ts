@@ -9,7 +9,7 @@ export const SLIDES_IN_MENU = 10
 
 export const SUGGESTED_FOOTER_ITEMS_COUNT = 4
 
-export const ITEMS_PER_PAGE = 5
+export const ITEMS_PER_PAGE = 20
 
 export const MAX_QUANTITY = 100
 
@@ -43,7 +43,7 @@ const url = {
 
 export const APP_URL =
   process.env.NODE_ENV === 'development'
-    ? `https://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
+    ? `http://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
     : process.env.NEXT_PUBLIC_APP_PUBLIC_URL
 
 export const API_URL = APP_URL + '/api'

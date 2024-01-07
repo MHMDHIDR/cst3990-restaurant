@@ -34,6 +34,7 @@ export type LoggedInUserProps =
   | (Session & {
       token?: {
         user: UserProps
+        email: UserGoogleProps['userEmail']
         picture: UserGoogleProps['picture']
       }
       session?: {

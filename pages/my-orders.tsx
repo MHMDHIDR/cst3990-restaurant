@@ -16,7 +16,7 @@ const MyOrders = () => {
     if (!loading && !isAuth) {
       replace('/')
     }
-  }, [loading, isAuth])
+  }, [loading, isAuth, replace])
 
   return loading || !isAuth ? (
     <LoadingPage />

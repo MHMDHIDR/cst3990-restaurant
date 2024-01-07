@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, useEffect } from 'react'
+import { useContext, useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -21,7 +21,7 @@ import { LoadingPage, LoadingSpinner } from 'components/Loading'
 import CartItems from 'components/CartItems'
 import NoItems from 'components/NoItems'
 import Layout from 'components/Layout'
-import { selectedToppingsProps, orderMsgProps } from '@types'
+import { selectedToppingsProps, orderMsgProps, LoggedInUserProps } from '@types'
 import { validPhone } from 'functions/validForm'
 import scrollToView from 'functions/scrollToView'
 import { parseJson, stringJson } from 'functions/jsonTools'
@@ -36,19 +36,18 @@ const formDataFromLocalStorage =
 //orderFood
 const OrderFood = () => {
   useDocumentTitle('Cart Items')
-  const { pathname } = useRouter()
-
-  const { isAuth } = useAuth()
-
-  useEffect(() => {
-    scrollToView()
+  useLayoutEffect(() => {
+    scrollToView(800)
   }, [])
+
+  const { pathname } = useRouter()
+  const { user: useAuthUser, isAuth } = useAuth()
 
   const { items, grandPrice, setGrandPrice } = useContext(CartContext)
   const { checkedToppings } = useContext(ToppingsContext)
 
   //Form States
-  const { data: session } = useSession()
+  const { data: session }: { data: LoggedInUserProps } = useSession()
   const [userId, setUserId] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [personName, setPersonName] = useState(formDataFromLocalStorage.personName || '')
@@ -86,14 +85,21 @@ const OrderFood = () => {
   }, [response.response])
 
   useEffect(() => {
-    setUserId(USER?._id!)
-    setUserEmail(USER?.userEmail || session!?.user?.email!)
+    setUserId(USER._id ?? useAuthUser._id!)
+    setUserEmail(USER.userEmail ?? session?.token?.email ?? useAuthUser.userEmail!)
+  }, [useAuthUser._id, session?.token?.email, useAuthUser.userEmail])
 
+  useEffect(() => {
     localStorage.setItem(
       'formDataCart',
       stringJson({ personName, personPhone, personAddress, personNotes })
     )
-  }, [personName, personPhone, personAddress, personNotes, session])
+
+    // Remove formDataCart from localStorage when component unmounts
+    return () => {
+      localStorage.removeItem('formDataCart')
+    }
+  }, [personAddress, personName, personNotes, personPhone])
 
   useEffect(() => {
     setGrandPrice(grandPriceRef?.current?.textContent || grandPrice)
@@ -112,7 +118,7 @@ const OrderFood = () => {
       formErr.current!.textContent = ''
 
       // IF USER IS LOGGED IN
-      if (isAuth) {
+      if (isAuth && useAuthUser.userEmail !== '') {
         setShowLoginRegisterModal(false)
         handleSaveOrder()
       } else {
@@ -137,6 +143,8 @@ const OrderFood = () => {
     formData.append('foodItems', stringJson(items))
     formData.append('grandPrice', unformattedPrice(grandPriceRef?.current?.textContent!))
     formData.append('paymentData', stringJson(PAYMENT_DATA_EXAMPLE))
+
+    if (!userEmail) throw new Error("User's Email is not defined")
 
     try {
       const response = await axios.post(`${API_URL}/orders`, formData)
@@ -180,7 +188,7 @@ const OrderFood = () => {
           <Modal
             status={Loading}
             msg='Ordering is in the process, please wait a moment...'
-            extraComponents={<>{handleSaveOrder(/*paymentData*/)}</>}
+            // extraComponents={<>{handleSaveOrder(/*paymentData*/)}</>}
             btnName='Return'
             btnLink={`order-food`}
           />

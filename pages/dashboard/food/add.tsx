@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useContext, ChangeEvent } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  ChangeEvent,
+  useLayoutEffect
+} from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 import { TagsContext } from 'contexts/TagsContext'
@@ -25,8 +32,7 @@ import { capitalizeText } from 'utils/functions/capitalize'
 
 const AddFood = () => {
   useDocumentTitle('Add Food or Drink')
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollToView()
   }, [])
 

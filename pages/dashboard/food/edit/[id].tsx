@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useContext, ChangeEvent } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  ChangeEvent,
+  useLayoutEffect
+} from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 import { TagsContext } from 'contexts/TagsContext'
@@ -25,8 +32,7 @@ import uploadS3 from 'utils/functions/uploadS3'
 
 const EditFood = ({ foodData }: { foodData: foodDataProps }) => {
   useDocumentTitle('Edit Food')
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollToView()
   }, [])
 
