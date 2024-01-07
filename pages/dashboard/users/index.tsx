@@ -116,7 +116,7 @@ const DashboardUsers = () => {
 
   return loading || LoadingUsers ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && userType !== 'admin' && userType !== 'cashier' ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(LoggedInUserId)

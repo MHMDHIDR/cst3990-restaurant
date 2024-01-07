@@ -120,7 +120,7 @@ const DashboardMenu = () => {
 
   return loading ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && userType !== 'admin' && userType !== 'cashier' ? (
     <ModalNotFound />
   ) : (
     <>

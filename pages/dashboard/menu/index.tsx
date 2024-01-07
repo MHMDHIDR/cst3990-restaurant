@@ -116,7 +116,7 @@ const DashboardMenu = () => {
 
   return loading || LoadingMenu ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && userType !== 'admin' && userType !== 'cashier' ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)

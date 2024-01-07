@@ -198,7 +198,7 @@ const DashboardStatistics = () => {
   //check if userStatus is active and the userType is admin
   return loading || !(ordersBycCategory && Object.values(ordersBycCategory)) ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && userType !== 'admin' && userType !== 'cashier' ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)
