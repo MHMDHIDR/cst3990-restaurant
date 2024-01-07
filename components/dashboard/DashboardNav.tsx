@@ -46,10 +46,7 @@ const DashboardNav = () => {
         <Link
           href='/#'
           className='inline-block px-2 py-1 text-white bg-orange-700 border rounded-lg cursor-pointer hover:bg-opacity-30'
-          onClick={() => {
-            handleSignout()
-            window.location.replace('/')
-          }}
+          onClick={handleSignout}
         >
           Sign Out
         </Link>

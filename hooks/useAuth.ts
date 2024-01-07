@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getSession, useSession } from 'next-auth/react'
 import { LoggedInUserProps, UserProps } from '@types'
-import { stringJson } from 'utils/functions/jsonTools'
 
 /**
  * Custom hook to check if user is logged in then redirect to dashboard or home page
@@ -19,7 +18,6 @@ const useAuth = () => {
     const getUserSession = async () => {
       const session: any = await getSession()
       const { user }: { user: UserProps } = session?.token || { user: null }
-      const { _id, userAccountType, userFullName, userEmail }: UserProps = user
 
       if (!user) {
         setIsAuth(false)
@@ -37,10 +35,6 @@ const useAuth = () => {
         setUserType(user.userAccountType!)
         setUserStatus(user.userAccountStatus!)
         setUserId(user._id!)
-        localStorage.setItem(
-          'user',
-          stringJson({ _id, userAccountType, userFullName, userEmail })
-        )
         setLoading(false)
       }
     }

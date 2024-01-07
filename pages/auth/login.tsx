@@ -66,21 +66,36 @@ const Login = () => {
               userPassword
             })
 
+      const session: LoggedInUserProps = await getSession()
+      // extract user data from session
+      const { user } = session?.token!
+      const {
+        LoggedIn,
+        _id,
+        userAccountType,
+        userFullName,
+        userEmail,
+        message
+      }: UserProps = user
+
+      if (session?.token) {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ _id, userAccountType, userFullName, userEmail })
+        )
+      }
+
       if (result && (result.error || result.status === 400)) {
         setLoggedInStatus(0)
         setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
       } else {
-        const session: LoggedInUserProps = await getSession()
-        // extract user data from session
-        const { user } = session?.token!
-
-        setLoggedInStatus(user?.LoggedIn)
-        setLoginMsg(user?.message)
+        setLoggedInStatus(LoggedIn)
+        setLoginMsg(message)
         redirect
           ? push(`${redirect}`)
-          : user?.userAccountType === 'user'
+          : userAccountType === 'user'
           ? window.location.replace('/')
-          : user?.userAccountType === 'admin'
+          : userAccountType === 'admin'
           ? window.location.replace(`/dashboard`)
           : null
       }
@@ -156,9 +171,15 @@ const Login = () => {
               <div className='flex flex-col gap-6 text-center border-none form__group ltr'>
                 <div className='flex flex-wrap items-center justify-around gap-y-4'>
                   <button
-                    className={`w-fit px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all order-2`}
+                    className={`w-fit px-12 py-3 text-white uppercase bg-orange-700 rounded-lg hover:bg-orange-800 scale-100 transition-all order-2 ${
+                      //add disbaled class if is true or false (that means user has clicked Login button)
+                      isSendingLoginForm
+                        ? ' disabled:opacity-30 disabled:hover:bg-orange-700 pointer-events-none'
+                        : ''
+                    }`}
                     type='submit'
                     id='submitBtn'
+                    disabled={isSendingLoginForm}
                   >
                     {isSendingLoginForm ? (
                       <>
@@ -171,9 +192,15 @@ const Login = () => {
                   </button>
                   <button
                     type='button'
-                    className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all`}
+                    className={`w-fit flex items-center gap-4 px-8 py-2 text-gray-700 dark:text-white uppercase rounded-lg outline outline-1 focus:outline-2 outline-orange-500 hover:outline-orange-500 scale-100 transition-all ${
+                      //add disbaled class if is true or false (that means user has clicked Login button)
+                      isSendingLoginForm
+                        ? ' disabled:opacity-30 disabled:hover:bg-gray-700 pointer-events-none cursor-not-allowed'
+                        : ''
+                    }`}
                     onClick={e => sendLoginForm(e, { signInType: 'google' })}
                     aria-label='Login With Google'
+                    disabled={isSendingLoginForm}
                   >
                     Login With Google
                     <Image

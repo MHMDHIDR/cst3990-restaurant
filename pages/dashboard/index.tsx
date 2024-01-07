@@ -25,7 +25,7 @@ const DashboardHome = ({ orderItemsCount, menuItemsCount }: DashboardHomeProps) 
   //check if userStatus is active and the userType is admin
   return loading ? (
     <LoadingPage />
-  ) : !USER || (userType !== 'admin' && userType !== 'cashier') ? (
+  ) : !USER && userType !== 'admin' && userType !== 'cashier' ? (
     <ModalNotFound />
   ) : userStatus === 'block' ? (
     logoutUser(userId)
