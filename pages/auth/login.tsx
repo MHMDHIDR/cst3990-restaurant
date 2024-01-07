@@ -11,7 +11,7 @@ import { LoadingSpinner, LoadingPage } from 'components/Loading'
 import Layout from 'components/Layout'
 import { EyeIconOpen, EyeIconClose } from 'components/Icons/EyeIcon'
 import { USER, APP_URL } from '@constants'
-import { parseJson, stringJson } from 'functions/jsonTools'
+import { parseJson } from 'functions/jsonTools'
 import type { LoggedInUserProps, UserProps } from '@types'
 
 const LoginDataFromLocalStorage =
@@ -74,28 +74,13 @@ const Login = () => {
         // extract user data from session
         const { user } = session?.token!
 
-        const {
-          LoggedIn,
-          _id,
-          userAccountType,
-          userFullName,
-          userEmail,
-          message
-        }: UserProps = user
-
-        if (session?.token) {
-          localStorage.setItem(
-            'user',
-            stringJson({ _id, userAccountType, userFullName, userEmail })
-          )
-        }
-        setLoggedInStatus(LoggedIn)
-        setLoginMsg(message)
+        setLoggedInStatus(user?.LoggedIn)
+        setLoginMsg(user?.message)
         redirect
           ? push(`${redirect}`)
-          : userAccountType === 'user'
+          : user?.userAccountType === 'user'
           ? window.location.replace('/')
-          : userAccountType === 'admin'
+          : user?.userAccountType === 'admin'
           ? window.location.replace(`/dashboard`)
           : null
       }
