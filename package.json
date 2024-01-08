@@ -5,7 +5,7 @@
   "description": "NextJS Restaurant to find and order delicious foods, drinks, and sweets.",
   "private": true,
   "scripts": {
-    "dev": "next --experimental-https",
+    "dev": "next dev --port 100.72.11.100:3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

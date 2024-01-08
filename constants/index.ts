@@ -36,15 +36,16 @@ export const USER: UserProps =
   'user' in localStorage &&
   parseJson(localStorage.getItem('user') || '{}')
 
-const url = {
-  local: `localhost`,
-  dev: `dev.com`
-}
+// const url = {
+//   local: `localhost`,
+//   dev: `dev.com`
+// }
 
 export const APP_URL =
   process.env.NODE_ENV === 'development'
-    ? `https://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
-    : process.env.NEXT_PUBLIC_APP_PUBLIC_URL
+    ? `http://100.72.11.100:53101`
+    : //`https://${origin?.includes(url.dev) ? url.dev : url.local}:3000`
+      process.env.NEXT_PUBLIC_APP_PUBLIC_URL
 
 export const API_URL = APP_URL + '/api'
 

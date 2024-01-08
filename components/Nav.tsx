@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import { CartContext } from 'contexts/CartContext'
 import ThemeToggler from './ThemeToggler'
 import Logo from './Icons/Logo'
@@ -21,6 +22,7 @@ const Nav = () => {
   const [cartItemsLength, setCartItemsLength] = useState(0)
 
   const router = useRouter()
+  const pathName = usePathname()
 
   useEffect(() => {
     setCartItemsLength(items.length)
@@ -52,16 +54,27 @@ const Nav = () => {
     lastScrollY = window.scrollY
   })
 
+  // alert(navigator.userAgent.includes('iPhone'))
+  // alert(document.querySelector('nav')?.getBoundingClientRect().top)
+
+  if (typeof window !== 'undefined') {
+    console.log(pathName)
+  }
+
   return loading ? (
     <LoadingPage />
   ) : (
-    <div className='fixed inset-0 bottom-auto z-[9999] w-full transition-transform duration-300 nav ltr'>
+    <div
+      className={`fixed inset-0 bottom-auto z-[9999] w-full transition-transform duration-300 nav ltr`}
+    >
       <nav
         className={`flex flex-wrap items-center justify-between px-5 xl:px-10 lg:px-20 py-1 bg-gray-300 bg-opacity-90 dark:bg-neutral-900 dark:bg-opacity-90 shadow-xl backdrop-blur-sm
-          saturate-[180%] transition-all ${
+          saturate-[180%] transition-all${
             typeof window !== 'undefined'
               ? navigator.userAgent.includes('iPhone')
-                ? ' standalone:pt-10'
+                ? pathName === '/order-food'
+                  ? ' standalone:pt-20 pb-4 -mt-16'
+                  : ' standalone:pt-16 pb-4'
                 : ''
               : ''
           }`}

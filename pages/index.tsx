@@ -88,7 +88,7 @@ const Index = ({
         <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />
         <meta
           name='viewport'
-          content='width=device-width, initial-scale=1.0, viewport-fit=cover'
+          content='width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no'
         />
         <link rel='manifest' href='manifest.json' />
         <link rel='preconnect' href='https://fonts.googleapis.com' />
@@ -322,7 +322,7 @@ const Index = ({
             </Link>
           </div>
         </section>
-        <section id='new' className='py-12 my-8 new'>
+        <section id='new' className='py-12 my-8 new overflow-x-clip'>
           <div className='container mx-auto text-center'>
             <h2 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>New Food</h2>
             {newFood && newFood?.response?.length > 0 ? (
