@@ -19,8 +19,12 @@ const SearchContextProvider = ({ children }: { children: React.ReactNode }) => {
     if (response.response !== null) {
       setRearchResults(
         response.response?.response?.filter(
-          ({ foodName, foodTags }: { foodName: string; foodTags: string[] }) =>
-            removeSlug(foodName).includes(search) || foodTags.includes(search)
+          ({ foodName, foodTags }: { foodName: string; foodTags: string[] }) => {
+            return (
+              removeSlug(foodName).includes(search) ||
+              foodTags.some(tag => tag.includes(search))
+            )
+          }
         )
       )
     }
