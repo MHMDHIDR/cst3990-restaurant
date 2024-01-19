@@ -14,7 +14,7 @@ import Image from 'next/image'
 import useAuth from 'hooks/useAuth'
 import { handleSignout } from 'utils/functions/handleSignout'
 import { LoadingPage } from './Loading'
-import { USER } from '@constants'
+import { APP_URL, USER } from '@constants'
 
 const Nav = () => {
   const { items } = useContext(CartContext)
@@ -53,13 +53,6 @@ const Nav = () => {
       : nav?.classList.remove(hideNavClass)
     lastScrollY = window.scrollY
   })
-
-  // alert(navigator.userAgent.includes('iPhone'))
-  // alert(document.querySelector('nav')?.getBoundingClientRect().top)
-
-  if (typeof window !== 'undefined') {
-    console.log(pathName)
-  }
 
   return loading ? (
     <LoadingPage />
@@ -182,7 +175,7 @@ const Nav = () => {
                     className='px-3 py-1 text-sm text-center text-white transition-colors bg-red-700 border-2 rounded-lg select-none hover:bg-red-600 xl:border-0'
                     onClick={() => {
                       handleSignout()
-                      router.push('/')
+                      router.push(APP_URL ?? '/')
                     }}
                   >
                     Sign Out

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { notificationProps } from '@types'
 
-const Notification = ({ sendStatus, sendStatusMsg }: notificationProps) => {
+const Notification = ({ sendStatus, sendStatusMsg, canClose }: notificationProps) => {
   const notificationRef = useRef<HTMLButtonElement>(null)
 
   const removeNotification = () => {
@@ -18,16 +18,18 @@ const Notification = ({ sendStatus, sendStatusMsg }: notificationProps) => {
           : ''
       }`}
     >
-      <button
-        type='button'
-        className='absolute font-normal cursor-pointer right-4 hover:font-bold'
-        aria-label='close noification'
-        title='close noification'
-        onClick={removeNotification}
-        ref={notificationRef}
-      >
-        X
-      </button>
+      {canClose === true && (
+        <button
+          type='button'
+          className='absolute font-normal cursor-pointer right-4 hover:font-bold'
+          aria-label='close noification'
+          title='close noification'
+          onClick={removeNotification}
+          ref={notificationRef}
+        >
+          X
+        </button>
+      )}
       {sendStatusMsg}
     </p>
   ) : null

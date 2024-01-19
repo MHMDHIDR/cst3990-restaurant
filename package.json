@@ -5,11 +5,11 @@
   "description": "NextJS Restaurant to find and order delicious foods, drinks, and sweets.",
   "private": true,
   "scripts": {
-    "dev": "next dev --experimental-https",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit",
+    "check": "next lint && tsc --noEmit",
     "push": "next lint && npm run type-check && git add . && git diff --quiet  && git commit -am \"updates\" && git push -u origin main"
   },
   "keywords": [],

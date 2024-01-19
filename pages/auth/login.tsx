@@ -66,38 +66,47 @@ const Login = () => {
               userPassword
             })
 
+      result?.status === 400 ||
+        (result?.status === 401 &&
+          setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`))
+
       const session: LoggedInUserProps = await getSession()
-      // extract user data from session
-      const { user } = session?.token!
-      const {
-        LoggedIn,
-        _id,
-        userAccountType,
-        userFullName,
-        userEmail,
-        message
-      }: UserProps = user
+      if (session) {
+        // extract user data from session
+        const { user } = session?.token as { user: UserProps }
+        const {
+          LoggedIn,
+          _id,
+          userAccountType,
+          userFullName,
+          userEmail,
+          message
+        }: UserProps = user
 
-      if (session?.token) {
-        localStorage.setItem(
-          'user',
-          JSON.stringify({ _id, userAccountType, userFullName, userEmail })
-        )
-      }
+        if (session?.token) {
+          localStorage.setItem(
+            'user',
+            JSON.stringify({ _id, userAccountType, userFullName, userEmail })
+          )
+        }
 
-      if (result && (result.error || result.status === 400)) {
-        setLoggedInStatus(0)
-        setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
-      } else {
-        setLoggedInStatus(LoggedIn)
-        setLoginMsg(message)
-        redirect
-          ? push(`${redirect}`)
-          : userAccountType === 'user'
-          ? window.location.replace('/')
-          : userAccountType === 'admin'
-          ? window.location.replace(`/dashboard`)
-          : null
+        if (
+          result &&
+          (result.error || result.status === 400 || result.status === 401 || !result.ok)
+        ) {
+          setLoggedInStatus(0)
+          setLoginMsg(`Invalid Email, Telephone Number Or Password. Please Try Again!`)
+        } else {
+          setLoggedInStatus(LoggedIn)
+          setLoginMsg(message)
+          redirect
+            ? push(`${redirect}`)
+            : userAccountType === 'user'
+            ? window.location.replace('/')
+            : userAccountType === 'admin'
+            ? window.location.replace(`/dashboard`)
+            : null
+        }
       }
     } catch (error: any) {
       setLoggedInStatus(error.response?.data?.LoggedIn)

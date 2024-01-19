@@ -43,10 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           token: generateToken(user._id)
         })
       } else {
-        res.json({
-          LoggedIn: 0,
-          message: 'Invalid Email/Telephone Number Or Password'
-        })
+        res.json({ LoggedIn: 0, message: 'Invalid Email/Telephone Number Or Password' })
       }
       break
     }

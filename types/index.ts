@@ -364,6 +364,7 @@ export type cCategory = {
 export type notificationProps = {
   sendStatus: number
   sendStatusMsg: string
+  canClose?: boolean
 }
 
 export type mediaProps = {
@@ -421,4 +422,20 @@ export type deleteFoodEventListenerProps = {
 export type DashboardHomeProps = {
   orderItemsCount: number
   menuItemsCount: number
+}
+
+export type NotifyProps = {
+  type: 'success' | 'info' | 'error'
+  msg: string
+  reloadIn?: number
+  reloadTo?: string
+  position?:
+    | 'top-right'
+    | 'top-center'
+    | 'top-left'
+    | 'bottom-right'
+    | 'bottom-center'
+    | 'bottom-left'
+
+  duration?: number
 }
