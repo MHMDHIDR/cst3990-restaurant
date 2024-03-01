@@ -18,6 +18,7 @@ import {
 import Modal from 'components/Modal/Modal'
 import { Success, Loading } from 'components/Icons/Status'
 import { LoadingPage, LoadingSpinner } from 'components/Loading'
+import PaymentButton from 'components/PaymentButton'
 import CartItems from 'components/CartItems'
 import NoItems from 'components/NoItems'
 import Layout from 'components/Layout'
@@ -66,7 +67,7 @@ const OrderFood = () => {
     Failure: ''
   })
   const [showLoginRegisterModal, setShowLoginRegisterModal] = useState(false)
-  const [showOrderInProcessModal, _setShowOrderInProcessModal] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   //Declaring Referenced Element
@@ -120,7 +121,7 @@ const OrderFood = () => {
       // IF USER IS LOGGED IN
       if (isAuth && useAuthUser.userEmail !== '') {
         setShowLoginRegisterModal(false)
-        handleSaveOrder()
+        setShowPaymentModal(true)
       } else {
         // IF USER IS NOT LOGGED IN
         setShowLoginRegisterModal(true)
@@ -130,7 +131,7 @@ const OrderFood = () => {
     }
   }
 
-  const handleSaveOrder = async () => {
+  const handleSaveOrder = async (paymentData: any) => {
     //using FormData to send constructed data
     const formData = new FormData()
     formData.append('userId', userId)
@@ -142,7 +143,7 @@ const OrderFood = () => {
     formData.append('checkedToppings', stringJson(checkedToppings))
     formData.append('foodItems', stringJson(items))
     formData.append('grandPrice', unformattedPrice(grandPriceRef?.current?.textContent!))
-    formData.append('paymentData', stringJson(PAYMENT_DATA_EXAMPLE))
+    formData.append('paymentData', stringJson(paymentData ?? PAYMENT_DATA_EXAMPLE))
 
     if (!userEmail) throw new Error("User's Email is not defined")
 
@@ -184,11 +185,21 @@ const OrderFood = () => {
             btnName='Login or Register'
             btnLink={`/auth/login?redirect=${pathname}`}
           />
-        ) : showOrderInProcessModal === true ? (
+        ) : showPaymentModal === true ? (
           <Modal
             status={Loading}
-            msg='Ordering is in the process, please wait a moment...'
-            // extraComponents={<>{handleSaveOrder(/*paymentData*/)}</>}
+            msg={`Payment = ${formattedPrice(
+              Number(unformattedPrice(String(grandPrice)))
+            )}. Please select one of the following:`}
+            extraComponents={
+              <PaymentButton
+                value={Number(unformattedPrice(String(grandPrice)))}
+                onSuccess={(paymentData: any) => {
+                  setShowPaymentModal(false)
+                  handleSaveOrder(paymentData)
+                }}
+              />
+            }
             btnName='Return'
             btnLink={`order-food`}
           />

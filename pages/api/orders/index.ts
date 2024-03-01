@@ -68,18 +68,6 @@ export default async function handler(req: fileRequestProps, res: NextApiRespons
       break
     }
   }
-
-  // export const createPdf = async (req, res) => {
-  //   const { _id } = req.body
-
-  //   const order = await OrdersModel.findById(_id)
-
-  //   res.json({ orderInfoInvoice: order })
-  // }
-
-  // export const fetchPdf = async (_req, res) => {
-  //   res.sendFile(`../result.pdf`)
-  // }
 }
 
 export const config = {

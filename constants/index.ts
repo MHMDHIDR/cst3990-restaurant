@@ -1,5 +1,5 @@
-import { UserProps } from '@types'
 import { parseJson } from 'functions/jsonTools'
+import type { UserProps } from '@types'
 
 export const { origin }: any = typeof window !== 'undefined' && window.location
 
