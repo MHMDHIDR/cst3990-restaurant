@@ -166,6 +166,22 @@ const OrderFood = () => {
     }
   }
 
+  const handleStripePayment = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    const { data } = await axios.post(
+      `${API_URL}/payment`,
+      {
+        priceId: unformattedPrice(grandPriceRef?.current?.textContent!)
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    window.location.assign(data)
+  }
+
   return (
     <Layout>
       <section id='orderFood' className='py-12 my-8'>
@@ -193,13 +209,26 @@ const OrderFood = () => {
                 Number(unformattedPrice(String(grandPrice)))
               )}. Please select one of the following:`}
               extraComponents={
-                <PaymentButton
-                  value={Number(unformattedPrice(String(grandPrice)))}
-                  onSuccess={(paymentData: any) => {
-                    setShowPaymentModal(false)
-                    handleSaveOrder(paymentData)
-                  }}
-                />
+                <>
+                  {/* PayPal Payment */}
+                  <PaymentButton
+                    value={Number(unformattedPrice(String(grandPrice)))}
+                    onSuccess={(paymentData: any) => {
+                      setShowPaymentModal(false)
+                      handleSaveOrder(paymentData)
+                    }}
+                  />
+                  {/* Stripe Payment Tailwind Button */}
+                  <button
+                    onClick={e => {
+                      setShowPaymentModal(false)
+                      handleStripePayment(e)
+                    }}
+                    className='inline-block px-5 py-1 text-white bg-blue-600 rounded-md hover:bg-blue-700'
+                  >
+                    Stripe Payment
+                  </button>
+                </>
               }
               btnName='Return to Cart'
               btnLink={`order-food`}
