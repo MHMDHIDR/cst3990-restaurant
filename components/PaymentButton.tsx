@@ -1,13 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { origin /*as return_url*/ } from '@constants'
-
-const PayPalButton =
-  typeof window !== 'undefined' &&
-  (window as any)?.paypal?.Buttons?.driver('react', {
-    React,
-    ReactDOM
-  })
+import { origin } from '@constants'
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 const PaymentButton = ({ value, onSuccess }: { value: number; onSuccess: any }) => {
   const createOrder = (
@@ -37,21 +30,21 @@ const PaymentButton = ({ value, onSuccess }: { value: number; onSuccess: any }) 
   const onError = (error: any) => console.error('some error happened=> ', error)
 
   return (
-    <PayPalButton
-      createOrder={(
-        data: any,
-        actions: {
-          order: {
-            create: (arg: { purchase_units: { amount: { value: number } }[] }) => any
-          }
-        }
-      ) => createOrder(data, actions)}
-      onApprove={(data: any, actions: { order: { capture: () => any } }) =>
-        onApprove(data, actions)
-      }
-      onCancel={onCancel}
-      onError={onError}
-    />
+    <PayPalScriptProvider
+      options={{
+        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+        currency: 'GBP',
+        buyerCountry: 'GB',
+        locale: 'en_GB'
+      }}
+    >
+      <PayPalButtons
+        createOrder={(data: any, actions: any) => createOrder(data, actions)}
+        onApprove={(data: any, actions: any) => onApprove(data, actions)}
+        onCancel={onCancel}
+        onError={onError}
+      />
+    </PayPalScriptProvider>
   )
 }
 

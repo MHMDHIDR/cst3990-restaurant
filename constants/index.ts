@@ -17,7 +17,7 @@ export const FILE_UPLOAD_IMG_SIZE = 122
 
 export const ADDRESS_EXAMPLE = '123 Street, City, Postcode'
 
-export const PHONE_NUM_EXAMPLE = '07767002516'
+export const PHONE_NUM_EXAMPLE = '01234567890'
 
 export const PAYMENT_DATA_EXAMPLE = `[{
     "accelerated": false,

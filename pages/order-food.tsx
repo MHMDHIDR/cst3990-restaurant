@@ -186,23 +186,25 @@ const OrderFood = () => {
             btnLink={`/auth/login?redirect=${pathname}`}
           />
         ) : showPaymentModal === true ? (
-          <Modal
-            status={Loading}
-            msg={`Payment = ${formattedPrice(
-              Number(unformattedPrice(String(grandPrice)))
-            )}. Please select one of the following:`}
-            extraComponents={
-              <PaymentButton
-                value={Number(unformattedPrice(String(grandPrice)))}
-                onSuccess={(paymentData: any) => {
-                  setShowPaymentModal(false)
-                  handleSaveOrder(paymentData)
-                }}
-              />
-            }
-            btnName='Return'
-            btnLink={`order-food`}
-          />
+          <>
+            <Modal
+              status={Loading}
+              msg={`Payment = ${formattedPrice(
+                Number(unformattedPrice(String(grandPrice)))
+              )}. Please select one of the following:`}
+              extraComponents={
+                <PaymentButton
+                  value={Number(unformattedPrice(String(grandPrice)))}
+                  onSuccess={(paymentData: any) => {
+                    setShowPaymentModal(false)
+                    handleSaveOrder(paymentData)
+                  }}
+                />
+              }
+              btnName='Return to Cart'
+              btnLink={`order-food`}
+            />
+          </>
         ) : null}
 
         <div className='container mx-auto text-center'>
