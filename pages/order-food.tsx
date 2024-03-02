@@ -28,6 +28,12 @@ import scrollToView from 'functions/scrollToView'
 import { parseJson, stringJson } from 'functions/jsonTools'
 import { useSession } from 'next-auth/react'
 import { formattedPrice, unformattedPrice } from 'utils/functions/format'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
+import CheckoutForm from 'components/CheckoutForm'
+import { DividerStylish } from 'components/Divider'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
 const formDataFromLocalStorage =
   typeof window !== 'undefined'
@@ -166,21 +172,45 @@ const OrderFood = () => {
     }
   }
 
-  const handleStripePayment = async (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    const { data } = await axios.post(
-      `${API_URL}/payment`,
-      {
-        priceId: unformattedPrice(grandPriceRef?.current?.textContent!)
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    window.location.assign(data)
+  const [clientSecret, setClientSecret] = useState('')
+
+  const appearance = {
+    theme: 'stripe'
   }
+  const options = {
+    clientSecret,
+    appearance
+  } as any
+
+  //const handleStripePayment = async (e: any) => {
+  //e.preventDefault()
+  // setIsLoading(true)
+
+  useEffect(() => {
+    const handleStripePayment = async () => {
+      const amount = Number(unformattedPrice(String(grandPrice))) * 100 // Stripe requires the amount in cents
+
+      try {
+        // const response = await axios.post(`${API_URL}/stripe`, { amount, items })
+        const response = await axios.post(`${API_URL}/create-payment-intent`, {
+          amount
+          // ,items
+        })
+
+        const { paymentSuccess, paymentIntent, clientSecret } = response.data
+
+        setClientSecret(clientSecret)
+        if (paymentSuccess) {
+          setShowPaymentModal(false)
+          handleSaveOrder(paymentIntent)
+        }
+      } catch (err) {
+        console.error(err)
+        setIsLoading(false)
+      }
+    }
+    handleStripePayment()
+  }, [])
 
   return (
     <Layout>
@@ -218,16 +248,14 @@ const OrderFood = () => {
                       handleSaveOrder(paymentData)
                     }}
                   />
-                  {/* Stripe Payment Tailwind Button */}
-                  <button
-                    onClick={e => {
-                      setShowPaymentModal(false)
-                      handleStripePayment(e)
-                    }}
-                    className='inline-block px-5 py-1 text-white bg-blue-600 rounded-md hover:bg-blue-700'
-                  >
-                    Stripe Payment
-                  </button>
+
+                  <DividerStylish className='my-10' />
+
+                  {clientSecret && (
+                    <Elements options={options} stripe={stripePromise}>
+                      <CheckoutForm />
+                    </Elements>
+                  )}
                 </>
               }
               btnName='Return to Cart'

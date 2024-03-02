@@ -28,7 +28,7 @@ const Modal = forwardRef(
       <section
         ref={ref}
         id='modal'
-        className={`fixed inset-0 p-0 m-0 min-h-screen min-w-screen z-[10000] bg-gray-500 opacity-95 ${
+        className={`fixed inset-0 p-0 m-0 min-h-screen min-w-screen z-[10000] bg-gray-500 opacity-95 overflow-y-auto ${
           modalHidden.includes('hidden') ? 'hidden' : ''
         } flex items-center`}
       >
@@ -45,7 +45,9 @@ const Modal = forwardRef(
             <pre className='py-8 leading-9 whitespace-pre-line' dir='auto'>
               <p className={classes}>{msg}</p>
             </pre>
-            {extraComponents && extraComponents}
+            <div className='max-w-2xl mx-auto mb-5'>
+              {extraComponents && extraComponents}
+            </div>
             {btnName && btnLink ? (
               <a
                 href={btnLink}

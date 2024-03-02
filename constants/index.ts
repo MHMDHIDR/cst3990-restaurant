@@ -48,6 +48,8 @@ export const APP_URL =
 
 export const API_URL = APP_URL + '/api'
 
+export const APP_PAYMENT_SUCCESS_URL = APP_URL + '/payment/success'
+
 export const DEFAULT_USER_DATA = {
   userFullName: 'User Full Name',
   userAccountType: 'user'

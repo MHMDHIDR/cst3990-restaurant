@@ -43,6 +43,7 @@ const PaymentButton = ({ value, onSuccess }: { value: number; onSuccess: any }) 
         onApprove={(data: any, actions: any) => onApprove(data, actions)}
         onCancel={onCancel}
         onError={onError}
+        style={{ height: 30, color: 'blue', shape: 'rect', label: 'pay' }}
       />
     </PayPalScriptProvider>
   )
