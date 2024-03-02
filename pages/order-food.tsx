@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, useEffect, useLayoutEffect } from 'react'
+import { useContext, useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
@@ -43,7 +43,7 @@ const formDataFromLocalStorage =
 //orderFood
 const OrderFood = () => {
   useDocumentTitle('Cart Items')
-  useLayoutEffect(() => {
+  useEffect(() => {
     scrollToView(800)
   }, [])
 
@@ -182,13 +182,11 @@ const OrderFood = () => {
     appearance
   } as any
 
-  //const handleStripePayment = async (e: any) => {
-  //e.preventDefault()
-  // setIsLoading(true)
-
   useEffect(() => {
     const handleStripePayment = async () => {
       const amount = Number(unformattedPrice(String(grandPrice))) * 100 // Stripe requires the amount in cents
+
+      if (!amount) return
 
       try {
         // const response = await axios.post(`${API_URL}/stripe`, { amount, items })
@@ -210,7 +208,7 @@ const OrderFood = () => {
       }
     }
     handleStripePayment()
-  }, [])
+  }, [grandPrice])
 
   return (
     <Layout>
@@ -249,12 +247,13 @@ const OrderFood = () => {
                     }}
                   />
 
-                  <DividerStylish className='my-10' />
-
                   {clientSecret && (
-                    <Elements options={options} stripe={stripePromise}>
-                      <CheckoutForm />
-                    </Elements>
+                    <>
+                      <DividerStylish className='my-10' />
+                      <Elements options={options} stripe={stripePromise}>
+                        <CheckoutForm />
+                      </Elements>
+                    </>
                   )}
                 </>
               }

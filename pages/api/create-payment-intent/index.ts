@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET)
 
 const calculateOrderAmount = (_items: any) => {
-  return 0
+  return 1
 }
 
 export default async function handler(req: any, res: any) {
@@ -9,7 +9,7 @@ export default async function handler(req: any, res: any) {
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: Number(amount) ?? calculateOrderAmount(amount),
+    amount: Number(amount) === 0 ? calculateOrderAmount(amount) : Number(amount),
     currency: 'gbp',
     automatic_payment_methods: {
       enabled: true
