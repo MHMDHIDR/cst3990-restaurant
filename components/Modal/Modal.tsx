@@ -12,7 +12,7 @@ const Modal = forwardRef(
       modalHidden = '',
       classes = msg.length > 500 ? 'text-justify' : 'text-center',
       redirectLink,
-      redirectTime = 2500,
+      redirectTime = 2500000,
       btnName = '',
       btnLink = '/',
       ctaConfirmBtns = [],

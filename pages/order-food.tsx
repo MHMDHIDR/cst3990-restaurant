@@ -13,7 +13,8 @@ import {
   API_URL,
   PAYMENT_DATA_EXAMPLE,
   PHONE_NUM_EXAMPLE,
-  USER
+  USER,
+  PAYMENT_DATA_STRIPE
 } from '@constants'
 import Modal from 'components/Modal/Modal'
 import { Success, Loading } from 'components/Icons/Status'
@@ -75,6 +76,7 @@ const OrderFood = () => {
   const [showLoginRegisterModal, setShowLoginRegisterModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingStripe, setIsLoadingStripe] = useState(false)
 
   //Declaring Referenced Element
   const personNameErr = useRef<HTMLSpanElement>(null)
@@ -210,6 +212,13 @@ const OrderFood = () => {
     handleStripePayment()
   }, [grandPrice])
 
+  useEffect(() => {
+    if (isLoadingStripe === true) {
+      setShowPaymentModal(false)
+      handleSaveOrder(PAYMENT_DATA_STRIPE)
+    }
+  }, [isLoadingStripe])
+
   return (
     <Layout>
       <section id='orderFood' className='py-12 my-8'>
@@ -235,7 +244,8 @@ const OrderFood = () => {
               status={Loading}
               msg={`Payment = ${formattedPrice(
                 Number(unformattedPrice(String(grandPrice)))
-              )}. Please select one of the following:`}
+              )}. Please select one of the following`}
+              classes='mt-10 mb-5 text-2xl font-bold select-none'
               extraComponents={
                 <>
                   {/* PayPal Payment */}
@@ -250,8 +260,14 @@ const OrderFood = () => {
                   {clientSecret && (
                     <>
                       <DividerStylish className='my-10' />
+                      <h2 className='mt-10 mb-5 text-2xl font-bold select-none'>
+                        Pay with Stripe
+                      </h2>
                       <Elements options={options} stripe={stripePromise}>
-                        <CheckoutForm />
+                        <CheckoutForm
+                          isLoadingStripe={isLoadingStripe}
+                          setIsLoadingStripe={setIsLoadingStripe}
+                        />
                       </Elements>
                     </>
                   )}

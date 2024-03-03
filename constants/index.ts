@@ -26,7 +26,11 @@ export const PAYMENT_DATA_EXAMPLE = `[{
     "paymentID": null,
     "billingToken": null,
     "facilitatorAccessToken": "${Math.random() * 10000}",
-    "paymentSource": "paypal
+    "paymentSource": "paypal"
+  }]`
+
+export const PAYMENT_DATA_STRIPE = `[{
+    "paymentSource": "Stripe"
   }]`
 
 export const SCROLL_LIMIT = 400

@@ -12,7 +12,7 @@ const MyLink = ({ children, to = `/`, className }: MyLinkProps) => {
       href={`/#${to}`}
       className={className ? className : 'underline-hover'}
       data-scroll={to}
-      onClick={e => {
+      onClick={(e: any) => {
         scrollTo(e)
         menuToggler()
       }}

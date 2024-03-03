@@ -10,7 +10,7 @@ import useAuth from 'hooks/useAuth'
 import useEventListener from 'hooks/useEventListener'
 import Modal from '../Modal/Modal'
 import { Success, Error, Loading } from '../Icons/Status'
-import { PayPal } from '../Icons/Payments'
+import { PayPal, Stripe } from '../Icons/Payments'
 import { LoadingPage, LoadingSpinner } from '../Loading'
 import Pagination from '../Pagination'
 import Divider from '../Divider'
@@ -452,11 +452,17 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                             data-tooltip={`Payment Used ${
                               order.paymentData.paymentSource === 'paypal'
                                 ? 'PayPal'
+                                : JSON.parse('[{"paymentSource": "Stripe"}]')[0]
+                                    .paymentSource === 'Stripe'
+                                ? 'Stripe'
                                 : 'N/A'
                             }`}
                           >
                             {order.paymentData.paymentSource === 'paypal' ? (
                               <PayPal />
+                            ) : JSON.parse('[{"paymentSource": "Stripe"}]')[0]
+                                .paymentSource === 'Stripe' ? (
+                              <Stripe />
                             ) : (
                               'N/A'
                             )}
@@ -744,11 +750,19 @@ const OrdersTable = ({ ordersByUserEmail = false }) => {
                     <td className='px-1 py-2 min-w-[6rem]'>
                       <span
                         data-tooltip={`Payment Used ${
-                          order.paymentData.paymentSource === 'paypal' ? 'PayPal' : 'N/A'
+                          order.paymentData.paymentSource === 'paypal'
+                            ? 'PayPal'
+                            : JSON.parse('[{"paymentSource": "Stripe"}]')[0]
+                                .paymentSource === 'Stripe'
+                            ? 'Stripe'
+                            : 'N/A'
                         }`}
                       >
                         {order.paymentData.paymentSource === 'paypal' ? (
                           <PayPal />
+                        ) : JSON.parse('[{"paymentSource": "Stripe"}]')[0]
+                            .paymentSource === 'Stripe' ? (
+                          <Stripe />
                         ) : (
                           'N/A'
                         )}
