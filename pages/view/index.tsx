@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, Suspense, useLayoutEffect } from 'react'
+import { useState, useEffect, useContext, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
@@ -17,7 +17,7 @@ import { CartAddButton, CartRemoveButton } from 'components/CartButton'
 
 const ViewFood = ({ viewFood }: any) => {
   useDocumentTitle('View Foods')
-  useLayoutEffect(() => {
+  useEffect(() => {
     scrollToView()
   }, [])
 

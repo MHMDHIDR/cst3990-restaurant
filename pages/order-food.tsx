@@ -76,7 +76,6 @@ const OrderFood = () => {
   const [showLoginRegisterModal, setShowLoginRegisterModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingStripe, setIsLoadingStripe] = useState(false)
 
   //Declaring Referenced Element
   const personNameErr = useRef<HTMLSpanElement>(null)
@@ -212,13 +211,6 @@ const OrderFood = () => {
     handleStripePayment()
   }, [grandPrice])
 
-  useEffect(() => {
-    if (isLoadingStripe === true) {
-      setShowPaymentModal(false)
-      handleSaveOrder(PAYMENT_DATA_STRIPE)
-    }
-  }, [isLoadingStripe])
-
   return (
     <Layout>
       <section id='orderFood' className='py-12 my-8'>
@@ -229,7 +221,7 @@ const OrderFood = () => {
             btnName='View Orders'
             btnLink='/view'
             redirectLink='/view'
-            redirectTime={10000}
+            redirectTime={10000000000}
           />
         ) : showLoginRegisterModal === true ? (
           <Modal
@@ -265,8 +257,7 @@ const OrderFood = () => {
                       </h2>
                       <Elements options={options} stripe={stripePromise}>
                         <CheckoutForm
-                          isLoadingStripe={isLoadingStripe}
-                          setIsLoadingStripe={setIsLoadingStripe}
+                          onClick={() => handleSaveOrder(PAYMENT_DATA_STRIPE)}
                         />
                       </Elements>
                     </>
