@@ -27,11 +27,11 @@ const MyOrders = () => {
     <Layout>
       <section className='container py-12 mx-auto my-8 overflow-x-auto xl:max-w-full'>
         <div className='2xl:flex 2xl:flex-col 2xl:items-center 2xl:w-full'>
-          <div className='flex items-center justify-center gap-6 divide-x-2'>
-            <h3 className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl'>Orders</h3>
+          <div className='flex items-center justify-center gap-6 mb-10'>
+            <h3 className='mx-0 text-2xl text-center md:text-3xl'>Orders</h3>|
             <Link
               href='/most-ordered'
-              className='mx-0 mt-4 mb-12 text-2xl text-center md:text-3xl underline-hover'
+              className='mx-0 text-2xl text-center md:text-3xl underline-hover'
             >
               Most Ordered
             </Link>
