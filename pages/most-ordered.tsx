@@ -60,8 +60,14 @@ const MostOrdered = () => {
   ) : (
     <Layout>
       <section className='container py-12 mx-auto my-8'>
-        <div className='flex items-center justify-center mb-10'>
-          <h3 className='mx-0 text-2xl text-center md:text-3xl'>Most Ordered</h3>
+        <div className='flex items-center justify-center gap-6 mb-10'>
+          <h3 className='mx-0 text-2xl text-center md:text-3xl'>Most Ordered</h3>|
+          <Link
+            href='/my-orders'
+            className='mx-0 text-2xl text-center md:text-3xl underline-hover'
+          >
+            Orders
+          </Link>
         </div>
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
           {mostOrderedItems.map((orderedItem: any, idx: number) => {
