@@ -68,13 +68,13 @@ const MostOrdered = () => {
             return (
               <Link
                 key={idx}
-                className='p-4 border border-gray-200 rounded-lg'
+                className='p-4 group'
                 href={`/view/item/${orderedItem.item.cItemId}`}
               >
                 <img
                   src={orderedItem.item.cImg[0].foodImgDisplayPath}
                   alt={orderedItem.item.cHeading}
-                  className='w-full h-auto mb-4 rounded-lg'
+                  className='w-full h-auto mb-4 transition-transform duration-300 rounded-lg shadow-lg group-hover:shadow-xl group-hover:scale-105'
                 />
                 <h4 className='mb-2 text-lg font-semibold'>
                   {orderedItem.item.cHeading}
