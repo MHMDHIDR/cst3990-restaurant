@@ -9,12 +9,13 @@ import useAxios from 'hooks/useAxios'
 import { ITEMS_PER_PAGE } from '@constants'
 import { isNumber } from 'utils/functions/isNumber'
 import { CartAddButton } from 'components/CartButton'
+import Link from 'next/link'
 
 const MostOrdered = () => {
   useDocumentTitle('Most Ordered')
   const { replace } = useRouter()
   const { loading, userStatus, isAuth } = useAuth()
-  const [mostOrderedItems, setMostOrderedItems] = useState<any>([])
+  const [mostOrderedItems, setMostOrderedItems] = useState<any[]>([])
 
   useEffect(() => {
     if (!loading && !isAuth) {
@@ -31,7 +32,24 @@ const MostOrdered = () => {
 
   useEffect(() => {
     if (response.response !== null) {
-      setMostOrderedItems(response.response.response) // Fix: Pass the response as an array
+      const orderedItems = response.response.response.flatMap(
+        (order: any) => order?.orderItems ?? []
+      )
+
+      const orderedItemsMap = orderedItems.reduce((map: any, item: any) => {
+        const itemId = item.cItemId
+        map[itemId] = map[itemId] ? map[itemId] + 1 : 1
+        return map
+      }, {})
+
+      const sortedOrderedItems = Object.keys(orderedItemsMap)
+        .map(itemId => ({
+          item: orderedItems.find((item: any) => item.cItemId === itemId),
+          count: orderedItemsMap[itemId]
+        }))
+        .sort((a, b) => b.count - a.count)
+
+      setMostOrderedItems(sortedOrderedItems)
     }
   }, [response.response])
 
@@ -46,22 +64,30 @@ const MostOrdered = () => {
           <h3 className='mx-0 text-2xl text-center md:text-3xl'>Most Ordered</h3>
         </div>
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-          {mostOrderedItems.map((order: any) =>
-            order?.orderItems?.map((item: any, idx: number) => (
-              <div key={idx} className='p-4 border border-gray-200 rounded-lg'>
+          {mostOrderedItems.map((orderedItem: any, idx: number) => {
+            return (
+              <Link
+                key={idx}
+                className='p-4 border border-gray-200 rounded-lg'
+                href={`/view/item/${orderedItem.item.cItemId}`}
+              >
                 <img
-                  src={item.cImg[0].foodImgDisplayPath}
-                  alt={item.cHeading}
+                  src={orderedItem.item.cImg[0].foodImgDisplayPath}
+                  alt={orderedItem.item.cHeading}
                   className='w-full h-auto mb-4 rounded-lg'
                 />
-                <h4 className='mb-2 text-lg font-semibold'>{item.cHeading}</h4>
-                <span className='text-gray-600'>Quantity: {item.cQuantity}</span>
-                <CartAddButton classes='bg-green-800 hover:bg-green-700'>
+                <h4 className='mb-2 text-lg font-semibold'>
+                  {orderedItem.item.cHeading}
+                </h4>
+                <span className='text-gray-600'>
+                  Quantity Ordered: {orderedItem.count}
+                </span>
+                <CartAddButton classes='bg-green-800 hover:bg-green-700 mt-2'>
                   Order Again
                 </CartAddButton>
-              </div>
-            ))
-          )}
+              </Link>
+            )
+          })}
         </div>
       </section>
     </Layout>
