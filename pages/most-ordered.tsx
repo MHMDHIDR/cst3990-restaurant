@@ -10,9 +10,13 @@ import { ITEMS_PER_PAGE } from '@constants'
 import { isNumber } from 'utils/functions/isNumber'
 import { CartAddButton } from 'components/CartButton'
 import Link from 'next/link'
+import scrollToView from 'utils/functions/scrollToView'
 
 const MostOrdered = () => {
   useDocumentTitle('Most Ordered')
+  useEffect(() => {
+    scrollToView(700)
+  }, [])
   const { replace } = useRouter()
   const { loading, userStatus, isAuth } = useAuth()
   const [mostOrderedItems, setMostOrderedItems] = useState<any[]>([])

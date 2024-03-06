@@ -7,9 +7,13 @@ import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
 import { LoadingPage } from 'components/Loading'
 import Link from 'next/link'
+import scrollToView from 'utils/functions/scrollToView'
 
 const MyOrders = () => {
   useDocumentTitle('My Orders')
+  useEffect(() => {
+    scrollToView(700)
+  }, [])
   const { replace } = useRouter()
   const { loading, userStatus, isAuth } = useAuth()
 
