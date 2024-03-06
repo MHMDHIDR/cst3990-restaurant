@@ -11,6 +11,7 @@ import { isNumber } from 'utils/functions/isNumber'
 import { CartAddButton } from 'components/CartButton'
 import Link from 'next/link'
 import scrollToView from 'utils/functions/scrollToView'
+import { formattedPrice } from 'utils/functions/format'
 
 const MostOrdered = () => {
   useDocumentTitle('Most Ordered')
@@ -89,9 +90,14 @@ const MostOrdered = () => {
                 <h4 className='mb-2 text-lg font-semibold'>
                   {orderedItem.item.cHeading}
                 </h4>
-                <span className='text-gray-600'>
-                  Quantity Ordered: {orderedItem.count}
-                </span>
+                <div className='flex justify-between'>
+                  <span className='text-gray-600'>
+                    Quantity Ordered: {orderedItem.count}
+                  </span>
+                  <span className='font-bold text-green-700'>
+                    {formattedPrice(orderedItem.item.cPrice)}
+                  </span>
+                </div>
                 <CartAddButton classes='bg-green-800 hover:bg-green-700 mt-2'>
                   Order Again
                 </CartAddButton>
