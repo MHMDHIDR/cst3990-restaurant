@@ -7,6 +7,14 @@ import { parseJson } from 'functions/jsonTools'
 import formHandler from 'functions/form'
 import { randomUUID } from 'crypto'
 
+/**
+ * Orders API endpoint to handle orders
+ * It has two methods GET and POST
+ * GET: to get all orders
+ * POST: to add new order
+ * @param req
+ * @param res
+ */
 export default async function handler(req: fileRequestProps, res: NextApiResponse) {
   const { method } = req
   await dbConnect()

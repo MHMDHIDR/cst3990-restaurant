@@ -4,6 +4,14 @@ import UsersModel from 'models/User'
 import { genSalt, hash } from 'bcryptjs'
 import { UserProps } from '@types'
 
+/**
+ * User Join API endpoint to handle user registration
+ * It has only one method POST
+ * POST: to register user
+ * @param req
+ * @param res
+ * @returns { _id: user._id, email: user.userEmail, tel: user.userTel, userAdded: 1, message: 'User Successfully Registered You Can Login 👍🏼' }
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
 

@@ -11,6 +11,14 @@ const s3 = new S3({
   region: AWS_REGION
 })
 
+/**
+ * Upload URL API endpoint to handle file upload
+ * It has only one method GET
+ * GET: to upload file to S3 and return signed URL from AWS S3 Service to client
+ * @param req
+ * @param res
+ * @returns
+ */
 export default async function handler(req: fileRequestProps, res: NextApiResponse) {
   const { method, query } = req
   const { file }: any = query

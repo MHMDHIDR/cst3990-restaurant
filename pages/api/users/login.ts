@@ -5,6 +5,14 @@ import { compare } from 'bcryptjs'
 import { generateToken } from 'utils/functions/generateToken'
 import { UserProps } from '@types'
 
+/**
+ * Login API endpoint to handle user login
+ * It has only one method POST
+ * POST: to login user and return token
+ * @param req
+ * @param res
+ * @returns res.status(200) with user data and token
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
 

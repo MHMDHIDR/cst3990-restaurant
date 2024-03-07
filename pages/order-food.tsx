@@ -190,11 +190,7 @@ const OrderFood = () => {
       if (!amount) return
 
       try {
-        // const response = await axios.post(`${API_URL}/stripe`, { amount, items })
-        const response = await axios.post(`${API_URL}/create-payment-intent`, {
-          amount
-          // ,items
-        })
+        const response = await axios.post(`${API_URL}/create-payment-intent`, { amount })
 
         const { paymentSuccess, paymentIntent, clientSecret } = response.data
 

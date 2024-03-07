@@ -8,6 +8,9 @@ import { UserGoogleProps, UserProps } from '@types'
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET } = process.env
 
+/**
+ * AuthOptions for NextAuth
+ */
 export const authOptions: AuthOptions = {
   session: {
     strategy: 'jwt'

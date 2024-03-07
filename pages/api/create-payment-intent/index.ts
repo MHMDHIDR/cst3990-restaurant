@@ -1,5 +1,11 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET)
 
+/**
+ * Creates Payment Intent API endpoint to handle payment intent creation
+ * @param req
+ * @param res
+ * @returns clientSecret for payment intent
+ */
 export default async function handler(req: any, res: any) {
   const { amount } = req.body
 
