@@ -29,6 +29,7 @@
       "utils/*": ["utils/*"],
       "functions/*": ["utils/functions/*"],
       "components/*": ["components/*"],
+      "pages": ["pages/*"],
       "hooks/*": ["hooks/*"],
       "lang/*": ["lang/*"],
       "models/*": ["models/*"],
