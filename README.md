@@ -4,19 +4,23 @@
 
 &nbsp;
 
-### Built using:
+### **Built using:**
 
 #### NextJS
 
 #### ReactJS
 
-#### Tailwindcss
+#### Typescript
+
+#### TailwindCSS
 
 #### Mongodb
 
 &nbsp;
 
-### Deployed on:
+### **Deployed on:**
+
+#### Vercel
 
 #### AWS
 
@@ -42,7 +46,7 @@ pnpm i
 
 &nbsp;
 
-### How to Run:
+### **How to Run:**
 
 #### 1. Go to Root folder then apply the command:
 
@@ -66,4 +70,6 @@ pnpm dev
 
 &nbsp;
 
-###### All rights reserved &copy; MOHAMMED IBRAHIM 2023 - Middlesex University London
+<center style='color:#555'>All rights reserved &copy; MOHAMMED IBRAHIM</center>
+
+<center style='color:#555'>2023 - 2024 &bullet; Middlesex University London</center>
