@@ -1,11 +1,24 @@
 import { createTransport } from 'nodemailer'
 import { ADMIN_EMAIL, APP_URL } from '@constants'
 
-const email = async ({ name, subject, from, to, msg }: any) => {
-  /**
-   * @returns {Promise<any>} JSON
-   */
-
+/**
+ * Custom email function to send email
+ * @param name
+ * @param subject
+ * @param from
+ * @param to
+ * @param msg
+ *
+ * @returns {Promise<emailResponse: SMTPTransport.SentMessageInfo>} JSON
+ * @returns
+ */
+const email = async ({
+  name,
+  subject,
+  from,
+  to,
+  msg
+}: any): Promise<typeof emailResponse> => {
   to = to || (await ADMIN_EMAIL())
   from = from || (await ADMIN_EMAIL())
   name = name || to

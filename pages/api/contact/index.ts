@@ -1,6 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import email from 'functions/email'
 
+/**
+ * Contact API endpoint to handle contact form submission
+ * It has only one method POST
+ * POST: to send email
+ * @param req
+ * @param res
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
 

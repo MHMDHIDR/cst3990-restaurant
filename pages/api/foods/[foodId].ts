@@ -14,6 +14,15 @@ const s3 = new S3({
   }
 })
 
+/**
+ * API endpoint to handle food requests by id, it has two methods PATCH and DELETE
+ * PATCH: to update food data
+ * DELETE: to delete food data
+ *
+ * @param req
+ * @param res
+ * @returns
+ */
 export default async function handler(req: fileRequestProps, res: NextApiResponse) {
   const { method, query } = req
   const { foodId } = query

@@ -1,6 +1,13 @@
 import { Model } from 'mongoose'
 import dbConnect from 'utils/db'
 
+/**
+ * Paginated results middleware to handle paginated requests
+ * @param model The model to make the request based on and paginate the results
+ * @param req
+ * @param res
+ * @returns
+ */
 const paginatedResults = async (model: Model<any>, req: any, res: any) => {
   try {
     const mongoose: any = await dbConnect()

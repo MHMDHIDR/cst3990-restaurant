@@ -5,6 +5,14 @@ import { fileRequestProps, ToppingsProps } from '@types'
 import formHandler from 'functions/form'
 import { parseJson } from 'functions/jsonTools'
 
+/**
+ * API endpoint to handle food requests
+ * It handles GET and POST requests
+ * GET: to get all foods
+ * POST: to add a new food
+ * @param req
+ * @param res
+ */
 const handler = async (req: fileRequestProps, res: NextApiResponse) => {
   const { method } = req
 
