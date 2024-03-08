@@ -3,6 +3,13 @@ import dbConnect from 'utils/db'
 import UsersModel from 'models/User'
 import { UserProps } from '@types'
 
+/**
+ * Email Exists API endpoint to handle user login, it checks if the user email exists
+ * It has one method POST
+ * @param req
+ * @param res
+ * @returns
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
 
@@ -17,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Handle case when user is not found
       if (!user) {
-        return res.json(user)
+        return res.status(404).json(user)
       }
 
       // If user is found, check if his/her account is active or blocked

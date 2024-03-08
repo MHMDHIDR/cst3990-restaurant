@@ -8,6 +8,14 @@ import email, { customEmail } from 'functions/email'
 import formHandler from 'functions/form'
 import { UserProps } from '@types'
 
+/**
+ * Forgot Password API endpoint to handle forgot password
+ * It has one method POST
+ * POST: to send an email to the user with a link to reset the password
+ * @param req
+ * @param res
+ * @returns message and forgotPassSent
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
   const { fields }: any = await formHandler(req)

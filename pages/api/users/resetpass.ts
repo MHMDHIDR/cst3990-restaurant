@@ -9,6 +9,14 @@ import { parseJson } from 'utils/functions/jsonTools'
 import { UserProps } from '@types'
 import { DEFAULT_USER_DATA } from '@constants'
 
+/**
+ * Reset Password API endpoint to handle reset password
+ * It has one method POST
+ * POST: to reset the user password
+ * @param req
+ * @param res
+ * @returns message and newPassSet status
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
   const { fields }: any = await formHandler(req)
