@@ -74,15 +74,28 @@ export default function CheckoutForm({ onClick }: { onClick: () => void }) {
     <form id='payment-form' onSubmit={handleSubmit}>
       <PaymentElement id='payment-element' options={paymentElementOptions} />
       <button
-        disabled={isLoading || !stripe || !elements}
         id='submit'
-        className='block w-full px-5 py-6 mx-auto my-4 text-white bg-blue-600 rounded-md hover:bg-blue-700'
-        onClick={onClick}
+        className={`block w-full px-5 py-6 mx-auto my-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 ${
+          isLoading ? 'cursor-progress' : 'cursor-pointer'
+        }${!stripe || !elements ? ' opacity-50' : ''}`}
+        disabled={isLoading || !stripe || !elements}
       >
         <span id='button-text'>
           {isLoading ? <LoadingSpinner /> : 'Stripe Payment 💳'}
         </span>
       </button>
+      {/* <button
+        id='submit'
+        className={`block w-full px-5 py-6 mx-auto my-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 ${
+          isLoading ? 'cursor-progress' : 'cursor-pointer'
+        }${!stripe || !elements ? ' opacity-50' : ''}`}
+        onClick={onClick}
+        disabled={isLoading || !stripe || !elements}
+      >
+        <span id='button-text'>
+          {isLoading ? <LoadingSpinner /> : 'Stripe Payment 💳'}
+        </span>
+      </button> */}
 
       {message && <div id='payment-message'>{message}</div>}
     </form>
