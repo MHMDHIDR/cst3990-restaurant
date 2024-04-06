@@ -6,7 +6,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'mhmdhidr-uploads-university.s3.eu-west-2.amazonaws.com',
+        hostname: 'mhmdhidr-upload-university.s3.eu-west-2.amazonaws.com',
         pathname: '/**'
       },
       {
