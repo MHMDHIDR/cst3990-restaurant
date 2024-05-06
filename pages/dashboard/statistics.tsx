@@ -8,8 +8,8 @@ import {
   LinearScale,
   BarElement,
   PointElement,
-  LineElement,
-  type BarControllerDatasetOptions
+  LineElement
+  // type BarControllerDatasetOptions
 } from 'chart.js'
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import useAxios from 'hooks/useAxios'
