@@ -204,15 +204,16 @@ const DashboardStatistics = () => {
     scales: {
       y: {
         suggestedMin: 0, // Start from 0
-        suggestedMax: Math.max(
-          ...((ordersByDate as any).map((date: any) =>
-            Math.max(
-              countFoodOrdersByDate(orders.response?.response, date),
-              countDrinksOrdersByDate(orders.response?.response, date),
-              countSweetsOrdersByDate(orders.response?.response, date)
-            )
-          ) + 1)
-        ), // Find the max value and add 1 for padding
+        suggestedMax:
+          Math.max(
+            ...((ordersByDate as any)?.map((date: any) =>
+              Math.max(
+                countFoodOrdersByDate(orders.response?.response, date),
+                countDrinksOrdersByDate(orders.response?.response, date),
+                countSweetsOrdersByDate(orders.response?.response, date)
+              )
+            ) || [0]) // Add a default value if ordersByDate is undefined
+          ) + 0,
         ticks: {
           stepSize: 1 // Force whole number steps
         }
