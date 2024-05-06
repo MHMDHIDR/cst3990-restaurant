@@ -104,17 +104,21 @@ const DashboardStatistics = () => {
   }
 
   const countDrinksOrdersByDate = (ordersData: any, targetDate: any) => {
-    return ordersData.reduce((count: any, order: any) => {
+    return ordersData.reduce((count: number, order: any) => {
       const orderDate = order.orderDate.split('T')[0]
 
       if (orderDate === targetDate) {
-        const foodOrdersCount = order.orderItems.reduce((foodCount: any, item: any) => {
-          if (item.cCategory === 'drinks') {
-            return foodCount + item.cQuantity
-          }
-          return foodCount
-        }, 0)
-        return count + foodOrdersCount
+        const drinksOrdersCount = order.orderItems.reduce(
+          (drinkCount: number, item: any) => {
+            if (item.cCategory === 'drinks') {
+              return drinkCount + item.cQuantity
+            }
+            return drinkCount
+          },
+          0
+        )
+
+        return count + drinksOrdersCount
       }
       return count
     }, 0)
@@ -197,7 +201,24 @@ const DashboardStatistics = () => {
     ]
   }
 
-  const options: _DeepPartialObject<BarControllerDatasetOptions> | any = {
+  const options = {
+    scales: {
+      y: {
+        suggestedMin: 0, // Start from 0
+        suggestedMax: Math.max(
+          ...((ordersByDate as any).map((date: any) =>
+            Math.max(
+              countFoodOrdersByDate(orders.response?.response, date),
+              countDrinksOrdersByDate(orders.response?.response, date),
+              countSweetsOrdersByDate(orders.response?.response, date)
+            )
+          ) + 1)
+        ), // Find the max value and add 1 for padding
+        ticks: {
+          stepSize: 1 // Force whole number steps
+        }
+      }
+    },
     barPercentage: 0.5
   }
 
@@ -235,7 +256,8 @@ const DashboardStatistics = () => {
           <Line
             height={200}
             width={400}
-            data={ordersByDate?.length! > 1 ? BarData : DoughnutData}
+            data={(ordersByDate?.length as number) > 1 ? BarData : DoughnutData}
+            options={options}
           />
         </div>
       </div>
