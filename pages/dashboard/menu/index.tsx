@@ -183,7 +183,10 @@ const DashboardMenu = () => {
                         key={item._id}
                         className='transition-colors even:bg-gray-200 odd:bg-gray-300 dark:even:bg-gray-600 dark:odd:bg-gray-700'
                       >
-                        <td className='px-1 py-2 font-bold'>{idx + 1}</td>
+                        <td className='px-1 py-2 font-bold'>
+                          {/* Display the index consider the ITEMS_PER_PAGE and the current page then calculate the index */}
+                          {idx + 1}
+                        </td>
                         <td className='px-1 py-2 pr-3 min-w-[5rem]'>
                           <Image
                             loading='lazy'

@@ -9,7 +9,7 @@ export const SLIDES_IN_MENU = 10
 
 export const SUGGESTED_FOOTER_ITEMS_COUNT = 4
 
-export const ITEMS_PER_PAGE = 20
+export const ITEMS_PER_PAGE = 10
 
 export const MAX_QUANTITY = 100
 

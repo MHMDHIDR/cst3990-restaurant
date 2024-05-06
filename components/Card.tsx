@@ -94,40 +94,52 @@ const Card = ({
             </ul>
           )}
           {cToppings && typeof cToppings[0]?.toppingName === 'string' && (
-            // if this item has toppings and it's a string
-            <div className='flex flex-col flex-wrap items-start gap-4'>
-              <span>Toppings:</span>
-              {cToppings.map(({ toppingName = 'Topping', toppingPrice = 1 }, idx) => {
-                const cToppingId = cItemId + '-' + idx
+            // if this item has toppings
+            <>
+              <strong>Toppings:</strong>
+              <div
+                className={`grid items-center gap-4 my-4
+              ${
+                cToppings.length > 3
+                  ? 'grid-cols-2'
+                  : cToppings.length > 6
+                  ? 'grid-cols-3'
+                  : 'grid-cols-1'
+              }
+              `}
+              >
+                {cToppings.map(({ toppingName = 'Topping', toppingPrice = 1 }, idx) => {
+                  const cToppingId = cItemId + '-' + idx
 
-                return (
-                  <div className='flex items-center' key={cToppingId}>
-                    <input
-                      type='checkbox'
-                      id={cToppingId}
-                      className='cursor-pointer min-w-[1.5rem] min-h-[1.5rem]'
-                      onChange={() => handleToppingChecked(cToppingId, toppingPrice)}
-                      defaultChecked={checkedToppings.find(
-                        (topping: selectedToppingsProps) =>
-                          topping.toppingId === cToppingId
-                      )}
-                    />
-                    <label
-                      htmlFor={cToppingId}
-                      className='px-3 py-1 mx-4 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
-                    >
-                      {formattedPrice(toppingPrice)}
-                    </label>
-                    <label
-                      htmlFor={cToppingId}
-                      className='cursor-pointer p-1.5 text-base rounded-md select-none'
-                    >
-                      {toppingName}
-                    </label>
-                  </div>
-                )
-              })}
-            </div>
+                  return (
+                    <div className='flex items-center' key={cToppingId}>
+                      <input
+                        type='checkbox'
+                        id={cToppingId}
+                        className='cursor-pointer min-w-[1.5rem] min-h-[1.5rem]'
+                        onChange={() => handleToppingChecked(cToppingId, toppingPrice)}
+                        defaultChecked={checkedToppings.find(
+                          (topping: selectedToppingsProps) =>
+                            topping.toppingId === cToppingId
+                        )}
+                      />
+                      <label
+                        htmlFor={cToppingId}
+                        className='px-3 py-1 mx-4 text-base text-green-800 bg-green-300 rounded-md cursor-pointer bg-opacity-80 min-w-fit'
+                      >
+                        {formattedPrice(toppingPrice)}
+                      </label>
+                      <label
+                        htmlFor={cToppingId}
+                        className='cursor-pointer p-1.5 text-base rounded-md select-none'
+                      >
+                        {toppingName}
+                      </label>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
           )}
           {cCtaLabel ? (
             <div className='flex justify-evenly items-center gap-3 flex-wrap grow-[0.5] text-center bg-transparent'>
